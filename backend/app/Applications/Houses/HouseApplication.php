@@ -19,7 +19,7 @@ class HouseApplication
         return $house;
     }
 
-    public function updateCode(string $uid, UpdateHouseRequest $request)
+    public function update(string $uid, UpdateHouseRequest $request)
     {
 
         $house = House::where('uid', $uid)->first();
