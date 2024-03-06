@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Houses\HouseController;
+use App\Http\Controllers\Api\Houses\HouseDropdownController;
 use App\Http\Controllers\Api\MonthlyExpenses\MonthlyExpenseController;
 use App\Http\Controllers\Api\Occupants\OccupantController;
 use App\Http\Controllers\Api\MonthlyFees\MonthlyFeeController;
@@ -28,6 +29,10 @@ Route::prefix('/house')->controller(HouseController::class)->group(function () {
     Route::get('{uid}', 'show')->name('house.show');
     Route::post('/store', 'store')->name('house.store');
     Route::put('/{uid}/update', 'update')->name('house.update');
+
+    Route::prefix('/get-dropdown')->controller(HouseDropdownController::class)->group(function () {
+        Route::get('/not-occupied', 'getAllHouseNotOccupied')->name('house.get-dropdown-not-occupied');
+    });
 });
 
 
