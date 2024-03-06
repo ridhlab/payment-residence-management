@@ -16,6 +16,11 @@ class ApiResponser
         return 'Update ' . $model . ' successfully';
     }
 
+    public static function generateMessageGetIndex(string $model)
+    {
+        return 'Get index ' . $model . ' successfully';
+    }
+
     public static function successResponser($data, $message = null, $code = 200)
     {
         return response()->json([

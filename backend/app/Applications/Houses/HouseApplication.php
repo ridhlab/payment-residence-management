@@ -1,30 +1,31 @@
 <?php
 
-namespace App\Applications\houses;
+namespace App\Applications\Houses;
 
 use App\Http\Requests\Houses\StoreHouseRequest;
 use App\Http\Requests\Houses\UpdateHouseRequest;
+use App\Models\House;
 use App\Services\Houses\HouseService;
 
 class HouseApplication
 {
 
-    protected HouseService $houseService;
-
-    public function __construct(HouseService $houseService)
-    {
-        $this->houseService = $houseService;
-    }
-
     public function store(StoreHouseRequest $request)
     {
-        $data = $this->houseService->store($request->validated()['code']);
-        return $data;
+        $house = new House();
+        $house->code = $request->validated()['code'];
+        $house->is_occupied = false;
+        $house->save();
+        return $house;
     }
 
     public function updateCode(string $uid, UpdateHouseRequest $request)
     {
-        $data = $this->houseService->updateCode($uid, $request->validated()['code'], $request->validated()['is_occupied']);
-        return $data;
+
+        $house = House::where('uid', $uid)->first();
+        $house->code = $request->validated()['code'];
+        $house->is_occupied = $request->validated()['is_occupied'];
+        $house->save();
+        return $house;
     }
 }
