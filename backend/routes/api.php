@@ -64,6 +64,9 @@ Route::prefix('/monthly-fee')->controller(MonthlyFeeController::class)->group(fu
 
 
 Route::prefix('/monthly-expense')->controller(MonthlyExpenseController::class)->group(function () {
+    Route::get('/get-by-is-paid-monthly', 'getFilteredIsPaidMonthly')->name('monthly-expense.get-by-is-paid-monthly');
+    Route::get('/get-by-is-not-paid-monthly', 'getFilteredIsNotPaidMonthly')->name('monthly-expense.get-by-is-not-paid-monthly');
+
     Route::get('/', 'index')->name('monthly-expense.index');
     Route::get('{id}', 'show')->name('monthly-expense.show');
     Route::post('/store', 'store')->name('monthly-expense.store');
