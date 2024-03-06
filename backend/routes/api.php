@@ -27,8 +27,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('/house')->controller(HouseController::class)->group(function () {
-    Route::get('/house-occupied', 'getHouseOccupied')->name('house.house-occupied');
-
     Route::get('/', 'index')->name('house.index');
     Route::get('{id}', 'show')->name('house.show');
     Route::post('/store', 'store')->name('house.store');
@@ -70,6 +68,7 @@ Route::prefix('/monthly-expense')->controller(MonthlyExpenseController::class)->
 });
 
 Route::prefix('/house-occupant')->controller(HouseOccupantController::class)->group(function () {
+    Route::get('/occupied', 'getHouseOccupied')->name('hous-occupant.occupied');
     Route::post('/add-occupant', 'addHouseOccupant')->name('house-occupant.add-occupant');
     Route::post('/remove-house-occupant/{id}', 'setEndHouseOccupant')->name('house-occupant.remove-house-occupant');
 });

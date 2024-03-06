@@ -29,6 +29,23 @@ class HouseOccupantApplication
         $this->occupantApplication = $occupantApplication;
     }
 
+    public function getHouseOccupied()
+    {
+        $data = DB::table('houses', 'house')
+            ->leftJoin('house_occupants AS house_occupant', 'house_occupant.house_id', '=', 'house.id')
+            ->leftJoin('occupants AS occupant', 'occupant.id', '=', 'house_occupant.occupant_id')
+            ->where('is_occupied', '=', true)
+            ->where('house_occupant.is_still_occupant', '=', true)
+            ->select([
+                'house_occupant.id',
+                'house.code AS house_code',
+                'occupant.fullname AS occupant_name',
+                'house_occupant.occupant_status'
+            ])
+            ->get();
+        return $data;
+    }
+
     public function setEndHouseOccupant($houseOccupantId)
     {
         DB::beginTransaction();
