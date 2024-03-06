@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\HouseOccupants;
 use App\Applications\HouseOccupants\HouseOccupantApplication;
 use App\Http\Requests\HouseOccupants\AddHouseOccupantRequest;
 use App\Shared\ApiResponser;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class HouseOccupantController
 {
@@ -16,7 +18,14 @@ class HouseOccupantController
 
     public function addHouseOccupant(AddHouseOccupantRequest $request)
     {
-        $data = $this->houseOccupantApplication->addHouseOccupant($request);
-        return ApiResponser::successResponser($data, 'Success add data occupant');
+        try {
+            $data = $this->houseOccupantApplication->addHouseOccupant($request);
+            return ApiResponser::successResponser($data, 'Success add data house occupant');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            if ($e instanceof HttpException) {
+                return ApiResponser::errorResponse($e->getMessage());
+            }
+        }
     }
 }

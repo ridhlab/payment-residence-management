@@ -44,7 +44,7 @@ class OccupantApplication
             if ($fileExist) {
                 $fileExistInPublic = (file_exists(public_path('storage/identity-card/' . $occupant->identity_card_filename)));
                 if (!$fileExistInPublic) {
-                    throw new HttpException('File not exist');
+                    throw new HttpException(500, 'Internal server error');
                 }
                 File::delete(public_path('storage/identity-card/' . $occupant->identity_card_filename));
             }
