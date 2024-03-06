@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class HouseOccupant extends Model
@@ -26,5 +27,10 @@ class HouseOccupant extends Model
     public function historicalHouseOccupant(): HasOne
     {
         return $this->hasOne(HistoricalHouseOccupant::class, 'house_occupant_id');
+    }
+
+    public function occupantPayments(): HasMany
+    {
+        return $this->hasMany(OccupantPayment::class, 'house_occupant_id');
     }
 }
