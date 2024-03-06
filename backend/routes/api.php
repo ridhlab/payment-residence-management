@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\Houses\HouseController;
 use App\Http\Controllers\Api\Occupants\OccupantController;
+use App\Http\Controllers\Api\MonthlyFees\MonthlyFeeController;
+use App\Models\MonthlyFee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,4 +37,11 @@ Route::prefix('/occupant')->controller(OccupantController::class)->group(functio
     Route::put('/{uid}/update', 'update')->name('occupant.update');
 
     Route::post('/upload-identity-card/{uid}', 'uploadIdentityCard')->name('occupant.upload-identity-card');
+});
+
+Route::prefix('/monthly-fee')->controller(MonthlyFeeController::class)->group(function () {
+    Route::get('/', 'index')->name('occupant.index');
+    Route::get('{uid}', 'show')->name('occupant.show');
+    Route::post('/store', 'store')->name('occupant.store');
+    Route::put('/{uid}/update', 'update')->name('occupant.update');
 });
