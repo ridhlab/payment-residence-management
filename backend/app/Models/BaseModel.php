@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class BaseModel extends Model
 {
-    protected $hidden = ['id'];
-
     protected static function boot()
     {
         parent::boot();

@@ -8,7 +8,7 @@ class HouseDropdownApplication
 {
     public function getAllHouseNotOccupied()
     {
-        $data = DB::table('houses', 'house')->where('house.is_occupied', '=', false)->select(['uid', 'code'])->get();
+        $data = DB::table('houses', 'house')->where('house.is_occupied', '=', false)->select(['id', 'code'])->get();
         return $data;
     }
 }

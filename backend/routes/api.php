@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\HouseOccupants\HouseOccupantController;
 use App\Http\Controllers\Api\Houses\HouseController;
 use App\Http\Controllers\Api\Houses\HouseDropdownController;
 use App\Http\Controllers\Api\MonthlyExpenses\MonthlyExpenseController;
 use App\Http\Controllers\Api\Occupants\OccupantController;
 use App\Http\Controllers\Api\MonthlyFees\MonthlyFeeController;
+use App\Http\Controllers\Api\Occupants\OccupantDropdownController;
 use App\Models\MonthlyFee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,7 +33,7 @@ Route::prefix('/house')->controller(HouseController::class)->group(function () {
     Route::put('/{uid}/update', 'update')->name('house.update');
 
     Route::prefix('/get-dropdown')->controller(HouseDropdownController::class)->group(function () {
-        Route::get('/not-occupied', 'getAllHouseNotOccupied')->name('house.get-dropdown-not-occupied');
+        Route::get('/not-occupied', 'getAllHouseNotOccupied')->name('house.get-dropdown.not-occupied');
     });
 });
 
@@ -43,6 +45,10 @@ Route::prefix('/occupant')->controller(OccupantController::class)->group(functio
     Route::put('/{uid}/update', 'update')->name('occupant.update');
 
     Route::post('/upload-identity-card/{uid}', 'uploadIdentityCard')->name('occupant.upload-identity-card');
+
+    Route::prefix('/get-dropdown')->controller(OccupantDropdownController::class)->group(function () {
+        Route::get('/not-occupy', 'getAllOccupantNotOccupy')->name('occupant.get-dropdown.not-occupy');
+    });
 });
 
 Route::prefix('/monthly-fee')->controller(MonthlyFeeController::class)->group(function () {
@@ -58,4 +64,8 @@ Route::prefix('/monthly-expense')->controller(MonthlyExpenseController::class)->
     Route::get('{uid}', 'show')->name('monthly-expense.show');
     Route::post('/store', 'store')->name('monthly-expense.store');
     Route::put('/{uid}/update', 'update')->name('monthly-expense.update');
+});
+
+Route::prefix('/house-occupant')->controller(HouseOccupantController::class)->group(function () {
+    Route::post('/add-occupant', 'addHouseOccupant')->name('house-occupant.add-occupant');
 });

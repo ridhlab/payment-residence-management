@@ -19,6 +19,6 @@ class HouseDropdownController extends Controller
     public function getAllHouseNotOccupied()
     {
         $data = $this->houseDropdownApplication->getAllHouseNotOccupied();
-        return ApiResponser::successResponser($data, 'Success get data');
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('house'));
     }
 }
