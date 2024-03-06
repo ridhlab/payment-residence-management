@@ -2,8 +2,15 @@
 
 namespace App\Exceptions;
 
+use App\Shared\ApiResponser;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
+use TypeError;
 
 class Handler extends ExceptionHandler
 {
@@ -26,5 +33,25 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof TypeError) {
+            return ApiResponser::errorResponse('Internal Server Error', 500);
+        }
+        if ($exception instanceof HttpException) {
+            return ApiResponser::errorResponse($exception->getMessage());
+        }
+        if ($exception instanceof ValidationException) {
+            return ApiResponser::errorResponse('Data invalid', 422, $exception->errors());
+        }
+        if ($exception instanceof ModelNotFoundException) {
+            return ApiResponser::errorResponse($exception->getMessage());
+        }
+        if ($exception instanceof QueryException) {
+            return ApiResponser::errorResponse($exception->getMessage());
+        }
+        return parent::render($request, $exception);
     }
 }

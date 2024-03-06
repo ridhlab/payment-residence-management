@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class OccupantPayment extends Model
+class OccupantPayment extends BaseModel
 {
     use HasFactory;
 
