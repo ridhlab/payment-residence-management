@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Houses\HouseController;
+use App\Http\Controllers\Api\MonthlyExpenses\MonthlyExpenseController;
 use App\Http\Controllers\Api\Occupants\OccupantController;
 use App\Http\Controllers\Api\MonthlyFees\MonthlyFeeController;
 use App\Models\MonthlyFee;
@@ -40,8 +41,16 @@ Route::prefix('/occupant')->controller(OccupantController::class)->group(functio
 });
 
 Route::prefix('/monthly-fee')->controller(MonthlyFeeController::class)->group(function () {
-    Route::get('/', 'index')->name('occupant.index');
-    Route::get('{uid}', 'show')->name('occupant.show');
-    Route::post('/store', 'store')->name('occupant.store');
-    Route::put('/{uid}/update', 'update')->name('occupant.update');
+    Route::get('/', 'index')->name('monthly-fee.index');
+    Route::get('{uid}', 'show')->name('monthly-fee.show');
+    Route::post('/store', 'store')->name('monthly-fee.store');
+    Route::put('/{uid}/update', 'update')->name('monthly-fee.update');
+});
+
+
+Route::prefix('/monthly-expense')->controller(MonthlyExpenseController::class)->group(function () {
+    Route::get('/', 'index')->name('monthly-expense.index');
+    Route::get('{uid}', 'show')->name('monthly-expense.show');
+    Route::post('/store', 'store')->name('monthly-expense.store');
+    Route::put('/{uid}/update', 'update')->name('monthly-expense.update');
 });

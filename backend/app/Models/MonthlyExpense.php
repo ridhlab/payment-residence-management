@@ -9,5 +9,5 @@ class MonthlyExpense extends BaseModel
 {
     use HasFactory;
 
-    static protected $table = 'monthly_expenses';
+    protected $table = 'monthly_expenses';
 }
