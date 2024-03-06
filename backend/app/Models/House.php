@@ -11,6 +11,10 @@ class House extends BaseModel
 
     protected $table = 'houses';
 
+    protected $casts = [
+        'is_occupied' => 'boolean',
+    ];
+
     public function houseOccupants(): HasMany
     {
         return $this->hasMany(HouseOccupant::class, 'house_id');

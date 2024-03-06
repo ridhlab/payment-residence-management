@@ -27,7 +27,6 @@ class UpdateHouseRequest extends BaseRequest
         $house = House::where('uid', $uid)->first();
         return [
             'code' => 'string|required|min:4|unique:houses,code,' . $house->id,
-            'is_occupied' => 'required|boolean'
         ];
     }
 }
