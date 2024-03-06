@@ -2,18 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Str;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 
 class BaseModel extends Model
 {
-    protected $hidden = ['id'];
-
-    protected static function boot()
+    protected function serializeDate(DateTimeInterface $date)
     {
-        parent::boot();
-        static::creating(function ($model) {
-            $model->uid = Str::uuid()->toString();
-        });
+        return $date->format('Y-m-d H:i:s');
     }
 }

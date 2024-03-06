@@ -19,12 +19,26 @@ class HouseApplication
         return $house;
     }
 
-    public function update(string $uid, UpdateHouseRequest $request)
+    public function update($id, UpdateHouseRequest $request)
     {
 
-        $house = House::where('uid', $uid)->first();
+        $house = House::findOrFail($id);
         $house->code = $request->validated()['code'];
         $house->save();
         return $house;
+    }
+
+    public function setHouseOccupied($id)
+    {
+        $house = House::findOrFail($id);
+        $house->is_occupied = true;
+        $house->save();
+    }
+
+    public function setHouseNotOccupied($id)
+    {
+        $house = House::findOrFail($id);
+        $house->is_occupied = false;
+        $house->save();
     }
 }

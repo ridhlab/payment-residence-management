@@ -21,6 +21,11 @@ class ApiResponser
         return 'Get index ' . $model . ' successfully';
     }
 
+    public static function generateMessageGetData(string $model)
+    {
+        return 'Get data ' . $model . ' successfully';
+    }
+
     public static function successResponser($data, $message = null, $code = 200)
     {
         return response()->json([

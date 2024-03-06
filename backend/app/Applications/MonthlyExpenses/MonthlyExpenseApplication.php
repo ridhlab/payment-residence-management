@@ -19,9 +19,9 @@ class MonthlyExpenseApplication
         return $monthlyExpense;
     }
 
-    public function update($uid, UpdateMonthlyExpensesRequest $request)
+    public function update($id, UpdateMonthlyExpensesRequest $request)
     {
-        $monthlyExpense = MonthlyExpense::where('uid', $uid)->first();
+        $monthlyExpense = MonthlyExpense::findOrFail($id);
         $monthlyExpense->name = $request->validated()['name'];
         $monthlyExpense->fee = $request->validated()['fee'];
         $monthlyExpense->is_paid_monthly = $request->validated()['is_paid_monthly'];

@@ -12,7 +12,7 @@ class Occupant extends BaseModel
 
     protected $table = 'occupants';
 
-    protected $hidden = ['identity_card_filename', 'id'];
+    protected $hidden = ['identity_card_filename'];
 
     public function houseOccupants(): HasMany
     {

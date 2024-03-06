@@ -18,9 +18,9 @@ class MonthlyFeeApplication
         return $monthlyFee;
     }
 
-    public function update($uid, UpdateMonthlyFeeRequest $request)
+    public function update($id, UpdateMonthlyFeeRequest $request)
     {
-        $monthlyFee = MonthlyFee::where('uid', $uid)->first();
+        $monthlyFee = MonthlyFee::findOrFail($id);
         $monthlyFee->name = $request->validated()['name'];
         $monthlyFee->fee = $request->validated()['fee'];
 

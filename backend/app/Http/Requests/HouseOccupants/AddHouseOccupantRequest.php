@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Houses;
+namespace App\Http\Requests\HouseOccupants;
 
-use App\Http\Requests\BaseRequest;
-use App\Models\House;
-use Illuminate\Http\Request;
+use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateHouseRequest extends BaseRequest
+class AddHouseOccupantRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,12 +19,12 @@ class UpdateHouseRequest extends BaseRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(Request $request): array
+    public function rules(): array
     {
-        $id = $request->route('id');
-        $house = House::findOrFail($id);
         return [
-            'code' => 'string|required|min:4|unique:houses,code,' . $house->id,
+            'occupant_status' => 'required|in:contract,permanent',
+            'house_id' => 'required|integer',
+            'occupant_id' => 'required|integer'
         ];
     }
 }

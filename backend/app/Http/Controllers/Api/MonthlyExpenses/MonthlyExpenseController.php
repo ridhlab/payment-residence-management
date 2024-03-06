@@ -23,9 +23,9 @@ class MonthlyExpenseController extends Controller
         return ApiResponser::successResponser($data, ApiResponser::generateMessageStore('monthly expense'));
     }
 
-    public function update($uid, UpdateMonthlyExpensesRequest $request)
+    public function update($id, UpdateMonthlyExpensesRequest $request)
     {
-        $data = $this->monthlyExpenseApplication->update($uid, $request);
+        $data = $this->monthlyExpenseApplication->update($id, $request);
         return ApiResponser::successResponser($data, ApiResponser::generateMessageUpdate('monthly expense'));
     }
 }
