@@ -34,4 +34,11 @@ class HouseApplication
         $house->is_occupied = true;
         $house->save();
     }
+
+    public function setHouseNotOccupied($id)
+    {
+        $house = House::findOrFail($id);
+        $house->is_occupied = false;
+        $house->save();
+    }
 }

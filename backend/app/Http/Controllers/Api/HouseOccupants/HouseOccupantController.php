@@ -16,6 +16,19 @@ class HouseOccupantController
         $this->houseOccupantApplication = $houseOccupantApplication;
     }
 
+    public function setEndHouseOccupant($id)
+    {
+        try {
+            $this->houseOccupantApplication->setEndHouseOccupant($id);
+            return ApiResponser::successResponser(null, 'Success remove house occupant');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            if ($e instanceof HttpException) {
+                return ApiResponser::errorResponse($e->getMessage());
+            }
+        }
+    }
+
     public function addHouseOccupant(AddHouseOccupantRequest $request)
     {
         try {

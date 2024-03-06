@@ -23,6 +23,13 @@ class OccupantApplication
         $occupant->save();
     }
 
+    public function setNotOccupy($id)
+    {
+        $occupant = Occupant::findOrFail($id);
+        $occupant->is_occupy = false;
+        $occupant->save();
+    }
+
     public function store(StoreOccupantRequest $request)
     {
         $occupant = new Occupant();

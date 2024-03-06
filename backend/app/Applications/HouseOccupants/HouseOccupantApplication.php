@@ -6,7 +6,9 @@ use App\Applications\HistoricalHouseOccupants\HistoricalHouseOccupantApplication
 use App\Applications\Houses\HouseApplication;
 use App\Applications\Occupants\OccupantApplication;
 use App\Http\Requests\HouseOccupants\AddHouseOccupantRequest;
+use App\Models\House;
 use App\Models\HouseOccupant;
+use App\Models\Occupant;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -27,17 +29,30 @@ class HouseOccupantApplication
         $this->occupantApplication = $occupantApplication;
     }
 
+    public function setEndHouseOccupant($houseOccupantId)
+    {
+        DB::beginTransaction();
+        $houseOccupant = HouseOccupant::findOrFail($houseOccupantId);
+        $houseOccupant->is_still_occupant = false;
+        $houseOccupant->save();
+        $this->houseApplication->setHouseNotOccupied($houseOccupant->house_id);
+        $this->occupantApplication->setNotOccupy($houseOccupant->occupant_id);
+        $this->historicalHouseOccupantApplication->setHistoricalEndDate($houseOccupantId);
+        DB::commit();
+        return true;
+    }
+
     public function addHouseOccupant(AddHouseOccupantRequest $request)
     {
         $houseId = $request->validated()['house_id'];
         $occupantId = $request->validated()['occupant_id'];
         DB::beginTransaction();
 
-        $house = DB::table('houses', 'house')->where('house.id', '=', $houseId)->first();
+        $house = House::findOrFail($houseId);
         if ($house->is_occupied) {
             throw new HttpException(400, 'House is occupied');
         }
-        $occupant = DB::table('occupants', 'occupant')->where('occupant.id', '=', $occupantId)->first();
+        $occupant = Occupant::findOrFail($occupantId);
         if ($occupant->is_occupy) {
             throw new HttpException(400, 'Occupant is occupy');
         }
