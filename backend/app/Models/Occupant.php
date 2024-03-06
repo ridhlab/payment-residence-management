@@ -10,7 +10,9 @@ class Occupant extends BaseModel
 {
     use HasFactory;
 
-    static protected $table = 'occupants';
+    protected $table = 'occupants';
+
+    protected $hidden = ['identity_card_filename', 'id'];
 
     public function houseOccupants(): HasMany
     {
