@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Houses\HouseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +17,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('/house')->controller(HouseController::class)->group(function () {
+    Route::get('/', 'index')->name('house.index');
+    Route::get('{uid}', 'show')->name('house.show');
+    Route::post('/store', 'store')->name('house.store');
+    Route::put('/{uid}/update', 'update')->name('house.update');
 });

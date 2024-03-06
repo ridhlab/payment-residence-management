@@ -3,14 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class House extends Model
+class House extends BaseModel
 {
     use HasFactory;
 
-    static protected $table = 'houses';
+    protected $table = 'houses';
 
     public function houseOccupants(): HasMany
     {
