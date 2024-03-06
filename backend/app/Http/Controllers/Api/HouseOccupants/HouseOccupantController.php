@@ -16,6 +16,12 @@ class HouseOccupantController
         $this->houseOccupantApplication = $houseOccupantApplication;
     }
 
+    public function getDetailHouseOccupant($id)
+    {
+        $data = $this->houseOccupantApplication->getDetailHouseOccupant($id);
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('house occupant'));
+    }
+
     public function getHouseOccupied()
     {
         $data = $this->houseOccupantApplication->getHouseOccupied();

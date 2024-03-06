@@ -13,6 +13,9 @@ class HouseOccupant extends BaseModel
     use HasFactory;
 
     protected $table = 'house_occupants';
+    protected $casts = [
+        'is_still_occupant' => 'boolean'
+    ];
 
     public function house(): BelongsTo
     {

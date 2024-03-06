@@ -6,6 +6,7 @@ use App\Applications\HistoricalHouseOccupants\HistoricalHouseOccupantApplication
 use App\Applications\Houses\HouseApplication;
 use App\Applications\Occupants\OccupantApplication;
 use App\Http\Requests\HouseOccupants\AddHouseOccupantRequest;
+use App\Http\Resources\HouseOccupantResource;
 use App\Models\House;
 use App\Models\HouseOccupant;
 use App\Models\Occupant;
@@ -29,12 +30,18 @@ class HouseOccupantApplication
         $this->occupantApplication = $occupantApplication;
     }
 
+    public function getDetailHouseOccupant($id)
+    {
+        $data = HouseOccupant::findOrFail($id);
+        return new HouseOccupantResource($data);
+    }
+
     public function getHouseOccupied()
     {
         $data = DB::table('houses', 'house')
             ->leftJoin('house_occupants AS house_occupant', 'house_occupant.house_id', '=', 'house.id')
             ->leftJoin('occupants AS occupant', 'occupant.id', '=', 'house_occupant.occupant_id')
-            ->where('is_occupied', '=', true)
+            ->where('house.is_occupied', '=', true)
             ->where('house_occupant.is_still_occupant', '=', true)
             ->select([
                 'house_occupant.id',
