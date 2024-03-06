@@ -18,6 +18,7 @@ class HouseController extends Controller
         $this->houseApplication = $houseApplication;
     }
 
+
     // TODO : Define index controller
     // public function index()
     // {

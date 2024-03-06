@@ -37,6 +37,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+        dd($exception);
         if ($exception instanceof TypeError) {
             return ApiResponser::errorResponse('Internal Server Error', 500);
         }

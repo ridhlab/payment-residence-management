@@ -14,6 +14,11 @@ class Occupant extends BaseModel
 
     protected $hidden = ['identity_card_filename'];
 
+    protected $casts = [
+        'is_married' => 'boolean',
+        'is_occupy' => 'boolean'
+    ];
+
     public function houseOccupants(): HasMany
     {
         return $this->hasMany(HouseOccupant::class, 'occupant_id');

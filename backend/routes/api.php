@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\HistoricalHouseOccupants\HistoricalHouseOccupantController;
 use App\Http\Controllers\Api\HouseOccupants\HouseOccupantController;
 use App\Http\Controllers\Api\Houses\HouseController;
 use App\Http\Controllers\Api\Houses\HouseDropdownController;
@@ -31,6 +32,7 @@ Route::prefix('/house')->controller(HouseController::class)->group(function () {
     Route::get('{id}', 'show')->name('house.show');
     Route::post('/store', 'store')->name('house.store');
     Route::put('/{id}/update', 'update')->name('house.update');
+
 
     Route::prefix('/get-dropdown')->controller(HouseDropdownController::class)->group(function () {
         Route::get('/not-occupied', 'getAllHouseNotOccupied')->name('house.get-dropdown.not-occupied');
@@ -67,6 +69,12 @@ Route::prefix('/monthly-expense')->controller(MonthlyExpenseController::class)->
 });
 
 Route::prefix('/house-occupant')->controller(HouseOccupantController::class)->group(function () {
+    Route::get('/occupied', 'getHouseOccupied')->name('hous-occupant.occupied');
+    Route::get('/{id}', 'getDetailHouseOccupant')->name('house-occupant.show');
     Route::post('/add-occupant', 'addHouseOccupant')->name('house-occupant.add-occupant');
     Route::post('/remove-house-occupant/{id}', 'setEndHouseOccupant')->name('house-occupant.remove-house-occupant');
+});
+
+Route::prefix('/historical-house-occupant')->controller(HistoricalHouseOccupantController::class)->group(function () {
+    Route::get('/by-house/{id}', 'getHistoricalByHouseId')->name('historical-house-occupant.by-house');
 });

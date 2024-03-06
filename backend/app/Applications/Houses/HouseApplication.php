@@ -5,11 +5,10 @@ namespace App\Applications\Houses;
 use App\Http\Requests\Houses\StoreHouseRequest;
 use App\Http\Requests\Houses\UpdateHouseRequest;
 use App\Models\House;
-use App\Services\Houses\HouseService;
+use Illuminate\Support\Facades\DB;
 
 class HouseApplication
 {
-
     public function store(StoreHouseRequest $request)
     {
         $house = new House();
