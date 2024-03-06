@@ -35,9 +35,9 @@ class HouseController extends Controller
         return ApiResponser::successResponser($data, ApiResponser::generateMessageStore('house'));
     }
 
-    public function update($uid, UpdateHouseRequest $request)
+    public function update($id, UpdateHouseRequest $request)
     {
-        $data = $this->houseApplication->update($uid, $request);
+        $data = $this->houseApplication->update($id, $request);
         return ApiResponser::successResponser($data, ApiResponser::generateMessageUpdate('house'));
     }
 }

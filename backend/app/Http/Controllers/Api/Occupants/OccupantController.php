@@ -8,7 +8,6 @@ use App\Http\Requests\Occupants\StoreOccupantRequest;
 use App\Http\Requests\Occupants\UpdateOccupantRequest;
 use App\Shared\ApiResponser;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class OccupantController extends Controller
 {
@@ -25,15 +24,15 @@ class OccupantController extends Controller
         return ApiResponser::successResponser($data, ApiResponser::generateMessageStore('occupant'));
     }
 
-    public function update($uid, UpdateOccupantRequest $request)
+    public function update($id, UpdateOccupantRequest $request)
     {
-        $data = $this->occupantApplication->update($uid, $request);
+        $data = $this->occupantApplication->update($id, $request);
         return ApiResponser::successResponser($data, ApiResponser::generateMessageUpdate('occupant'));
     }
 
-    public function uploadIdentityCard($uid, Request $request)
+    public function uploadIdentityCard($id, Request $request)
     {
-        $this->occupantApplication->uploadIdentityCard($uid, $request);
+        $this->occupantApplication->uploadIdentityCard($id, $request);
         return ApiResponser::successResponser(null, 'Success uploaded identity card');
     }
 }

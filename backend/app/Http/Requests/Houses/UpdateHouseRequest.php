@@ -23,8 +23,8 @@ class UpdateHouseRequest extends BaseRequest
      */
     public function rules(Request $request): array
     {
-        $uid = $request->route('uid');
-        $house = House::where('uid', $uid)->first();
+        $id = $request->route('id');
+        $house = House::findOrFail($id);
         return [
             'code' => 'string|required|min:4|unique:houses,code,' . $house->id,
         ];

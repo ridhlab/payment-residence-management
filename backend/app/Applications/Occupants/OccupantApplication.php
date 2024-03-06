@@ -34,9 +34,9 @@ class OccupantApplication
         return $occupant;
     }
 
-    public function update(string $uid, UpdateOccupantRequest $request)
+    public function update($id, UpdateOccupantRequest $request)
     {
-        $occupant = Occupant::where('uid', $uid)->first();
+        $occupant = Occupant::findOrFail($id);
         $occupant->fullname = $request->validated()['fullname'];
         $occupant->phone = $request->validated()['phone'] ?? null;
         $occupant->is_married = $request->validated()['is_married'];
@@ -44,11 +44,11 @@ class OccupantApplication
         return $occupant;
     }
 
-    public function uploadIdentityCard($uid, Request $request)
+    public function uploadIdentityCard($id, Request $request)
     {
         $identityCardFile = $request->file('identity_card');
         if ($identityCardFile) {
-            $occupant = Occupant::where('uid', $uid)->first();
+            $occupant = Occupant::findOrFail($id);
             $fileExist = !!$occupant->identity_card_filename;
             if ($fileExist) {
                 $fileExistInPublic = (file_exists(public_path('storage/identity-card/' . $occupant->identity_card_filename)));
