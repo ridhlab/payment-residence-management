@@ -24,7 +24,6 @@ class HouseApplication
 
         $house = House::where('uid', $uid)->first();
         $house->code = $request->validated()['code'];
-        $house->is_occupied = $request->validated()['is_occupied'];
         $house->save();
         return $house;
     }

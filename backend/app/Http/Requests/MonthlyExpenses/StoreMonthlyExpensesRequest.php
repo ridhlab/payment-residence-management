@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Houses;
+namespace App\Http\Requests\MonthlyExpenses;
 
 use App\Http\Requests\BaseRequest;
-use App\Models\House;
-use Illuminate\Http\Request;
 
-class UpdateHouseRequest extends BaseRequest
+class StoreMonthlyExpensesRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,12 +19,12 @@ class UpdateHouseRequest extends BaseRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(Request $request): array
+    public function rules(): array
     {
-        $uid = $request->route('uid');
-        $house = House::where('uid', $uid)->first();
         return [
-            'code' => 'string|required|min:4|unique:houses,code,' . $house->id,
+            'name' => 'string|required',
+            'fee' => 'numeric|required',
+            'is_paid_monthly' => 'boolean|required'
         ];
     }
 }
