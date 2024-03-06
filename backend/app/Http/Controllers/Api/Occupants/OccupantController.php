@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 class OccupantController extends Controller
 {
     protected OccupantApplication $occupantApplication;
+
     public function __construct(OccupantApplication $occupantApplication = null)
     {
         $this->occupantApplication = $occupantApplication;
@@ -28,5 +29,11 @@ class OccupantController extends Controller
     {
         $data = $this->occupantApplication->update($uid, $request);
         return ApiResponser::successResponser($data, ApiResponser::generateMessageUpdate('occupant'));
+    }
+
+    public function uploadIdentityCard($uid, Request $request)
+    {
+        $this->occupantApplication->uploadIdentityCard($uid, $request);
+        return ApiResponser::successResponser(null, 'Success uploaded identity card');
     }
 }
