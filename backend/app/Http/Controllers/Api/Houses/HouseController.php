@@ -18,6 +18,12 @@ class HouseController extends Controller
         $this->houseApplication = $houseApplication;
     }
 
+    public function getHouseOccupied()
+    {
+        $data = $this->houseApplication->getHouseOccupied();
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('house'));
+    }
+
     // TODO : Define index controller
     // public function index()
     // {

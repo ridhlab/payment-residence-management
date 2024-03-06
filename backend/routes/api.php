@@ -27,10 +27,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('/house')->controller(HouseController::class)->group(function () {
+    Route::get('/house-occupied', 'getHouseOccupied')->name('house.house-occupied');
+
     Route::get('/', 'index')->name('house.index');
     Route::get('{id}', 'show')->name('house.show');
     Route::post('/store', 'store')->name('house.store');
     Route::put('/{id}/update', 'update')->name('house.update');
+
 
     Route::prefix('/get-dropdown')->controller(HouseDropdownController::class)->group(function () {
         Route::get('/not-occupied', 'getAllHouseNotOccupied')->name('house.get-dropdown.not-occupied');

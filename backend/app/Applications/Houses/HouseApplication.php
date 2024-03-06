@@ -5,10 +5,26 @@ namespace App\Applications\Houses;
 use App\Http\Requests\Houses\StoreHouseRequest;
 use App\Http\Requests\Houses\UpdateHouseRequest;
 use App\Models\House;
-use App\Services\Houses\HouseService;
+use Illuminate\Support\Facades\DB;
 
 class HouseApplication
 {
+    public function getHouseOccupied()
+    {
+        $data = DB::table('houses', 'house')
+            ->leftJoin('house_occupants AS house_occupant', 'house_occupant.house_id', '=', 'house.id')
+            ->leftJoin('occupants AS occupant', 'occupant.id', '=', 'house_occupant.occupant_id')
+            ->where('is_occupied', '=', true)
+            ->where('house_occupant.is_still_occupant', '=', true)
+            ->select([
+                'house.id',
+                'house.code AS house_code',
+                'occupant.fullname AS occupant_name',
+                'house_occupant.occupant_status'
+            ])
+            ->get();
+        return $data;
+    }
 
     public function store(StoreHouseRequest $request)
     {
