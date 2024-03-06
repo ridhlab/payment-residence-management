@@ -12,7 +12,7 @@ class HistoricalHouseOccupant extends BaseModel
 {
     use HasFactory;
 
-    static protected $table = 'historical_house_occupants';
+    protected $table = 'historical_house_occupants';
 
     public function houseOccupant(): BelongsTo
     {

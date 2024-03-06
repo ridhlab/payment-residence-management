@@ -15,12 +15,21 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class OccupantApplication
 {
+
+    public function setOccupy($id)
+    {
+        $occupant = Occupant::findOrFail($id);
+        $occupant->is_occupy = true;
+        $occupant->save();
+    }
+
     public function store(StoreOccupantRequest $request)
     {
         $occupant = new Occupant();
         $occupant->fullname = $request->validated()['fullname'];
         $occupant->phone = $request->validated()['phone'] ?? null;
         $occupant->is_married = $request->validated()['is_married'];
+        $occupant->is_occupy = false;
         $occupant->save();
         return $occupant;
     }

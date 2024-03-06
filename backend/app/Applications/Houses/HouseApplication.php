@@ -28,9 +28,9 @@ class HouseApplication
         return $house;
     }
 
-    public function setHouseOccupied($uid)
+    public function setHouseOccupied($id)
     {
-        $house = House::where('uid', $uid)->first();
+        $house = House::findOrFail($id);
         $house->is_occupied = true;
         $house->save();
     }
