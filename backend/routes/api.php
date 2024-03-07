@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('/house')->controller(HouseController::class)->group(function () {
     Route::get('/', 'index')->name('house.index');
-    Route::get('{id}', 'show')->name('house.show');
+    Route::get('{id}/default-value-for-form', 'getDefaultValueForForm')->name('house.show');
     Route::post('/store', 'store')->name('house.store');
     Route::put('/{id}/update', 'update')->name('house.update');
 

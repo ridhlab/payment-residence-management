@@ -9,6 +9,21 @@ use Illuminate\Support\Facades\DB;
 
 class HouseApplication
 {
+
+    public function getIndex()
+    {
+        $data = House::orderBy('created_at', 'DESC')->get();
+        return $data;
+    }
+
+    public function getDefaultValueForForm($id)
+    {
+        $data = DB::table('houses')
+            ->where('id', '=', $id)
+            ->select(['id', 'code'])->first();
+        return $data;
+    }
+
     public function store(StoreHouseRequest $request)
     {
         $house = new House();
