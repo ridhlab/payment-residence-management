@@ -71,7 +71,9 @@ Route::prefix('/monthly-expense')->controller(MonthlyExpenseController::class)->
     Route::get('/get-by-is-paid-monthly', 'getFilteredIsPaidMonthly')->name('monthly-expense.get-by-is-paid-monthly');
     Route::get('/get-by-is-not-paid-monthly', 'getFilteredIsNotPaidMonthly')->name('monthly-expense.get-by-is-not-paid-monthly');
 
-    Route::get('/', 'index')->name('monthly-expense.index');
+    Route::get('/', 'index')->name('monthly-enpense.index');
+    Route::get('{id}/default-value-for-form', 'getDefaultValueForForm')->name('monthly-enpense.default-value-for-form');
+
     Route::get('{id}', 'show')->name('monthly-expense.show');
     Route::post('/store', 'store')->name('monthly-expense.store');
     Route::put('/{id}/update', 'update')->name('monthly-expense.update');

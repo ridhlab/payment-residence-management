@@ -9,6 +9,21 @@ use Illuminate\Support\Facades\DB;
 
 class MonthlyExpenseApplication
 {
+
+    public function getIndex()
+    {
+        $data = MonthlyExpense::orderBy('created_at', 'DESC')->get();
+        return $data;
+    }
+
+    public function getDefaultValueForForm($id)
+    {
+        $data = MonthlyExpense::where('id', $id)->select([
+            'id', 'name', 'fee', 'is_paid_monthly'
+        ])->first();
+        return $data;
+    }
+
     public function getAllFilteredByIsPaidMonthly($isPaidMonthly)
     {
         $data = DB::table('monthly_expenses')

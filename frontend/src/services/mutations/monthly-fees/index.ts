@@ -32,7 +32,7 @@ export const useMonthlyFeeMutationUpdate = (
     >
 ) => {
     return useMutation({
-        mutationKey: ["occupant-update"],
+        mutationKey: ["monthly-fee-update"],
         mutationFn: (payload) => monthlyFeeUpdate(id, payload),
         ...options,
     });

@@ -6,15 +6,15 @@ import RowActionButtons from "@/components/shared/table/row-action-buttons";
 import { getCurrencyId } from "@/helpers/currency";
 import { parsingRoute } from "@/helpers/route";
 import { numberColumns } from "@/helpers/table";
-import { IMonthlyFee } from "@/interfaces/entities/monthly-fees";
+import { IMonthlyExpense } from "@/interfaces/entities/monthly-expenses";
 import { ROUTES } from "@/routes/list-route";
-import { useGetMonthlyFeeIndex } from "@/services/queries/monthly-fees";
+import { useGetMonthlyExpenseIndex } from "@/services/queries/monthly-expenses";
 import { Card, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 
-export default function MonthlyFeeIndex() {
-    const query = useGetMonthlyFeeIndex();
-    const columns: ColumnsType<IMonthlyFee> = [
+export default function MonthlyExpenseIndex() {
+    const query = useGetMonthlyExpenseIndex();
+    const columns: ColumnsType<IMonthlyExpense> = [
         numberColumns(),
         {
             title: "Nama",
@@ -28,6 +28,12 @@ export default function MonthlyFeeIndex() {
             render: (val) => getCurrencyId(val),
         },
         {
+            title: "Bayar Tiap Bulan",
+            dataIndex: "isPaidMonthly",
+            key: "isPaidMonthly",
+            render: (val) => (val ? "Iya" : "Tidak"),
+        },
+        {
             title: "Aksi",
             dataIndex: "id",
             key: "action",
@@ -36,7 +42,9 @@ export default function MonthlyFeeIndex() {
                     actions={[
                         {
                             type: "edit",
-                            href: parsingRoute(ROUTES.MONTHLY_FEE_EDIT, { id }),
+                            href: parsingRoute(ROUTES.MONTHLY_EXPENSE_EDIT, {
+                                id,
+                            }),
                         },
                     ]}
                 />
@@ -45,10 +53,10 @@ export default function MonthlyFeeIndex() {
     ];
     return (
         <MainLayout
-            title="Daftar Iuran Bulanan"
-            breadcrumbs={BREADCRUBMS.MONTHLY_FEE.INDEX()}
+            title="Daftar Pengeluaran Bulanan"
+            breadcrumbs={BREADCRUBMS.MONTHLY_EXPENSE.INDEX()}
         >
-            <Card extra={<AddButton href={ROUTES.MONTHLY_FEE_CREATE} />}>
+            <Card extra={<AddButton href={ROUTES.MONTHLY_EXPENSE_CREATE} />}>
                 {query.isLoading || query.isFetching ? (
                     <LoaderCenter />
                 ) : (
@@ -57,9 +65,7 @@ export default function MonthlyFeeIndex() {
                         size="small"
                         dataSource={query.data.data}
                         columns={columns}
-                        scroll={{
-                            x: "auto",
-                        }}
+                        scroll={{ x: 500 }}
                     />
                 )}
             </Card>

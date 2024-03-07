@@ -46,4 +46,13 @@ export const ENDPOINT_API = {
             NOT_OCCUPIED: "/monthly-fee/get-dropdown/not-occupied",
         },
     },
+    MONTHLY_EXPENSE: {
+        INDEX: "/monthly-expense",
+        DEFAULT_VALUE_FOR_FORM: "/monthly-expense/:id/default-value-for-form",
+        STORE: "/monthly-expense/store",
+        UPDATE: "/monthly-expense/:id/update",
+        DROPDOWN: {
+            NOT_OCCUPIED: "/monthly-expense/get-dropdown/not-occupied",
+        },
+    },
 };

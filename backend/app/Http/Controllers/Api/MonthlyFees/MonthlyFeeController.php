@@ -26,7 +26,7 @@ class MonthlyFeeController extends Controller
     public function getDefaultValueForForm($id)
     {
         $data = $this->monthlyFeeApplication->getDefaultValueForForm($id);
-        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('occupant'));
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('monthly fee'));
     }
 
     public function getAll()
