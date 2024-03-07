@@ -11,21 +11,12 @@ import {
     IMonthlyExpenseStoreRequest,
     IMonthlyExpenseUpdateRequest,
 } from "@/interfaces/requests/monthly-expenses";
-import {
-    IMonthlyFeeStoreRequest,
-    IMonthlyFeeUpdateRequest,
-} from "@/interfaces/requests/monthly-fees";
 import { ROUTES } from "@/routes/list-route";
 import {
     useMonthlyExpenseMutationStore,
     useMonthlyExpenseMutationUpdate,
 } from "@/services/mutations/monthly-expenses";
-import {
-    useMonthlyFeeMutationStore,
-    useMonthlyFeeMutationUpdate,
-} from "@/services/mutations/monthly-fees";
 import { useGetMonthlyExpenseDefaultValueForForm } from "@/services/queries/monthly-expenses";
-import { useGetMonthlyFeeDefaultValueForForm } from "@/services/queries/monthly-fees";
 import { Card, Form, Input, InputNumber, Radio } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import * as yup from "yup";
