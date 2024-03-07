@@ -8,55 +8,55 @@ import { modalConfirm } from "@/helpers/modal-confirm";
 import { prompNotification } from "@/helpers/notification";
 import { useFormUtility } from "@/hooks/useFormUtility";
 import {
-    IHouseStoreRequest,
-    IHouseUpdateRequest,
-} from "@/interfaces/requests/houses";
+    IMonthlyFeeStoreRequest,
+    IMonthlyFeeUpdateRequest,
+} from "@/interfaces/requests/monthly-fees";
 import { ROUTES } from "@/routes/list-route";
 import {
-    useHouseMutationStore,
-    useHouseMutationUpdate,
-} from "@/services/mutations/houses";
-import { useGetHouseDefaultValueForForm } from "@/services/queries/houses";
-import { Card, Form, Input } from "antd";
+    useMonthlyFeeMutationStore,
+    useMonthlyFeeMutationUpdate,
+} from "@/services/mutations/monthly-fees";
+import { useGetMonthlyFeeDefaultValueForForm } from "@/services/queries/monthly-fees";
+import { Card, Form, Input, InputNumber } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import * as yup from "yup";
 
-const schema: yup.ObjectSchema<IHouseStoreRequest | IHouseUpdateRequest> = yup
-    .object()
-    .shape({
-        code: yup.string().required(getRequiredMessage("Kode")),
-    });
+const schema: yup.ObjectSchema<
+    IMonthlyFeeStoreRequest | IMonthlyFeeUpdateRequest
+> = yup.object().shape({
+    name: yup.string().required(getRequiredMessage("Nama")),
+    fee: yup.number().required(getRequiredMessage("Biaya")),
+});
 
-export default function FormHousePage({
-    editPage = false,
+export default function MonthlyFeeFormPage({
+    editPage,
 }: {
     editPage?: boolean;
 }) {
     const { id } = useParams();
     const { form, yupSync } = useFormUtility({ schema });
-
-    const query = useGetHouseDefaultValueForForm(id);
+    const query = useGetMonthlyFeeDefaultValueForForm(id);
     const navigate = useNavigate();
 
-    const mutationUpdate = useHouseMutationUpdate(id, {
+    const mutationStore = useMonthlyFeeMutationStore({
         onSuccess: () => {
             prompNotification({
                 method: "success",
-                message: "Berhasil mengubah data rumah",
+                message: "Berhasil menambahkan iuran bulanan",
             });
-            navigate(ROUTES.HOUSE_INDEX);
+            navigate(ROUTES.MONTHLY_FEE_INDEX);
         },
         onError: (error) =>
             prompNotification({ message: error.message, method: "error" }),
     });
 
-    const mutationStore = useHouseMutationStore({
+    const mutationUpdate = useMonthlyFeeMutationUpdate(id, {
         onSuccess: () => {
             prompNotification({
                 method: "success",
-                message: "Berhasil menambahkan data rumah",
+                message: "Berhasil mengubah data iuran bulanan",
             });
-            navigate(ROUTES.HOUSE_INDEX);
+            navigate(ROUTES.MONTHLY_FEE_INDEX);
         },
         onError: (error) =>
             prompNotification({ message: error.message, method: "error" }),
@@ -76,32 +76,36 @@ export default function FormHousePage({
 
     return (
         <MainLayout
-            title={editPage ? "Edit Rumah" : "Tambah Rumah"}
             breadcrumbs={
                 editPage
-                    ? BREADCRUBMS.HOUSE.EDIT(id)
-                    : BREADCRUBMS.HOUSE.CREATE()
+                    ? BREADCRUBMS.MONTHLY_FEE.EDIT(id)
+                    : BREADCRUBMS.MONTHLY_FEE.CREATE()
             }
+            title={editPage ? "Edit Iuran Bulanan" : "Tambah Iuran Bulanan"}
         >
             <Card>
                 {query.isLoading || query.isFetching ? (
                     <LoaderCenter />
                 ) : (
                     <Form
-                        initialValues={{ ...query?.data?.data }}
                         form={form}
                         onFinish={onFinish}
+                        initialValues={{ ...query?.data?.data }}
                     >
-                        <Form.Item
-                            name="code"
-                            label="Kode Rumah"
-                            rules={[yupSync]}
-                        >
-                            <Input placeholder="Input kode rumah" />
+                        <Form.Item label="Nama" name="name" rules={[yupSync]}>
+                            <Input placeholder="Input nama" />
+                        </Form.Item>
+                        <Form.Item label="Biaya" name="fee" rules={[yupSync]}>
+                            <InputNumber
+                                prefix={"Rp "}
+                                style={{ width: "100%" }}
+                                placeholder="Input biaya"
+                                type="number"
+                            />
                         </Form.Item>
                         <ButtonAction
                             actions={[
-                                <Button href={ROUTES.HOUSE_INDEX}>
+                                <Button href={ROUTES.MONTHLY_FEE_INDEX}>
                                     Cancel
                                 </Button>,
                                 <Button type="primary" htmlType="submit">

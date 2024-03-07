@@ -59,6 +59,8 @@ Route::prefix('/monthly-fee')->controller(MonthlyFeeController::class)->group(fu
     Route::get('/get-all', 'getAll')->name('monthly-fee.get-all');
 
     Route::get('/', 'index')->name('monthly-fee.index');
+    Route::get('{id}/default-value-for-form', 'getDefaultValueForForm')->name('monthly-fee.default-value-for-form');
+
     Route::get('{id}', 'show')->name('monthly-fee.show');
     Route::post('/store', 'store')->name('monthly-fee.store');
     Route::put('/{id}/update', 'update')->name('monthly-fee.update');

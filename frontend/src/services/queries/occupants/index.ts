@@ -34,6 +34,7 @@ export const useGetOccupantDefaultValueForForm = (
     return useQuery({
         queryKey: ["get-occupant-default-value-for-form", id],
         queryFn: () => getOccupantDefaultValueForForm(id),
+        enabled: !!id,
         ...options,
     });
 };

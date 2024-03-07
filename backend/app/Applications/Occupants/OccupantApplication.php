@@ -17,12 +17,7 @@ class OccupantApplication
 {
     public function getDefaultValueForForm($id)
     {
-        $data = DB::table('occupants')
-            ->where('id', '=', $id)
-            ->select(['id', 'fullname', 'is_married', 'phone'])->first();
-        if ($data) {
-            $data->is_married = $data->is_married ? true : false;
-        }
+        $data = Occupant::where('id', $id)->select(['id', 'fullname', 'is_married', 'phone'])->first();
         return $data;
     }
 

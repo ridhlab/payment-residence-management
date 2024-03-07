@@ -9,6 +9,20 @@ use Illuminate\Support\Facades\DB;
 
 class MonthlyFeeApplication
 {
+    public function getIndex()
+    {
+        $data = MonthlyFee::orderBy('created_at', 'DESC')->get();
+        return $data;
+    }
+
+    public function getDefaultValueForForm($id)
+    {
+        $data = MonthlyFee::where('id', $id)->select([
+            'id', 'name', 'fee'
+        ])->first();
+        return $data;
+    }
+
     public function getAll()
     {
         $data = DB::table('monthly_fees', 'monthly_fee')
