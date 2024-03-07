@@ -17,6 +17,18 @@ class MonthlyExpenseController extends Controller
         $this->monthlyExpenseApplication = $monthlyExpenseApplication;
     }
 
+    public function index()
+    {
+        $data = $this->monthlyExpenseApplication->getIndex();
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetIndex('monthly expense'));
+    }
+
+    public function getDefaultValueForForm($id)
+    {
+        $data = $this->monthlyExpenseApplication->getDefaultValueForForm($id);
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('monthly expense'));
+    }
+
     public function getFilteredIsPaidMonthly()
     {
         $data = $this->monthlyExpenseApplication->getAllFilteredByIsPaidMonthly(true);
