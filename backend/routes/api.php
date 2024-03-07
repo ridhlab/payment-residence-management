@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\MonthlyExpenses\MonthlyExpenseController;
 use App\Http\Controllers\Api\Occupants\OccupantController;
 use App\Http\Controllers\Api\MonthlyFees\MonthlyFeeController;
 use App\Http\Controllers\Api\Occupants\OccupantDropdownController;
+use App\Http\Controllers\Api\Payments\PaymentController;
 use App\Models\MonthlyFee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -82,4 +83,8 @@ Route::prefix('/house-occupant')->controller(HouseOccupantController::class)->gr
 
 Route::prefix('/historical-house-occupant')->controller(HistoricalHouseOccupantController::class)->group(function () {
     Route::get('/by-house/{id}', 'getHistoricalByHouseId')->name('historical-house-occupant.by-house');
+});
+
+Route::prefix('/payments')->controller(PaymentController::class)->group(function () {
+    Route::post('/add-payments', 'addPayments')->name('payments.add-payments');
 });
