@@ -6,6 +6,7 @@ import {
     MoneyCollectOutlined,
     RedEnvelopeOutlined,
     TeamOutlined,
+    UserSwitchOutlined,
 } from "@ant-design/icons";
 import {
     Breadcrumb,
@@ -36,6 +37,7 @@ const menuKey = {
     Occupant: ROUTES.OCCUPANT_INDEX,
     MonthlyFee: ROUTES.MONTHLY_FEE_INDEX,
     MonthlyExpense: ROUTES.MONTHLY_EXPENSE_INDEX,
+    HouseOccupant: ROUTES.HOUSE_OCCUPANT_INDEX,
 };
 
 export default function MainLayout({ children, ...props }: IProps) {
@@ -79,6 +81,13 @@ export default function MainLayout({ children, ...props }: IProps) {
                     <Link to={ROUTES.MONTHLY_EXPENSE_INDEX}>
                         Pengeluaran Bulanan
                     </Link>
+                ),
+            },
+            {
+                key: menuKey.HouseOccupant,
+                icon: <UserSwitchOutlined />,
+                label: (
+                    <Link to={ROUTES.HOUSE_OCCUPANT_INDEX}>Penghuni Rumah</Link>
                 ),
             },
         ],

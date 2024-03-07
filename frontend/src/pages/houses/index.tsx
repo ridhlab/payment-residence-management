@@ -48,7 +48,10 @@ export default function HousePage() {
         },
     ];
     return (
-        <MainLayout title="List House" breadcrumbs={BREADCRUBMS.HOUSE.INDEX()}>
+        <MainLayout
+            title="Daftar Rumah"
+            breadcrumbs={BREADCRUBMS.HOUSE.INDEX()}
+        >
             <Card extra={<AddButton href={ROUTES.HOUSE_CREATE} />}>
                 {query.isLoading || query.isFetching ? (
                     <LoaderCenter />

@@ -10,7 +10,7 @@ import {
 export const getMonthlyExpenseIndex = async () => {
     try {
         const response = await axiosInstance.get(
-            ENDPOINT_API.MONTHLY_EXPENSE.INDEX
+            ENDPOINT_API.MONTHLY_EXPENSES.INDEX
         );
         return response.data;
     } catch (error) {
@@ -21,7 +21,7 @@ export const getMonthlyExpenseIndex = async () => {
 export const getMonthlyExpenseDefaultValueForForm = async (id) => {
     try {
         const response = await axiosInstance.get(
-            parsingRoute(ENDPOINT_API.MONTHLY_EXPENSE.DEFAULT_VALUE_FOR_FORM, {
+            parsingRoute(ENDPOINT_API.MONTHLY_EXPENSES.DEFAULT_VALUE_FOR_FORM, {
                 id,
             })
         );
@@ -36,7 +36,7 @@ export const monthlyExpenseStore = async (
 ) => {
     try {
         const response = await axiosInstance.post(
-            ENDPOINT_API.MONTHLY_EXPENSE.STORE,
+            ENDPOINT_API.MONTHLY_EXPENSES.STORE,
             payload
         );
         return response.data;
@@ -51,7 +51,7 @@ export const monthlyExpenseUpdate = async (
 ) => {
     try {
         const response = await axiosInstance.put(
-            parsingRoute(ENDPOINT_API.MONTHLY_EXPENSE.UPDATE, { id }),
+            parsingRoute(ENDPOINT_API.MONTHLY_EXPENSES.UPDATE, { id }),
             payload
         );
         return response.data;

@@ -16,6 +16,10 @@ export const ROUTES = {
     MONTHLY_EXPENSE_INDEX: "/monthly-expense",
     MONTHLY_EXPENSE_CREATE: "/monthly-expense/create",
     MONTHLY_EXPENSE_EDIT: "/monthly-expense/:id/edit",
+
+    HOUSE_OCCUPANT_INDEX: "/house-occupant",
+    HOUSE_OCCUPANT_CREATE: "/house-occupant/create",
+    HOUSE_OCCUPANT_DETAIL: "/house-occupant/:id",
 };
 
 export const ENDPOINT_API = {
@@ -37,7 +41,7 @@ export const ENDPOINT_API = {
             NOT_OCCUPY: "/occupant/get-dropdown/not-occupy",
         },
     },
-    MONTHLY_FEE: {
+    MONTHLY_FEES: {
         INDEX: "/monthly-fee",
         DEFAULT_VALUE_FOR_FORM: "/monthly-fee/:id/default-value-for-form",
         STORE: "/monthly-fee/store",
@@ -46,7 +50,7 @@ export const ENDPOINT_API = {
             NOT_OCCUPIED: "/monthly-fee/get-dropdown/not-occupied",
         },
     },
-    MONTHLY_EXPENSE: {
+    MONTHLY_EXPENSES: {
         INDEX: "/monthly-expense",
         DEFAULT_VALUE_FOR_FORM: "/monthly-expense/:id/default-value-for-form",
         STORE: "/monthly-expense/store",
@@ -54,5 +58,11 @@ export const ENDPOINT_API = {
         DROPDOWN: {
             NOT_OCCUPIED: "/monthly-expense/get-dropdown/not-occupied",
         },
+    },
+    HOUSE_OCCUPANTS: {
+        GET_HOUSE_OCCUPIED: "/house-occupant/occupied",
+        DETAIL: "/house-occupant/:id",
+        ADD_OCCUPANT: "/house-occupant/add-occupant",
+        REMOVE_HOUSE_OCCUPANT: "/house-occupant/remove-house-occupant/:id",
     },
 };

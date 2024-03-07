@@ -97,4 +97,35 @@ export const BREADCRUBMS = {
             },
         ],
     },
+    HOUSE_OCCUPANT: {
+        INDEX: () => [
+            { label: "Dashboard", href: ROUTES.DASHBOARD },
+            {
+                label: "Daftar Penghuni Rumah Aktif",
+                href: ROUTES.HOUSE_OCCUPANT_INDEX,
+            },
+        ],
+        CREATE: () => [
+            { label: "Dashboard", href: ROUTES.DASHBOARD },
+            {
+                label: "Daftar Penghuni Rumah Aktif",
+                href: ROUTES.HOUSE_OCCUPANT_INDEX,
+            },
+            {
+                label: "Tambah Penghuni Rumah",
+                href: ROUTES.HOUSE_OCCUPANT_CREATE,
+            },
+        ],
+        DETAIL: (id) => [
+            { label: "Dashboard", href: ROUTES.DASHBOARD },
+            {
+                label: "Daftar Penghuni Rumah Aktif",
+                href: ROUTES.HOUSE_OCCUPANT_INDEX,
+            },
+            {
+                label: "Detail Penghuni Rumah",
+                href: parsingRoute(ROUTES.HOUSE_OCCUPANT_DETAIL, { id }),
+            },
+        ],
+    },
 };
