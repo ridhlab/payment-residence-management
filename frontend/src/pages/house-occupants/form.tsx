@@ -3,14 +3,13 @@ import { BREADCRUBMS } from "@/common/breadcrumbs";
 import { occupantStatusOptions } from "@/common/select-options";
 import MainLayout from "@/components/layouts/main";
 import ButtonAction from "@/components/shared/form/button-actions";
-import LoaderCenter from "@/components/shared/loader/loader-center";
 import { OccupantStatus } from "@/enums/occupant-status";
 import { getRequiredMessage } from "@/helpers/form";
 import { modalConfirm } from "@/helpers/modal-confirm";
 import { prompNotification } from "@/helpers/notification";
 import { useFetchDropdownSearch } from "@/hooks/useFetchDropdown";
 import { useFormUtility } from "@/hooks/useFormUtility";
-import { IAddOccupantRequest } from "@/interfaces/requests/house-occupants";
+import { IAddHouseOccupantRequest } from "@/interfaces/requests/house-occupants";
 import { ROUTES } from "@/routes/list-route";
 import { useAddHouseOccupantMutation } from "@/services/mutations/house-occupants";
 import { useGetHouseDropdownNotOccupied } from "@/services/queries/houses";
@@ -20,7 +19,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
-const schema: yup.ObjectSchema<IAddOccupantRequest> = yup.object().shape({
+const schema: yup.ObjectSchema<IAddHouseOccupantRequest> = yup.object().shape({
     occupantId: yup.number().required(getRequiredMessage("Penghuni")),
     houseId: yup.number().required(getRequiredMessage("Rumah")),
     occupantStatus: yup
