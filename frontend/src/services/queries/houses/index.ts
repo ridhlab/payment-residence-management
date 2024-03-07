@@ -34,6 +34,7 @@ export const useGetHouseDefaultValueForForm = (
     return useQuery({
         queryKey: ["get-house-default-value-for-form", id],
         queryFn: () => getHouseDefaultValueForForm(id),
+        enabled: !!id,
         ...options,
     });
 };

@@ -3,6 +3,8 @@ import {
     HomeOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
+    MoneyCollectOutlined,
+    RedEnvelopeOutlined,
     TeamOutlined,
 } from "@ant-design/icons";
 import {
@@ -32,6 +34,8 @@ const menuKey = {
     Dashboard: ROUTES.DASHBOARD,
     House: ROUTES.HOUSE_INDEX,
     Occupant: ROUTES.OCCUPANT_INDEX,
+    MonthlyFee: ROUTES.MONTHLY_FEE_INDEX,
+    MonthlyExpense: ROUTES.MONTHLY_EXPENSE_INDEX,
 };
 
 export default function MainLayout({ children, ...props }: IProps) {
@@ -62,6 +66,20 @@ export default function MainLayout({ children, ...props }: IProps) {
                 key: menuKey.Occupant,
                 icon: <TeamOutlined />,
                 label: <Link to={ROUTES.OCCUPANT_INDEX}>Penghuni</Link>,
+            },
+            {
+                key: menuKey.MonthlyFee,
+                icon: <MoneyCollectOutlined />,
+                label: <Link to={ROUTES.MONTHLY_FEE_INDEX}>Iuran Bulanan</Link>,
+            },
+            {
+                key: menuKey.MonthlyExpense,
+                icon: <RedEnvelopeOutlined />,
+                label: (
+                    <Link to={ROUTES.MONTHLY_EXPENSE_INDEX}>
+                        Pengeluaran Bulanan
+                    </Link>
+                ),
             },
         ],
         []
