@@ -25,8 +25,10 @@ class HouseController extends Controller
         return ApiResponser::successResponser($data, ApiResponser::generateMessageGetIndex('house'));
     }
 
-    public function show($uid)
+    public function getDefaultValueForForm($id)
     {
+        $data = $this->houseApplication->getDefaultValueForForm($id);
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('house'));
     }
 
     public function store(StoreHouseRequest $request)

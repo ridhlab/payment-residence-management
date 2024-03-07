@@ -2,6 +2,8 @@ import { BREADCRUBMS } from "@/common/breadcrumbs";
 import MainLayout from "@/components/layouts/main";
 import AddButton from "@/components/shared/button/add-button";
 import LoaderCenter from "@/components/shared/loader/loader-center";
+import RowActionButtons from "@/components/shared/table/row-action-buttons";
+import { parsingRoute } from "@/helpers/route";
 import { numberColumns } from "@/helpers/table";
 import { IHouse } from "@/interfaces/entities/houses";
 import { ROUTES } from "@/routes/list-route";
@@ -28,6 +30,21 @@ export default function HousePage() {
                 ) : (
                     <Tag color="yellow">Kosong</Tag>
                 ),
+        },
+        {
+            title: "Aksi",
+            dataIndex: "id",
+            key: "action",
+            render: (id) => (
+                <RowActionButtons
+                    actions={[
+                        {
+                            type: "edit",
+                            href: parsingRoute(ROUTES.HOUSE_EDIT, { id }),
+                        },
+                    ]}
+                />
+            ),
         },
     ];
     return (

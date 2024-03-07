@@ -12,7 +12,15 @@ class HouseApplication
 
     public function getIndex()
     {
-        $data = House::all();
+        $data = House::orderBy('created_at', 'DESC')->get();
+        return $data;
+    }
+
+    public function getDefaultValueForForm($id)
+    {
+        $data = DB::table('houses')
+            ->where('id', '=', $id)
+            ->select(['id', 'code'])->first();
         return $data;
     }
 

@@ -4,9 +4,9 @@ export const yupValidator = <T extends AnyObject>(
     schema: ObjectSchema<T>,
     getFieldsValue: () => T
 ) => ({
-    async validator({ field }) {
+    async validator({ field }: any) {
         await schema.validateSyncAt(field, getFieldsValue());
     },
 });
 
-export const getRequiredMessage = (name: string) => `${name} is required`;
+export const getRequiredMessage = (name: string) => `${name} wajib diisi`;

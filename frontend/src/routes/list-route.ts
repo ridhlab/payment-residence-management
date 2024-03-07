@@ -1,5 +1,5 @@
 export const ROUTES = {
-    DASHBOARD: "/dashboard",
+    DASHBOARD: "/",
 
     HOUSE_INDEX: "/house",
     HOUSE_CREATE: "/house/create",
@@ -13,6 +13,7 @@ export const ROUTES = {
 export const ENDPOINT_API = {
     HOUSES: {
         INDEX: "/house",
+        DEFAULT_VALUE_FOR_FORM: "/house/:id/default-value-for-form",
         STORE: "/house/store",
         UPDATE: "/house/:id/update",
         DROPDOWN: {

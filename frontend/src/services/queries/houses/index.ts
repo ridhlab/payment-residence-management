@@ -1,6 +1,12 @@
 import { IBaseResponse } from "@/interfaces/responses/base";
-import { IHouseIndexResponse } from "@/interfaces/responses/houses";
-import { getHouseIndex } from "@/services/apis/houses";
+import {
+    IHouseDefaultValueForFormResponse,
+    IHouseIndexResponse,
+} from "@/interfaces/responses/houses";
+import {
+    getHouseDefaultValueForForm,
+    getHouseIndex,
+} from "@/services/apis/houses";
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 
 export const useGetHouseIndex = (
@@ -13,6 +19,21 @@ export const useGetHouseIndex = (
     return useQuery({
         queryKey: ["get-house-index"],
         queryFn: () => getHouseIndex(),
+        ...options,
+    });
+};
+
+export const useGetHouseDefaultValueForForm = (
+    id,
+    options?: UseQueryOptions<
+        IHouseDefaultValueForFormResponse,
+        IBaseResponse<unknown>,
+        IHouseDefaultValueForFormResponse
+    >
+) => {
+    return useQuery({
+        queryKey: ["get-house-default-value-for-form", id],
+        queryFn: () => getHouseDefaultValueForForm(id),
         ...options,
     });
 };

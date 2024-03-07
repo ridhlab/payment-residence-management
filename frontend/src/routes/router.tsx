@@ -6,7 +6,8 @@ import { ROUTES } from "./list-route";
 
 const Dashboard = React.lazy(() => import("@/pages/dashboard"));
 
-const HouseIndex = React.lazy(() => import("@/pages/houses"));
+const HouseIndexPage = React.lazy(() => import("@/pages/houses"));
+const HouseFormPage = React.lazy(() => import("@/pages/houses/form"));
 
 export const withSuspense = (component: React.ReactNode) => {
     return <Suspense fallback={<LoaderFullscreen />}>{component}</Suspense>;
@@ -19,6 +20,14 @@ export const router = createBrowserRouter([
     },
     {
         path: ROUTES.HOUSE_INDEX,
-        element: withSuspense(<HouseIndex />),
+        element: withSuspense(<HouseIndexPage />),
+    },
+    {
+        path: ROUTES.HOUSE_CREATE,
+        element: withSuspense(<HouseFormPage />),
+    },
+    {
+        path: ROUTES.HOUSE_EDIT,
+        element: withSuspense(<HouseFormPage editPage />),
     },
 ]);

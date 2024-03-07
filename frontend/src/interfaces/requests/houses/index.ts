@@ -1,7 +1,7 @@
-export interface IStoreHouseRequest {
+export interface IHouseStoreRequest {
     code: string;
 }
 
-export interface IUpdateHouseRequest {
+export interface IHouseUpdateRequest {
     code: string;
 }
