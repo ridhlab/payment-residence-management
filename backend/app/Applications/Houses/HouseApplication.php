@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\DB;
 
 class HouseApplication
 {
+
+    public function getIndex()
+    {
+        $data = House::all();
+        return $data;
+    }
+
     public function store(StoreHouseRequest $request)
     {
         $house = new House();

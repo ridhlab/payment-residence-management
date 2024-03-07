@@ -19,12 +19,11 @@ class HouseController extends Controller
     }
 
 
-    // TODO : Define index controller
-    // public function index()
-    // {
-    //     $data = $this->houseApplication->getIndex();
-    //     return ApiResponser::successResponser($data, ApiResponser::generateMessageGetIndex('house'));
-    // }
+    public function index()
+    {
+        $data = $this->houseApplication->getIndex();
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetIndex('house'));
+    }
 
     public function show($uid)
     {
