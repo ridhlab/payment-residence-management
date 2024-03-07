@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('/house')->controller(HouseController::class)->group(function () {
     Route::get('/', 'index')->name('house.index');
-    Route::get('{id}/default-value-for-form', 'getDefaultValueForForm')->name('house.show');
+    Route::get('{id}/default-value-for-form', 'getDefaultValueForForm')->name('house.default-value-for-form');
     Route::post('/store', 'store')->name('house.store');
     Route::put('/{id}/update', 'update')->name('house.update');
 
@@ -43,6 +43,7 @@ Route::prefix('/house')->controller(HouseController::class)->group(function () {
 
 Route::prefix('/occupant')->controller(OccupantController::class)->group(function () {
     Route::get('/', 'index')->name('occupant.index');
+    Route::get('{id}/default-value-for-form', 'getDefaultValueForForm')->name('occupant.default-value-for-form');
     Route::get('{id}', 'show')->name('occupant.show');
     Route::post('/store', 'store')->name('occupant.store');
     Route::put('/{id}/update', 'update')->name('occupant.update');
