@@ -63,6 +63,9 @@ export default function OccupantIndexPage() {
                         size="small"
                         dataSource={query.data.data}
                         columns={columns}
+                        scroll={{
+                            x: "auto",
+                        }}
                     />
                 )}
             </Card>

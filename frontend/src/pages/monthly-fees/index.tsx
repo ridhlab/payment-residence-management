@@ -57,6 +57,9 @@ export default function MonthlyFeeIndex() {
                         size="small"
                         dataSource={query.data.data}
                         columns={columns}
+                        scroll={{
+                            x: "auto",
+                        }}
                     />
                 )}
             </Card>

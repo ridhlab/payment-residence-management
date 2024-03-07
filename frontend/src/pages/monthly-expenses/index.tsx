@@ -65,6 +65,7 @@ export default function MonthlyExpenseIndex() {
                         size="small"
                         dataSource={query.data.data}
                         columns={columns}
+                        scroll={{ x: 500 }}
                     />
                 )}
             </Card>

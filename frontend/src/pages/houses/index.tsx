@@ -58,6 +58,9 @@ export default function HousePage() {
                         size="small"
                         dataSource={query.data.data}
                         columns={columns}
+                        scroll={{
+                            x: "auto",
+                        }}
                     />
                 )}
             </Card>
