@@ -12,7 +12,7 @@ class Payment extends BaseModel
 {
     use HasFactory;
 
-    static protected $table = 'payments';
+    protected $table = 'payments';
 
     public function monthlyExpense(): BelongsTo
     {

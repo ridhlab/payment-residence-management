@@ -35,9 +35,7 @@ class HouseOccupantController
             return ApiResponser::successResponser(null, 'Success remove house occupant');
         } catch (\Throwable $e) {
             DB::rollBack();
-            if ($e instanceof HttpException) {
-                return ApiResponser::errorResponse($e->getMessage());
-            }
+            throw $e;
         }
     }
 
@@ -48,9 +46,7 @@ class HouseOccupantController
             return ApiResponser::successResponser($data, 'Success add data house occupant');
         } catch (\Throwable $e) {
             DB::rollBack();
-            if ($e instanceof HttpException) {
-                return ApiResponser::errorResponse($e->getMessage());
-            }
+            throw $e;
         }
     }
 }

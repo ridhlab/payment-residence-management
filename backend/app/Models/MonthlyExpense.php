@@ -9,5 +9,9 @@ class MonthlyExpense extends BaseModel
 {
     use HasFactory;
 
+    protected $casts = [
+        'is_paid_monthly' => 'boolean'
+    ];
+
     protected $table = 'monthly_expenses';
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\MonthlyExpenses\MonthlyExpenseController;
 use App\Http\Controllers\Api\Occupants\OccupantController;
 use App\Http\Controllers\Api\MonthlyFees\MonthlyFeeController;
 use App\Http\Controllers\Api\Occupants\OccupantDropdownController;
+use App\Http\Controllers\Api\Payments\PaymentController;
 use App\Models\MonthlyFee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +55,8 @@ Route::prefix('/occupant')->controller(OccupantController::class)->group(functio
 });
 
 Route::prefix('/monthly-fee')->controller(MonthlyFeeController::class)->group(function () {
+    Route::get('/get-all', 'getAll')->name('monthly-fee.get-all');
+
     Route::get('/', 'index')->name('monthly-fee.index');
     Route::get('{id}', 'show')->name('monthly-fee.show');
     Route::post('/store', 'store')->name('monthly-fee.store');
@@ -62,6 +65,9 @@ Route::prefix('/monthly-fee')->controller(MonthlyFeeController::class)->group(fu
 
 
 Route::prefix('/monthly-expense')->controller(MonthlyExpenseController::class)->group(function () {
+    Route::get('/get-by-is-paid-monthly', 'getFilteredIsPaidMonthly')->name('monthly-expense.get-by-is-paid-monthly');
+    Route::get('/get-by-is-not-paid-monthly', 'getFilteredIsNotPaidMonthly')->name('monthly-expense.get-by-is-not-paid-monthly');
+
     Route::get('/', 'index')->name('monthly-expense.index');
     Route::get('{id}', 'show')->name('monthly-expense.show');
     Route::post('/store', 'store')->name('monthly-expense.store');
@@ -77,4 +83,8 @@ Route::prefix('/house-occupant')->controller(HouseOccupantController::class)->gr
 
 Route::prefix('/historical-house-occupant')->controller(HistoricalHouseOccupantController::class)->group(function () {
     Route::get('/by-house/{id}', 'getHistoricalByHouseId')->name('historical-house-occupant.by-house');
+});
+
+Route::prefix('/payments')->controller(PaymentController::class)->group(function () {
+    Route::post('/add-payments', 'addPayments')->name('payments.add-payments');
 });

@@ -17,6 +17,12 @@ class MonthlyFeeController extends Controller
         $this->monthlyFeeApplication = $monthlyFeeApplication;
     }
 
+    public function getAll()
+    {
+        $data = $this->monthlyFeeApplication->getAll();
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('monthly fee'));
+    }
+
     public function store(StoreMonthlyFeeRequest $request)
     {
         $data = $this->monthlyFeeApplication->store($request);

@@ -17,6 +17,19 @@ class MonthlyExpenseController extends Controller
         $this->monthlyExpenseApplication = $monthlyExpenseApplication;
     }
 
+    public function getFilteredIsPaidMonthly()
+    {
+        $data = $this->monthlyExpenseApplication->getAllFilteredByIsPaidMonthly(true);
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('monthly expense'));
+    }
+
+    public function getFilteredIsNotPaidMonthly()
+    {
+        $data = $this->monthlyExpenseApplication->getAllFilteredByIsPaidMonthly(false);
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('monthly expense'));
+    }
+
+
     public function store(StoreMonthlyExpensesRequest $request)
     {
         $data = $this->monthlyExpenseApplication->store($request);
