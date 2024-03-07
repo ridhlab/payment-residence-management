@@ -18,9 +18,7 @@ class HouseApplication
 
     public function getDefaultValueForForm($id)
     {
-        $data = DB::table('houses')
-            ->where('id', '=', $id)
-            ->select(['id', 'code'])->first();
+        $data = House::where('id', $id)->select(['id', 'code'])->first();
         return $data;
     }
 

@@ -17,6 +17,18 @@ class MonthlyFeeController extends Controller
         $this->monthlyFeeApplication = $monthlyFeeApplication;
     }
 
+    public function index()
+    {
+        $data = $this->monthlyFeeApplication->getIndex();
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetIndex('monthly fee'));
+    }
+
+    public function getDefaultValueForForm($id)
+    {
+        $data = $this->monthlyFeeApplication->getDefaultValueForForm($id);
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('occupant'));
+    }
+
     public function getAll()
     {
         $data = $this->monthlyFeeApplication->getAll();
