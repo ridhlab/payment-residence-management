@@ -15,6 +15,22 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class OccupantApplication
 {
+    public function getDefaultValueForForm($id)
+    {
+        $data = DB::table('occupants')
+            ->where('id', '=', $id)
+            ->select(['id', 'fullname', 'is_married', 'phone'])->first();
+        if ($data) {
+            $data->is_married = $data->is_married ? true : false;
+        }
+        return $data;
+    }
+
+    public function getIndex()
+    {
+        $data = Occupant::orderBy('created_at', 'DESC')->get();
+        return $data;
+    }
 
     public function setOccupy($id)
     {

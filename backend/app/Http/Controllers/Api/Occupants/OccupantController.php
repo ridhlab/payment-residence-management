@@ -18,6 +18,18 @@ class OccupantController extends Controller
         $this->occupantApplication = $occupantApplication;
     }
 
+    public function getDefaultValueForForm($id)
+    {
+        $data = $this->occupantApplication->getDefaultValueForForm($id);
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('occupant'));
+    }
+
+    public function index()
+    {
+        $data = $this->occupantApplication->getIndex();
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('occupant'));
+    }
+
     public function store(StoreOccupantRequest $request)
     {
         $data = $this->occupantApplication->store($request);

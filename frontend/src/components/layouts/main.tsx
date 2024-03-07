@@ -1,8 +1,9 @@
 import {
     DashboardOutlined,
-    FieldTimeOutlined,
+    HomeOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
+    TeamOutlined,
 } from "@ant-design/icons";
 import {
     Breadcrumb,
@@ -54,12 +55,12 @@ export default function MainLayout({ children, ...props }: IProps) {
             },
             {
                 key: menuKey.House,
-                icon: <DashboardOutlined />,
+                icon: <HomeOutlined />,
                 label: <Link to={ROUTES.HOUSE_INDEX}>Rumah</Link>,
             },
             {
                 key: menuKey.Occupant,
-                icon: <FieldTimeOutlined />,
+                icon: <TeamOutlined />,
                 label: <Link to={ROUTES.OCCUPANT_INDEX}>Penghuni</Link>,
             },
         ],

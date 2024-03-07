@@ -22,6 +22,7 @@ export const ENDPOINT_API = {
     },
     OCCUPANTS: {
         INDEX: "/occupant",
+        DEFAULT_VALUE_FOR_FORM: "/occupant/:id/default-value-for-form",
         STORE: "/occupant/store",
         UPDATE: "/occupant/:id/update",
         DROPDOWN: {
