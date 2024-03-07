@@ -12,3 +12,15 @@ export const getHouseOccupantOccupied = async () => {
         throw (error as AxiosError).response.data;
     }
 };
+
+export const addHouseOccupant = async (payload) => {
+    try {
+        const response = await axiosInstance.post(
+            ENDPOINT_API.HOUSE_OCCUPANTS.ADD_OCCUPANT,
+            payload
+        );
+        return response.data;
+    } catch (error) {
+        throw (error as AxiosError).response.data;
+    }
+};

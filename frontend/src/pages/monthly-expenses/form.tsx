@@ -121,10 +121,10 @@ export default function MonthlyExpenseFormPage({
                         <ButtonAction
                             actions={[
                                 <Button href={ROUTES.MONTHLY_EXPENSE_INDEX}>
-                                    Cancel
+                                    Batal
                                 </Button>,
                                 <Button type="primary" htmlType="submit">
-                                    Save
+                                    Simpan
                                 </Button>,
                             ]}
                         />

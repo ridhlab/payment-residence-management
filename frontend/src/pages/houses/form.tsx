@@ -102,10 +102,10 @@ export default function FormHousePage({
                         <ButtonAction
                             actions={[
                                 <Button href={ROUTES.HOUSE_INDEX}>
-                                    Cancel
+                                    Batal
                                 </Button>,
                                 <Button type="primary" htmlType="submit">
-                                    Save
+                                    Simpan
                                 </Button>,
                             ]}
                         />

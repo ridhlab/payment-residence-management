@@ -23,6 +23,9 @@ const MonthlyExpenseFormPage = React.lazy(
 const HouseOccupantIndexPage = React.lazy(
     () => import("@/pages/house-occupants")
 );
+const HouseOccupantFormPage = React.lazy(
+    () => import("@/pages/house-occupants/form")
+);
 
 export const withSuspense = (component: React.ReactNode) => {
     return <Suspense fallback={<LoaderFullscreen />}>{component}</Suspense>;
@@ -84,5 +87,9 @@ export const router = createBrowserRouter([
     {
         path: ROUTES.HOUSE_OCCUPANT_INDEX,
         element: withSuspense(<HouseOccupantIndexPage />),
+    },
+    {
+        path: ROUTES.HOUSE_OCCUPANT_CREATE,
+        element: withSuspense(<HouseOccupantFormPage />),
     },
 ]);

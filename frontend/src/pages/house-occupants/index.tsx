@@ -1,6 +1,7 @@
 import { BREADCRUBMS } from "@/common/breadcrumbs";
 import { occupantStatusTranslation } from "@/common/translation";
 import MainLayout from "@/components/layouts/main";
+import AddButton from "@/components/shared/button/add-button";
 import LoaderCenter from "@/components/shared/loader/loader-center";
 import RowActionButtons from "@/components/shared/table/row-action-buttons";
 import { OccupantStatus } from "@/enums/occupant-status";
@@ -65,7 +66,13 @@ export default function HouseOccupantIndexPage() {
             title="Daftar Penghuni Rumah Aktif"
             breadcrumbs={BREADCRUBMS.HOUSE_OCCUPANT.INDEX()}
         >
-            <Card>
+            <Card
+                extra={
+                    <AddButton href={ROUTES.HOUSE_OCCUPANT_CREATE}>
+                        Tambah Penghuni Rumah
+                    </AddButton>
+                }
+            >
                 {query.isLoading || query.isFetching ? (
                     <LoaderCenter />
                 ) : (

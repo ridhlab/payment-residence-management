@@ -1,7 +1,7 @@
 import { ENDPOINT_API } from "@/routes/list-route";
 import { axiosInstance } from "..";
 import { AxiosError } from "axios";
-import { parsingRoute } from "@/helpers/route";
+import { parsingRoute, routeWithParams } from "@/helpers/route";
 import {
     IOccupantStoreRequest,
     IOccupantUpdateRequest,
@@ -44,6 +44,19 @@ export const occupantUpdate = async (id, payload: IOccupantUpdateRequest) => {
         const response = await axiosInstance.put(
             parsingRoute(ENDPOINT_API.OCCUPANTS.UPDATE, { id }),
             payload
+        );
+        return response.data;
+    } catch (error) {
+        throw (error as AxiosError).response.data;
+    }
+};
+
+export const getOccupantDropdownNotOccupy = async (search) => {
+    try {
+        const response = await axiosInstance.get(
+            routeWithParams(ENDPOINT_API.OCCUPANTS.DROPDOWN.NOT_OCCUPY, {
+                search,
+            })
         );
         return response.data;
     } catch (error) {
