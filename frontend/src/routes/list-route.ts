@@ -74,5 +74,9 @@ export const ENDPOINT_API = {
     PAYMENTS: {
         ADD_PAYMENTS: "/payment/add-payments",
         BY_HOUSE_OCCUPANT_ID: "/payment/by-house-occupant/:houseOccupantId",
+        GET_PAID_BY_HOUSE_OCCUPANT:
+            "/payment/paid-by-house-occupant/:houseOccupantId",
+        GET_NOT_PAID_BY_HOUSE_OCCUPANT:
+            "/payment/not-paid-by-house-occupant/:houseOccupantId",
     },
 };

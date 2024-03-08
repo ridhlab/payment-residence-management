@@ -27,7 +27,9 @@ class PaymentApplication
             ->select([
                 'type',
                 DB::raw('(CASE WHEN type = "fee" THEN monthly_fee_id ELSE monthly_expense_id END) AS id'),
-                DB::raw('(CASE WHEN type = "fee" THEN monthly_fee.name ELSE monthly_expense.name END) AS name')
+                DB::raw('(CASE WHEN type = "fee" THEN monthly_fee.name ELSE monthly_expense.name END) AS name'),
+                DB::raw('(CASE WHEN type = "fee" THEN monthly_fee.fee ELSE monthly_expense.fee END) AS fee'),
+                'occupant_payment.payment_date'
             ])
             ->get();
         return $paymentPaid;
@@ -40,26 +42,33 @@ class PaymentApplication
             return [
                 'id' => $fee['id'],
                 'type' => 'fee',
-                'name' => $fee['name']
+                'name' => $fee['name'],
+                'fee' => $fee['fee'],
             ];
         }), ...MonthlyExpense::all()->map(function ($expense) {
             return [
                 'id' => $expense['id'],
                 'type' => 'expense',
-                'name' => $expense['name']
+                'name' => $expense['name'],
+                'fee' => $expense['fee'],
             ];
         })];
-        $notPaid = collect($listPaymentAvailable)->filter(function ($paymentAvail) use ($paymentPaid) {
-            $isExist = false;
+        $notPaids = collect($listPaymentAvailable)->filter(function ($paymentAvail) use ($paymentPaid) {
+            $isPaid = false;
             foreach ($paymentPaid as $payment) {
                 if ($payment->type == $paymentAvail['type'] && $paymentAvail['id'] == $payment->id) {
-                    $isExist = true;
+                    $isPaid = true;
                 }
             }
-            return $isExist ? false : true;
+            return $isPaid ? false : true;
+        })->filter(function ($notPaid) {
+            $isFee = $notPaid['type'] == 'fee';
+            if ($isFee) return true;
+            if (MonthlyExpense::findOrFail($notPaid['id'])->is_paid_monthly) return true;
+            return false;
         })->values();
 
-        return $notPaid;
+        return $notPaids;
     }
 
     public function getPaymentByHouseOccupant($houseOccupantId)
@@ -75,7 +84,8 @@ class PaymentApplication
                 'occupant_payment.payment_date',
                 'payment.type AS payment_type',
                 DB::raw('(CASE WHEN payment.type = "fee" THEN monthly_fee.name ELSE monthly_expense.name END) AS payment_name'),
-                'payment.date AS payment_for_date'
+                'payment.date AS payment_for_date',
+                DB::raw('(CASE WHEN payment.type = "fee" THEN monthly_fee.fee ELSE monthly_expense.fee END) AS fee'),
             ])
             ->get();
         $data->map(function ($data) {

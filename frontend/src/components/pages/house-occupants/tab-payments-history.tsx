@@ -1,8 +1,12 @@
 import AddButton from "@/components/shared/button/add-button";
 import ModalAddPayments from "./modal-add-payments";
 import React from "react";
-import { Card, Space, Tabs, Tag } from "antd";
-import { useGetPaymentByHouseOccupantId } from "@/services/queries/payments";
+import { Card, Space, Tabs, Tag, Typography } from "antd";
+import {
+    useGetPaymentByHouseOccupantId,
+    useGetPaymentNotPaidByHouseOccupant,
+    useGetPaymentPaidByHouseOccupant,
+} from "@/services/queries/payments";
 import { useParams } from "react-router-dom";
 import LoaderCenter from "@/components/shared/loader/loader-center";
 import { PaymentType } from "@/enums/payment-type";
@@ -11,20 +15,26 @@ export default function TabPaymentHistory() {
     const { id: houseOccupantId } = useParams();
     const [openModalAddPayment, setOpenModalAddPayment] = React.useState(false);
 
-    const queryPaidOff = useGetPaymentByHouseOccupantId(houseOccupantId);
+    const queryPaidAll = useGetPaymentByHouseOccupantId(houseOccupantId);
 
-    const paidOffContent =
-        queryPaidOff.isLoading || queryPaidOff.isFetching ? (
+    const queryNotPaidPayment =
+        useGetPaymentNotPaidByHouseOccupant(houseOccupantId);
+
+    const queryPaidPayment = useGetPaymentPaidByHouseOccupant(houseOccupantId);
+
+    const historyContent =
+        queryPaidAll.isLoading || queryPaidAll.isFetching ? (
             <LoaderCenter />
-        ) : (
+        ) : queryPaidAll.data?.data?.length ? (
             <Space direction="vertical" style={{ width: "100%" }}>
-                {queryPaidOff?.data?.data.map(
+                {queryPaidAll?.data?.data.map(
                     ({
-                        paymentDate,
-                        paymentForDate,
                         id,
                         paymentName,
                         paymentType,
+                        paymentDate,
+                        paymentForDate,
+                        fee,
                     }) => (
                         <Tag key={id} color="green" style={{ width: "100%" }}>
                             <p>Nama Pembayaran : {paymentName}</p>
@@ -34,12 +44,74 @@ export default function TabPaymentHistory() {
                                     ? "Iuran Bulanan"
                                     : "Pengeluaran Bulanan"}
                             </p>
-                            <p>Tanggal Pembayaran : {paymentDate}</p>
-                            <p>Pembayaran Untuk Bulan : {paymentForDate}</p>
+                            <p>Biaya : {fee}</p>
+                            <p>Pembayaran bulan : {paymentForDate}</p>
+                            <p>Dibayar pada : {paymentDate}</p>
                         </Tag>
                     )
                 )}
             </Space>
+        ) : (
+            <Typography.Text>
+                Penghuni ini belum melakukan pembayaran sama sekali
+            </Typography.Text>
+        );
+
+    const paidOffContent =
+        queryPaidPayment.isLoading || queryPaidPayment.isFetching ? (
+            <LoaderCenter />
+        ) : queryPaidPayment?.data?.data?.length ? (
+            <Space direction="vertical" style={{ width: "100%" }}>
+                {queryPaidPayment?.data?.data.map(
+                    ({ id, name, type, paymentDate, fee }) => (
+                        <Tag key={id} color="green" style={{ width: "100%" }}>
+                            <p>Nama Pembayaran : {name}</p>
+                            <p>
+                                Tipe Pembayaran :{" "}
+                                {type === PaymentType.FEE
+                                    ? "Iuran Bulanan"
+                                    : "Pengeluaran Bulanan"}
+                            </p>
+                            <p>Biaya : {fee}</p>
+                            <p>Tanggal Pembayaran : {paymentDate}</p>
+                        </Tag>
+                    )
+                )}
+            </Space>
+        ) : (
+            <Typography.Text>
+                Belum ada pembayaran yang lunas bulan ini
+            </Typography.Text>
+        );
+
+    const notPaidContent =
+        queryNotPaidPayment.isLoading || queryNotPaidPayment.isFetching ? (
+            <LoaderCenter />
+        ) : queryNotPaidPayment.data?.data?.length ? (
+            <Space direction="vertical" style={{ width: "100%" }}>
+                {queryNotPaidPayment?.data?.data.map(
+                    ({ id, name, type, fee }) => (
+                        <Tag
+                            key={`${type}-` + id}
+                            color="red"
+                            style={{ width: "100%" }}
+                        >
+                            <p>Nama Pembayaran : {name}</p>
+                            <p>
+                                Tipe Pembayaran :{" "}
+                                {type === PaymentType.FEE
+                                    ? "Iuran Bulanan"
+                                    : "Pengeluaran Bulanan"}
+                            </p>
+                            <p>Biaya : {fee}</p>
+                        </Tag>
+                    )
+                )}
+            </Space>
+        ) : (
+            <Typography.Text>
+                Pembayaran pada bulan ini sudah lunas semua
+            </Typography.Text>
         );
 
     return (
@@ -54,17 +126,30 @@ export default function TabPaymentHistory() {
             >
                 <Tabs
                     items={[
-                        { key: "belum-lunas", label: "Belum Lunas" },
                         {
-                            label: "Lunas",
+                            key: "belum-lunas",
+                            label: "Belum Lunas Bulan Ini",
+                            children: notPaidContent,
+                        },
+                        {
+                            label: "Lunas Bulan Ini",
                             key: "lunas",
                             children: paidOffContent,
+                        },
+                        {
+                            label: "Histori Pembayaran",
+                            key: "history",
+                            children: historyContent,
                         },
                     ]}
                 />
             </Card>
             <ModalAddPayments
-                refetchHistoricalPayment={() => queryPaidOff.refetch()}
+                refetchHistoricalPayment={() => {
+                    queryNotPaidPayment.refetch();
+                    queryPaidPayment.refetch();
+                    queryPaidAll.refetch();
+                }}
                 open={openModalAddPayment}
                 setOpen={setOpenModalAddPayment}
             />
