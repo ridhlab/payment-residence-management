@@ -25,14 +25,17 @@ class PaymentApplication
             if ($isTypeFee && !array_key_exists('monthly_fee_id', $payment)  || !$isTypeFee && !array_key_exists('monthly_expense_id', $payment)) {
                 throw new HttpException(400, 'Type and id relation not match');
             }
-            $newPayment =  new Payment();
-            if ($isTypeFee) {
-                $newPayment->monthly_fee_id = $payment['monthly_fee_id'];
-            } else {
-                $newPayment->monthly_expense_id = $payment['monthly_expense_id'];
+            for ($i = 1; $i <= $payment['number_of_months']; $i++) {
+                $newPayment =  new Payment();
+                if ($isTypeFee) {
+                    $newPayment->monthly_fee_id = $payment['monthly_fee_id'];
+                } else {
+                    $newPayment->monthly_expense_id = $payment['monthly_expense_id'];
+                }
+                $date = Carbon::now()->addMonthNoOverflow($i - 1);
+                $newPayment->date = $date;
+                $occupantPayment->payments()->save($newPayment);
             }
-            $newPayment->number_of_months =  $payment['number_of_months'];
-            $occupantPayment->payments()->save($newPayment);
         }
 
         DB::commit();
