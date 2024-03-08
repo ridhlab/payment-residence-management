@@ -5,7 +5,7 @@ import LoaderCenter from "@/components/shared/loader/loader-center";
 import RowActionButtons from "@/components/shared/table/row-action-buttons";
 import { parsingRoute } from "@/helpers/route";
 import { numberColumns } from "@/helpers/table";
-import { IHouse } from "@/interfaces/entities/houses";
+import { IHouseIndexData } from "@/interfaces/responses/houses";
 import { ROUTES } from "@/routes/list-route";
 import { useGetHouseIndex } from "@/services/queries/houses";
 import { Card, Table, Tag } from "antd";
@@ -13,7 +13,7 @@ import { ColumnsType } from "antd/es/table";
 
 export default function HousePage() {
     const query = useGetHouseIndex();
-    const columns: ColumnsType<IHouse> = [
+    const columns: ColumnsType<IHouseIndexData> = [
         numberColumns(),
         {
             title: "Kode Rumah",
@@ -26,10 +26,16 @@ export default function HousePage() {
             key: "isOccupied",
             render: (val) =>
                 val ? (
-                    <Tag color="green">Terisi</Tag>
+                    <Tag color="green">Dihuni</Tag>
                 ) : (
-                    <Tag color="yellow">Kosong</Tag>
+                    <Tag color="yellow">Tidak Dihuni</Tag>
                 ),
+        },
+        {
+            title: "Penghuni",
+            dataIndex: "occupant",
+            key: "occupant",
+            render: (val) => val ?? "-",
         },
         {
             title: "Aksi",
