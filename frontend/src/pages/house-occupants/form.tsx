@@ -83,12 +83,6 @@ export default function HouseOccupantFormPage() {
         }
     }, [queryDropdownHouse?.data?.data]);
 
-    // const isLoading =
-    //     queryDropdownOccupant.isLoading ||
-    //     queryDropdownOccupant.isFetching ||
-    //     queryDropdownHouse.isLoading ||
-    //     queryDropdownHouse.isFetching;
-
     return (
         <MainLayout
             title="Tambah Penghuni Rumah"

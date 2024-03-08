@@ -43,6 +43,7 @@ export const ENDPOINT_API = {
     },
     MONTHLY_FEES: {
         INDEX: "/monthly-fee",
+        GET_ALL: "/monthly-fee/get-all",
         DEFAULT_VALUE_FOR_FORM: "/monthly-fee/:id/default-value-for-form",
         STORE: "/monthly-fee/store",
         UPDATE: "/monthly-fee/:id/update",
@@ -55,6 +56,8 @@ export const ENDPOINT_API = {
         DEFAULT_VALUE_FOR_FORM: "/monthly-expense/:id/default-value-for-form",
         STORE: "/monthly-expense/store",
         UPDATE: "/monthly-expense/:id/update",
+        IS_PAID_MONTHLY: "/monthly-expense/get-by-is-paid-monthly",
+        IS_NOT_PAID_MONTHLY: "/monthly-expense/get-by-is-not-paid-monthly",
         DROPDOWN: {
             NOT_OCCUPIED: "/monthly-expense/get-dropdown/not-occupied",
         },
@@ -67,5 +70,9 @@ export const ENDPOINT_API = {
     },
     HISTORICAL_HOUSE_OCCUPANTS: {
         BY_HOUSE: "/historical-house-occupant/by-house/:houseId",
+    },
+    PAYMENTS: {
+        ADD_PAYMENTS: "/payment/add-payments",
+        BY_HOUSE_OCCUPANT_ID: "/payment/by-house-occupant/:houseOccupantId",
     },
 };

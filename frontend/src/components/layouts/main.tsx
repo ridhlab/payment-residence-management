@@ -151,7 +151,7 @@ export default function MainLayout({ children, ...props }: IProps) {
                     />
                 </Space>
             </Sider>
-            <Layout>
+            <Layout style={{ overflow: "scroll", maxHeight: "100vh" }}>
                 <Header
                     style={{
                         padding: 0,

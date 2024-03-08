@@ -26,7 +26,9 @@ const schema: yup.ObjectSchema<
 > = yup.object().shape({
     name: yup.string().required(getRequiredMessage("Nama")),
     fee: yup.number().required(getRequiredMessage("Biaya")),
-    isPaidMonthly: yup.boolean().required("Dibayar tiap bulan"),
+    isPaidMonthly: yup
+        .boolean()
+        .required(getRequiredMessage("Dibayar tiap bulan")),
 });
 
 export default function MonthlyExpenseFormPage({

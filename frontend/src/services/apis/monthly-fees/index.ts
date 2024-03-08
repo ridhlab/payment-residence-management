@@ -57,3 +57,14 @@ export const monthlyFeeUpdate = async (
         throw (error as AxiosError).response.data;
     }
 };
+
+export const monthlyFeeGetAll = async () => {
+    try {
+        const response = await axiosInstance.get(
+            ENDPOINT_API.MONTHLY_FEES.GET_ALL
+        );
+        return response.data;
+    } catch (error) {
+        throw (error as AxiosError).response.data;
+    }
+};

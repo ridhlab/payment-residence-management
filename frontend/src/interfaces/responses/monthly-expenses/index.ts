@@ -7,3 +7,13 @@ export interface IMonthlyExpenseDefaultValueForFormResponse
     extends IBaseResponse<
         Pick<IMonthlyExpense, "name" | "fee" | "isPaidMonthly">
     > {}
+
+export interface IMonthlyExpenseByIsPaidOrNotPaidData {
+    id: number;
+    name: string;
+    fee: number;
+    isPaidMonthly: boolean;
+}
+
+export interface IMonthlyExpenseByIsPaidOrNotPaidResponse
+    extends IBaseResponse<IMonthlyExpenseByIsPaidOrNotPaidData[]> {}

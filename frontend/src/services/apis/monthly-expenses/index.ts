@@ -59,3 +59,25 @@ export const monthlyExpenseUpdate = async (
         throw (error as AxiosError).response.data;
     }
 };
+
+export const getMonthlyExpenseByIsPaidMonthly = async () => {
+    try {
+        const response = await axiosInstance.get(
+            ENDPOINT_API.MONTHLY_EXPENSES.IS_PAID_MONTHLY
+        );
+        return response.data;
+    } catch (error) {
+        throw (error as AxiosError).response.data;
+    }
+};
+
+export const getMonthlyExpenseByIsNotPaidMonthly = async () => {
+    try {
+        const response = await axiosInstance.get(
+            ENDPOINT_API.MONTHLY_EXPENSES.IS_NOT_PAID_MONTHLY
+        );
+        return response.data;
+    } catch (error) {
+        throw (error as AxiosError).response.data;
+    }
+};
