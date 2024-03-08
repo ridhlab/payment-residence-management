@@ -19,6 +19,8 @@ import { PlusOutlined } from "@ant-design/icons";
 import ButtonAction from "@/components/shared/form/button-actions";
 import * as yup from "yup";
 import { useFormUtility } from "@/hooks/useFormUtility";
+import { IMonthlyFeeGetAllData } from "@/interfaces/responses/monthly-fees";
+import { IMonthlyExpenseByIsPaidOrNotPaidData } from "@/interfaces/responses/monthly-expenses";
 
 const schema = yup.object().shape({
     houseOccupantId: yup.number().required(),
@@ -27,7 +29,7 @@ const schema = yup.object().shape({
             type: yup.mixed<PaymentType>().oneOf(Object.values(PaymentType)),
             monthlyFeeId: yup.number().optional(),
             monthlyExpenseId: yup.number().optional(),
-            numberOfMonths: yup.number().required(),
+            payments: yup.number().required(),
         })
     ),
 });
@@ -47,6 +49,11 @@ export default function ModalAddPayments({
     const queryMonthlyExpenseNotPaidMontly =
         useGetMonthlyExpenseByIsNotPaidMonthly();
 
+    const dataMonthlyExpense = [
+        ...(queryMonthlyExpensePaidMontly?.data?.data ?? []),
+        ...(queryMonthlyExpenseNotPaidMontly?.data?.data ?? []),
+    ];
+
     const mutationAddPayments = useAddPaymentsMutations({
         onSuccess: () => {
             prompNotification({
@@ -64,13 +71,12 @@ export default function ModalAddPayments({
     // @ts-ignore
     const { form } = useFormUtility<IAddPaymentRequest>(schema);
 
-    const [numberOfMonths, setNumberOfMonths] = React.useState<
+    const [payments, setPayments] = React.useState<
         { id: number; type: PaymentType; months: number }[]
     >([]);
+    console.log({ payments });
 
-    const [montlyExpenseNotPaidSelected, setMontlyExpenseNotPaidSelected] =
-        React.useState([]);
-    const [valueExpenseNotPaidActive, setValueExpenseNotPaidActive] =
+    const [valueFeeExpenseActive, setValueFeeExpenseActive] =
         React.useState(null);
 
     const handleClose = () => {
@@ -85,23 +91,23 @@ export default function ModalAddPayments({
         queryMonthlyExpensePaidMontly.isLoading ||
         queryMonthlyExpensePaidMontly.isFetching;
 
-    const handleClickAddMonthlyExpense = () => {
-        setMontlyExpenseNotPaidSelected((prev) => [
-            ...prev,
-            valueExpenseNotPaidActive,
-        ]);
-        setNumberOfMonths((prev) => [
+    const handleClickAdd = () => {
+        // setMontlyExpenseNotPaidSelected((prev) => [
+        //     ...prev,
+        //     valueFeeExpenseActive,
+        // ]);
+        setPayments((prev) => [
             ...prev,
             {
                 type: PaymentType.EXPENSE,
                 months: 1,
                 // eslint-disable-next-line no-unsafe-optional-chaining
                 id: (queryMonthlyExpenseNotPaidMontly.data?.data.find(
-                    ({ id }) => valueExpenseNotPaidActive === id
+                    ({ id }) => valueFeeExpenseActive === id
                 )).id,
             },
         ]);
-        setValueExpenseNotPaidActive(null);
+        setValueFeeExpenseActive(null);
     };
 
     const onFinish = () => {
@@ -109,18 +115,19 @@ export default function ModalAddPayments({
             onOk: async () => {
                 const payload: IAddPaymentRequest = {
                     houseOccupantId: parseInt(houseOccupantId),
-                    payments: numberOfMonths.map(({ id, months, type }) => {
+                    // @ts-ignore
+                    payments: payments.map(({ id, months, type }) => {
                         if (type === PaymentType.EXPENSE) {
                             return {
                                 type: PaymentType.EXPENSE,
-                                numberOfMonths: months,
+                                payments: months,
                                 monthlyExpenseId: id,
                             };
                         }
                         if (type === PaymentType.FEE) {
                             return {
                                 type: PaymentType.FEE,
-                                numberOfMonths: months,
+                                payments: months,
                                 monthlyFeeId: id,
                             };
                         }
@@ -131,21 +138,9 @@ export default function ModalAddPayments({
         });
     };
 
-    const deleteExpense = (expenseId) => {
-        setNumberOfMonths(
-            numberOfMonths.filter(
-                ({ id, type }) =>
-                    !(id === expenseId && type === PaymentType.EXPENSE)
-            )
-        );
-        setMontlyExpenseNotPaidSelected(
-            montlyExpenseNotPaidSelected.filter((id) => expenseId !== id)
-        );
-    };
-
     const handleChangeNumberMonths = (id, val, type: PaymentType) => {
-        setNumberOfMonths(
-            numberOfMonths.map((item) => {
+        setPayments(
+            payments.map((item) => {
                 if (item.id === id && type === item.type) {
                     return { ...item, months: val };
                 }
@@ -160,7 +155,7 @@ export default function ModalAddPayments({
             queryMonthlyExpenseNotPaidMontly.data?.data &&
             queryMonthlyExpensePaidMontly.data?.data
         ) {
-            const _numberOfMonths = [
+            const _payments = [
                 ...(queryMonthlyFee.data?.data.map(({ id }) => ({
                     type: PaymentType.FEE,
                     months: 1,
@@ -172,13 +167,95 @@ export default function ModalAddPayments({
                     id,
                 })) ?? []),
             ];
-            setNumberOfMonths(_numberOfMonths);
+            setPayments(_payments);
         }
     }, [
         queryMonthlyFee.data?.data,
         queryMonthlyExpenseNotPaidMontly.data?.data,
         queryMonthlyExpensePaidMontly.data?.data,
     ]);
+
+    const optionsListPaymentAvailable = [
+        ...(queryMonthlyFee.data?.data.map(({ fee, name, id }) => ({
+            label: `${name} - ${fee}`,
+            value: id,
+            disabled: !!payments.find(
+                (payment) =>
+                    payment.id === id && payment.type === PaymentType.FEE
+            ),
+        })) ?? []),
+        ...(queryMonthlyExpensePaidMontly.data?.data.map(
+            ({ fee, name, id }) => ({
+                label: `${name} - ${fee}`,
+                value: id,
+                disabled: !!payments.find(
+                    (payment) =>
+                        payment.id === id &&
+                        payment.type === PaymentType.EXPENSE
+                ),
+            })
+        ) ?? []),
+        ...(queryMonthlyExpenseNotPaidMontly.data?.data.map(
+            ({ fee, name, id }) => ({
+                label: `${name} - ${fee}`,
+                value: id,
+                disabled: !!payments.find(
+                    (payment) =>
+                        payment.id === id &&
+                        payment.type === PaymentType.EXPENSE
+                ),
+            })
+        ) ?? []),
+    ];
+
+    const paymentsNode = payments?.map((_payment) => {
+        const paymentActive:
+            | IMonthlyFeeGetAllData
+            | IMonthlyExpenseByIsPaidOrNotPaidData =
+            _payment.type === PaymentType.FEE
+                ? queryMonthlyFee?.data?.data?.find(
+                      (data) => data.id === _payment.id
+                  )
+                : dataMonthlyExpense.find((data) => data.id === _payment.id);
+        return (
+            <TagItemPayment
+                key={
+                    _payment.type === PaymentType.FEE
+                        ? "monthly-fee-"
+                        : "monthly-expense-" + paymentActive.id
+                }
+                color={
+                    _payment.type === PaymentType.FEE ||
+                    (_payment.type === PaymentType.EXPENSE &&
+                        // @ts-ignore
+                        paymentActive?.isPaidMonthly)
+                        ? "red"
+                        : undefined
+                }
+                fee={paymentActive.fee}
+                name={paymentActive.name}
+                type={_payment.type}
+                handleChange={(val) =>
+                    handleChangeNumberMonths(
+                        paymentActive.id,
+                        val,
+                        PaymentType.FEE
+                    )
+                }
+                handleDelete={() =>
+                    setPayments(
+                        payments.filter(
+                            (data) =>
+                                !(
+                                    data.id === paymentActive.id &&
+                                    data.type === _payment.type
+                                )
+                        )
+                    )
+                }
+            />
+        );
+    });
 
     return (
         <Modal
@@ -198,94 +275,25 @@ export default function ModalAddPayments({
                         size="large"
                     >
                         <Space direction="vertical" style={{ width: "100%" }}>
-                            {queryMonthlyFee.data?.data.map(
-                                ({ name, fee, id }) => (
-                                    <TagItemPayment
-                                        key={"monthly-fee-" + id}
-                                        color="red"
-                                        fee={fee}
-                                        name={name}
-                                        type="fee"
-                                        handleChange={(val) =>
-                                            handleChangeNumberMonths(
-                                                id,
-                                                val,
-                                                PaymentType.FEE
-                                            )
-                                        }
-                                    />
-                                )
-                            )}
-                            {queryMonthlyExpensePaidMontly.data?.data.map(
-                                ({ fee, name, id }) => (
-                                    <TagItemPayment
-                                        key={"monthly-expense-" + id}
-                                        color="red"
-                                        fee={fee}
-                                        name={name}
-                                        type="expense"
-                                        handleChange={(val) =>
-                                            handleChangeNumberMonths(
-                                                id,
-                                                val,
-                                                PaymentType.EXPENSE
-                                            )
-                                        }
-                                    />
-                                )
-                            )}
-                            {montlyExpenseNotPaidSelected.map((id) => {
-                                const monthlyExpense =
-                                    queryMonthlyExpenseNotPaidMontly.data?.data.find(
-                                        (expense) => id === expense.id
-                                    );
-                                return (
-                                    <TagItemPayment
-                                        key={id}
-                                        fee={monthlyExpense.fee}
-                                        name={monthlyExpense.name}
-                                        type="expense"
-                                        expenseNotMonthly
-                                        handleDelete={() => deleteExpense(id)}
-                                        handleChange={(val) =>
-                                            handleChangeNumberMonths(
-                                                id,
-                                                val,
-                                                PaymentType.EXPENSE
-                                            )
-                                        }
-                                    />
-                                );
-                            })}
+                            {paymentsNode}
                         </Space>
                         <Space>
                             <Select
                                 size="small"
-                                placeholder="Pilih Pengeluaran Bulanan"
-                                options={queryMonthlyExpenseNotPaidMontly.data?.data.map(
-                                    ({ fee, name, id }) => ({
-                                        label: `${name} - ${fee}`,
-                                        value: id,
-                                        disabled:
-                                            montlyExpenseNotPaidSelected.includes(
-                                                id
-                                            ),
-                                    })
-                                )}
+                                placeholder="Pilih Nama Iura/Pengeluaran"
+                                options={optionsListPaymentAvailable}
                                 allowClear
-                                onClear={() =>
-                                    setValueExpenseNotPaidActive(null)
-                                }
-                                value={valueExpenseNotPaidActive}
+                                onClear={() => setValueFeeExpenseActive(null)}
+                                value={valueFeeExpenseActive}
                                 onChange={(val) =>
-                                    setValueExpenseNotPaidActive(val)
+                                    setValueFeeExpenseActive(val)
                                 }
                             />
                             <Button
                                 icon={<PlusOutlined />}
                                 size="small"
-                                disabled={!valueExpenseNotPaidActive}
-                                onClick={handleClickAddMonthlyExpense}
+                                disabled={!valueFeeExpenseActive}
+                                onClick={handleClickAdd}
                             >
                                 Tambah
                             </Button>

@@ -10,7 +10,6 @@ export default function TagItemPayment({
     name,
     type,
     fee,
-    expenseNotMonthly = false,
     handleDelete,
     handleChange,
 }: {
@@ -19,52 +18,33 @@ export default function TagItemPayment({
     name: string;
     type: "fee" | "expense";
     fee: number;
-    expenseNotMonthly?: boolean;
     handleDelete?: () => void;
 }) {
-    if (expenseNotMonthly) {
-        return (
-            <Tag color={color} style={{ width: "100%" }}>
-                <Flex justify="space-between">
-                    <div>
-                        <p>Nama : {name}</p>
-                        <p>Biaya : {getCurrencyId(fee)}</p>
-                        <p>
-                            Tipe :{" "}
-                            {type === "fee"
-                                ? "Iuran Bulanan"
-                                : "Pengeluaran Bulanan"}
-                        </p>
-                        <span>Bayar berapa bulan :</span>
-                        <InputNumber
-                            size="small"
-                            defaultValue={1}
-                            onChange={(val) => handleChange(val)}
-                        />
-                    </div>
-                    <Button
-                        size="small"
-                        icon={<DeleteOutlined />}
-                        onClick={handleDelete}
-                    ></Button>
-                </Flex>
-            </Tag>
-        );
-    }
     return (
         <Tag color={color} style={{ width: "100%" }}>
-            <p>Nama : {name}</p>
-            <p>Biaya : {getCurrencyId(fee)}</p>
-            <p>
-                Tipe :{" "}
-                {type === "fee" ? "Iuran Bulanan" : "Pengeluaran Bulanan"}
-            </p>
-            <span>Bayar berapa bulan :</span>
-            <InputNumber
-                size="small"
-                defaultValue={1}
-                onChange={(val) => handleChange(val)}
-            />
+            <Flex justify="space-between">
+                <div>
+                    <p>Nama : {name}</p>
+                    <p>Biaya : {getCurrencyId(fee)}</p>
+                    <p>
+                        Tipe :{" "}
+                        {type === "fee"
+                            ? "Iuran Bulanan"
+                            : "Pengeluaran Bulanan"}
+                    </p>
+                    <span>Bayar berapa bulan :</span>
+                    <InputNumber
+                        size="small"
+                        defaultValue={1}
+                        onChange={(val) => handleChange(val)}
+                    />
+                </div>
+                <Button
+                    size="small"
+                    icon={<DeleteOutlined />}
+                    onClick={handleDelete}
+                ></Button>
+            </Flex>
         </Tag>
     );
 }
