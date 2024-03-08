@@ -4,7 +4,6 @@ import DetailInformationHouseOccupant from "@/components/pages/house-occupants/d
 import TabHistoricalHouseOccupant from "@/components/pages/house-occupants/tab-historical-house-occupant";
 import TabPaymentHistory from "@/components/pages/house-occupants/tab-payments-history";
 import LoaderCenter from "@/components/shared/loader/loader-center";
-import { useGetHistoricalHouseOccupantByHouse } from "@/services/queries/historical-house-occupants";
 import { useGetDetailHouseOccupant } from "@/services/queries/house-occupants";
 import { Card, Space, Tabs } from "antd";
 import { useParams } from "react-router-dom";
@@ -12,18 +11,11 @@ import { useParams } from "react-router-dom";
 export default function HouseOccupantDetailPage() {
     const { id } = useParams();
     const query = useGetDetailHouseOccupant(id);
-    const queryHistoricalHouseOccupant = useGetHistoricalHouseOccupantByHouse(
-        query.data?.data.houseId
+
+    const contentHistoricalHouseOccupants = (
+        <TabHistoricalHouseOccupant houseId={query?.data?.data?.houseId} />
     );
-    const contentHistoricalHouseOccupants =
-        queryHistoricalHouseOccupant.isLoading ||
-        queryHistoricalHouseOccupant.isFetching ? (
-            <LoaderCenter />
-        ) : (
-            <TabHistoricalHouseOccupant
-                historical={queryHistoricalHouseOccupant.data?.data}
-            />
-        );
+
     const contentHistoricalPayments = <TabPaymentHistory />;
 
     return (
