@@ -12,7 +12,15 @@ class HouseApplication
 
     public function getIndex()
     {
-        $data = DB::table('houses', 'house')->orderBy('created_at', 'DESC')
+        $data = DB::table('houses', 'house')->orderBy('house.created_at', 'DESC')
+            ->leftJoin('house_occupants AS house_occupant', 'house_occupant.house_id', '=', 'house.id')
+            ->leftJoin('occupants AS occupant', 'occupant.id', '=', 'house_occupant.occupant_id')
+            ->select([
+                'house.id',
+                'house.is_occupied',
+                'house.code',
+                'occupant.fullname AS occupant'
+            ])
             ->get();
         return $data;
     }
