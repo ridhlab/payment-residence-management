@@ -65,4 +65,7 @@ export const ENDPOINT_API = {
         ADD_OCCUPANT: "/house-occupant/add-occupant",
         REMOVE_HOUSE_OCCUPANT: "/house-occupant/remove-house-occupant/:id",
     },
+    HISTORICAL_HOUSE_OCCUPANTS: {
+        BY_HOUSE: "/historical-house-occupant/by-house/:houseId",
+    },
 };
