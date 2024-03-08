@@ -68,7 +68,6 @@ export default function ModalAddPayments({
         { id: number; type: PaymentType; months: number }[]
     >([]);
 
-    console.log({ numberOfMonths });
     const [montlyExpenseNotPaidSelected, setMontlyExpenseNotPaidSelected] =
         React.useState([]);
     const [valueExpenseNotPaidActive, setValueExpenseNotPaidActive] =
