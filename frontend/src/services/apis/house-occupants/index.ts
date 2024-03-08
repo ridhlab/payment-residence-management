@@ -26,6 +26,19 @@ export const addHouseOccupant = async (payload) => {
     }
 };
 
+export const removeHouseOccupant = async (id) => {
+    try {
+        const response = await axiosInstance.post(
+            parsingRoute(ENDPOINT_API.HOUSE_OCCUPANTS.REMOVE_HOUSE_OCCUPANT, {
+                id,
+            })
+        );
+        return response.data;
+    } catch (error) {
+        throw (error as AxiosError).response.data;
+    }
+};
+
 export const getDetailHouseOccupant = async (id) => {
     try {
         const response = await axiosInstance.get(
