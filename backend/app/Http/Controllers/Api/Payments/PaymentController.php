@@ -36,4 +36,16 @@ class PaymentController extends Controller
         $data = $this->paymentApplication->getPaymentByHouseOccupant($houseOccupantId);
         return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('payments'));
     }
+
+    public function getNotPaidByHouseOccupant($houseOccupantId)
+    {
+        $data = $this->paymentApplication->getNotPaidByHouseOccupant($houseOccupantId);
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('payments'));
+    }
+
+    public function getPaidByHouseOccupant($houseOccupantId)
+    {
+        $data = $this->paymentApplication->getPaidByHouseOccupant($houseOccupantId);
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('payments'));
+    }
 }

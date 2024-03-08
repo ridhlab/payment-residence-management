@@ -3,6 +3,8 @@
 namespace App\Applications\Payments;
 
 use App\Http\Requests\Payments\AddPaymentRequest;
+use App\Models\MonthlyExpense;
+use App\Models\MonthlyFee;
 use App\Models\OccupantPayment;
 use App\Models\Payment;
 use Carbon\Carbon;
@@ -11,6 +13,54 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class PaymentApplication
 {
+
+    public function getPaidByHouseOccupant($houseOccupantId)
+    {
+        $paymentPaid = DB::table('payments', 'payment')
+            ->leftJoin('occupant_payments AS occupant_payment', 'occupant_payment.id', 'payment.occupant_payment_id')
+            ->leftJoin('house_occupants AS house_occupant', 'occupant_payment.house_occupant_id', '=', 'house_occupant.id')
+            ->leftJoin('monthly_fees AS monthly_fee', 'monthly_fee.id', '=', 'payment.monthly_fee_id')
+            ->leftJoin('monthly_expenses AS monthly_expense', 'monthly_expense.id', '=', 'payment.monthly_expense_id')
+            ->where('house_occupant.id', '=', $houseOccupantId)
+            ->whereYear('payment.date', '=', Carbon::now())
+            ->whereMonth('payment.date', '=', Carbon::now())
+            ->select([
+                'type',
+                DB::raw('(CASE WHEN type = "fee" THEN monthly_fee_id ELSE monthly_expense_id END) AS id'),
+                DB::raw('(CASE WHEN type = "fee" THEN monthly_fee.name ELSE monthly_expense.name END) AS name')
+            ])
+            ->get();
+        return $paymentPaid;
+    }
+
+    public function getNotPaidByHouseOccupant($houseOccupantId)
+    {
+        $paymentPaid = $this->getPaidByHouseOccupant($houseOccupantId);
+        $listPaymentAvailable = [...MonthlyFee::all()->map(function ($fee) {
+            return [
+                'id' => $fee['id'],
+                'type' => 'fee',
+                'name' => $fee['name']
+            ];
+        }), ...MonthlyExpense::all()->map(function ($expense) {
+            return [
+                'id' => $expense['id'],
+                'type' => 'expense',
+                'name' => $expense['name']
+            ];
+        })];
+        $notPaid = collect($listPaymentAvailable)->filter(function ($paymentAvail) use ($paymentPaid) {
+            $isExist = false;
+            foreach ($paymentPaid as $payment) {
+                if ($payment->type == $paymentAvail['type'] && $paymentAvail['id'] == $payment->id) {
+                    $isExist = true;
+                }
+            }
+            return $isExist ? false : true;
+        })->values();
+
+        return $notPaid;
+    }
 
     public function getPaymentByHouseOccupant($houseOccupantId)
     {
