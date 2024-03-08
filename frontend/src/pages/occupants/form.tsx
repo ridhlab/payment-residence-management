@@ -126,10 +126,10 @@ export default function OccupantFormPage({
                         <ButtonAction
                             actions={[
                                 <Button href={ROUTES.OCCUPANT_INDEX}>
-                                    Cancel
+                                    Batal
                                 </Button>,
                                 <Button type="primary" htmlType="submit">
-                                    Save
+                                    Simpan
                                 </Button>,
                             ]}
                         />

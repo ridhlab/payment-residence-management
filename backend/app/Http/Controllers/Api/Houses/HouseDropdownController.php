@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Houses;
 use App\Applications\Houses\HouseDropdownApplication;
 use App\Http\Controllers\Controller;
 use App\Shared\ApiResponser;
+use Illuminate\Http\Request;
 
 class HouseDropdownController extends Controller
 {
@@ -16,9 +17,9 @@ class HouseDropdownController extends Controller
         $this->houseDropdownApplication = $houseDropdownApplication;
     }
 
-    public function getAllHouseNotOccupied()
+    public function getAllHouseNotOccupied(Request $request)
     {
-        $data = $this->houseDropdownApplication->getAllHouseNotOccupied();
+        $data = $this->houseDropdownApplication->getAllHouseNotOccupied($request->query('search'));
         return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('house'));
     }
 }

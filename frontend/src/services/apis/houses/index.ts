@@ -1,7 +1,7 @@
 import { ENDPOINT_API } from "@/routes/list-route";
 import { axiosInstance } from "..";
 import { AxiosError } from "axios";
-import { parsingRoute } from "@/helpers/route";
+import { parsingRoute, routeWithParams } from "@/helpers/route";
 import {
     IHouseStoreRequest,
     IHouseUpdateRequest,
@@ -44,6 +44,19 @@ export const houseUpdate = async (id, payload: IHouseUpdateRequest) => {
         const response = await axiosInstance.put(
             parsingRoute(ENDPOINT_API.HOUSES.UPDATE, { id }),
             payload
+        );
+        return response.data;
+    } catch (error) {
+        throw (error as AxiosError).response.data;
+    }
+};
+
+export const getHouseDropdownNotOccupied = async (search) => {
+    try {
+        const response = await axiosInstance.get(
+            routeWithParams(ENDPOINT_API.HOUSES.DROPDOWN.NOT_OCCUPIED, {
+                search,
+            })
         );
         return response.data;
     } catch (error) {

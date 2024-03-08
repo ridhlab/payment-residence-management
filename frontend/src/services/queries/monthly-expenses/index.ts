@@ -1,9 +1,12 @@
 import { IBaseResponse } from "@/interfaces/responses/base";
 import {
+    IMonthlyExpenseByIsPaidOrNotPaidResponse,
     IMonthlyExpenseDefaultValueForFormResponse,
     IMonthlyExpenseIndexResponse,
 } from "@/interfaces/responses/monthly-expenses";
 import {
+    getMonthlyExpenseByIsNotPaidMonthly,
+    getMonthlyExpenseByIsPaidMonthly,
     getMonthlyExpenseDefaultValueForForm,
     getMonthlyExpenseIndex,
 } from "@/services/apis/monthly-expenses";
@@ -35,6 +38,34 @@ export const useGetMonthlyExpenseDefaultValueForForm = (
         queryKey: ["get-monthly-expense-default-value-for-form", id],
         queryFn: () => getMonthlyExpenseDefaultValueForForm(id),
         enabled: !!id,
+        ...options,
+    });
+};
+
+export const useGetMonthlyExpenseByIsPaidMonthly = (
+    options?: UseQueryOptions<
+        IMonthlyExpenseByIsPaidOrNotPaidResponse,
+        IBaseResponse<unknown>,
+        IMonthlyExpenseByIsPaidOrNotPaidResponse
+    >
+) => {
+    return useQuery({
+        queryKey: ["get-monthly-expense-by-is-paid-monthly"],
+        queryFn: () => getMonthlyExpenseByIsPaidMonthly(),
+        ...options,
+    });
+};
+
+export const useGetMonthlyExpenseByIsNotPaidMonthly = (
+    options?: UseQueryOptions<
+        IMonthlyExpenseByIsPaidOrNotPaidResponse,
+        IBaseResponse<unknown>,
+        IMonthlyExpenseByIsPaidOrNotPaidResponse
+    >
+) => {
+    return useQuery({
+        queryKey: ["get-monthly-expense-by-is-not-paid-monthly"],
+        queryFn: () => getMonthlyExpenseByIsNotPaidMonthly(),
         ...options,
     });
 };

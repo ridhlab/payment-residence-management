@@ -23,7 +23,8 @@ class OccupantApplication
 
     public function getIndex()
     {
-        $data = Occupant::orderBy('created_at', 'DESC')->get();
+        $data = DB::table('occupants', 'occupant')
+            ->orderBy('occupant.created_at', 'DESC')->get();
         return $data;
     }
 

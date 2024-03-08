@@ -12,7 +12,8 @@ class HouseApplication
 
     public function getIndex()
     {
-        $data = House::orderBy('created_at', 'DESC')->get();
+        $data = DB::table('houses', 'house')->orderBy('created_at', 'DESC')
+            ->get();
         return $data;
     }
 

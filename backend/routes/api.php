@@ -90,6 +90,9 @@ Route::prefix('/historical-house-occupant')->controller(HistoricalHouseOccupantC
     Route::get('/by-house/{id}', 'getHistoricalByHouseId')->name('historical-house-occupant.by-house');
 });
 
-Route::prefix('/payments')->controller(PaymentController::class)->group(function () {
+Route::prefix('/payment')->controller(PaymentController::class)->group(function () {
     Route::post('/add-payments', 'addPayments')->name('payments.add-payments');
+    Route::get('/by-house-occupant/{houseOccupantId}', 'getByOccupantHouseId')->name('payments.by-house-occupant');
+    Route::get('/not-paid-by-house-occupant/{houseOccupantId}', 'getNotPaidByHouseOccupant')->name('payments.not-paid-by-house-occupant');
+    Route::get('/paid-by-house-occupant/{houseOccupantId}', 'getPaidByHouseOccupant')->name('payments.paid-by-house-occupant');
 });

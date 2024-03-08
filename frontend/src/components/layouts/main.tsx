@@ -1,11 +1,13 @@
 import {
     DashboardOutlined,
+    DatabaseOutlined,
     HomeOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     MoneyCollectOutlined,
     RedEnvelopeOutlined,
     TeamOutlined,
+    UserSwitchOutlined,
 } from "@ant-design/icons";
 import {
     Breadcrumb,
@@ -36,6 +38,7 @@ const menuKey = {
     Occupant: ROUTES.OCCUPANT_INDEX,
     MonthlyFee: ROUTES.MONTHLY_FEE_INDEX,
     MonthlyExpense: ROUTES.MONTHLY_EXPENSE_INDEX,
+    HouseOccupant: ROUTES.HOUSE_OCCUPANT_INDEX,
 };
 
 export default function MainLayout({ children, ...props }: IProps) {
@@ -57,28 +60,48 @@ export default function MainLayout({ children, ...props }: IProps) {
                 icon: <DashboardOutlined />,
                 label: <Link to={ROUTES.DASHBOARD}>Dashboard</Link>,
             },
+
             {
-                key: menuKey.House,
-                icon: <HomeOutlined />,
-                label: <Link to={ROUTES.HOUSE_INDEX}>Rumah</Link>,
+                key: "master",
+                label: "Master Data",
+                icon: <DatabaseOutlined />,
+                children: [
+                    {
+                        key: menuKey.House,
+                        icon: <HomeOutlined />,
+                        label: <Link to={ROUTES.HOUSE_INDEX}>Rumah</Link>,
+                    },
+                    {
+                        key: menuKey.Occupant,
+                        icon: <TeamOutlined />,
+                        label: <Link to={ROUTES.OCCUPANT_INDEX}>Penghuni</Link>,
+                    },
+                    {
+                        key: menuKey.MonthlyFee,
+                        icon: <MoneyCollectOutlined />,
+                        label: (
+                            <Link to={ROUTES.MONTHLY_FEE_INDEX}>
+                                Iuran Bulanan
+                            </Link>
+                        ),
+                    },
+                    {
+                        key: menuKey.MonthlyExpense,
+                        icon: <RedEnvelopeOutlined />,
+                        label: (
+                            <Link to={ROUTES.MONTHLY_EXPENSE_INDEX}>
+                                Pengeluaran Bulanan
+                            </Link>
+                        ),
+                    },
+                ],
             },
+
             {
-                key: menuKey.Occupant,
-                icon: <TeamOutlined />,
-                label: <Link to={ROUTES.OCCUPANT_INDEX}>Penghuni</Link>,
-            },
-            {
-                key: menuKey.MonthlyFee,
-                icon: <MoneyCollectOutlined />,
-                label: <Link to={ROUTES.MONTHLY_FEE_INDEX}>Iuran Bulanan</Link>,
-            },
-            {
-                key: menuKey.MonthlyExpense,
-                icon: <RedEnvelopeOutlined />,
+                key: menuKey.HouseOccupant,
+                icon: <UserSwitchOutlined />,
                 label: (
-                    <Link to={ROUTES.MONTHLY_EXPENSE_INDEX}>
-                        Pengeluaran Bulanan
-                    </Link>
+                    <Link to={ROUTES.HOUSE_OCCUPANT_INDEX}>Penghuni Rumah</Link>
                 ),
             },
         ],
@@ -128,7 +151,7 @@ export default function MainLayout({ children, ...props }: IProps) {
                     />
                 </Space>
             </Sider>
-            <Layout>
+            <Layout style={{ overflow: "scroll", maxHeight: "100vh" }}>
                 <Header
                     style={{
                         padding: 0,

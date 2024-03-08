@@ -26,7 +26,9 @@ const schema: yup.ObjectSchema<
 > = yup.object().shape({
     name: yup.string().required(getRequiredMessage("Nama")),
     fee: yup.number().required(getRequiredMessage("Biaya")),
-    isPaidMonthly: yup.boolean().required("Dibayar tiap bulan"),
+    isPaidMonthly: yup
+        .boolean()
+        .required(getRequiredMessage("Dibayar tiap bulan")),
 });
 
 export default function MonthlyExpenseFormPage({
@@ -121,10 +123,10 @@ export default function MonthlyExpenseFormPage({
                         <ButtonAction
                             actions={[
                                 <Button href={ROUTES.MONTHLY_EXPENSE_INDEX}>
-                                    Cancel
+                                    Batal
                                 </Button>,
                                 <Button type="primary" htmlType="submit">
-                                    Save
+                                    Simpan
                                 </Button>,
                             ]}
                         />

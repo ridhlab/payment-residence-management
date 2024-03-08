@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Occupants;
 use App\Applications\Occupants\OccupantDropdownApplication;
 use App\Http\Controllers\Controller;
 use App\Shared\ApiResponser;
+use Illuminate\Http\Request;
 
 class OccupantDropdownController extends Controller
 {
@@ -15,9 +16,9 @@ class OccupantDropdownController extends Controller
         $this->occupantDropdownApplication = $occupantDropdownApplication;
     }
 
-    public function getAllOccupantNotOccupy()
+    public function getAllOccupantNotOccupy(Request $request)
     {
-        $data = $this->occupantDropdownApplication->getAllOccupantNotOccupy();
+        $data = $this->occupantDropdownApplication->getAllOccupantNotOccupy($request->query('search'));
         return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('occupant'));
     }
 }

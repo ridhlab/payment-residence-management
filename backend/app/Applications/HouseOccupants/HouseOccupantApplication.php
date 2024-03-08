@@ -49,6 +49,7 @@ class HouseOccupantApplication
                 'occupant.fullname AS occupant_name',
                 'house_occupant.occupant_status'
             ])
+            ->orderBy('house_occupant.created_at', 'DESC')
             ->get();
         return $data;
     }
