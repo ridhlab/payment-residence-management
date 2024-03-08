@@ -10,7 +10,7 @@ import {
     useGetMonthlyExpenseByIsPaidMonthly,
 } from "@/services/queries/monthly-expenses";
 import { useGetMonthlyFeeGetAll } from "@/services/queries/monthly-fees";
-import { Form, Modal, Select, Space } from "antd";
+import { Form, Modal, Select, Space, Tag } from "antd";
 import React from "react";
 import { useParams } from "react-router-dom";
 import TagItemPayment from "./tag-item-payment";
@@ -38,10 +38,14 @@ export default function ModalAddPayments({
     open,
     setOpen,
     refetchHistoricalPayment,
+    notPaids,
+    paids,
 }: {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     refetchHistoricalPayment: () => void;
+    paids: { type: PaymentType; id: number }[];
+    notPaids: { type: PaymentType; id: number }[];
 }) {
     const { id: houseOccupantId } = useParams();
     const queryMonthlyFee = useGetMonthlyFeeGetAll();
@@ -61,7 +65,6 @@ export default function ModalAddPayments({
                 message: "Berhasil tambah penghuni rumah",
             });
             setOpen(false);
-            window.location.reload();
             refetchHistoricalPayment();
         },
         onError: (error) =>
@@ -74,7 +77,6 @@ export default function ModalAddPayments({
     const [payments, setPayments] = React.useState<
         { id: number; type: PaymentType; months: number }[]
     >([]);
-    console.log({ payments });
 
     const [valueFeeExpenseActive, setValueFeeExpenseActive] =
         React.useState(null);
@@ -92,19 +94,13 @@ export default function ModalAddPayments({
         queryMonthlyExpensePaidMontly.isFetching;
 
     const handleClickAdd = () => {
-        // setMontlyExpenseNotPaidSelected((prev) => [
-        //     ...prev,
-        //     valueFeeExpenseActive,
-        // ]);
         setPayments((prev) => [
             ...prev,
             {
-                type: PaymentType.EXPENSE,
+                type: valueFeeExpenseActive.split("-")[0],
                 months: 1,
                 // eslint-disable-next-line no-unsafe-optional-chaining
-                id: (queryMonthlyExpenseNotPaidMontly.data?.data.find(
-                    ({ id }) => valueFeeExpenseActive === id
-                )).id,
+                id: parseInt(valueFeeExpenseActive.split("-")[1]),
             },
         ]);
         setValueFeeExpenseActive(null);
@@ -120,14 +116,14 @@ export default function ModalAddPayments({
                         if (type === PaymentType.EXPENSE) {
                             return {
                                 type: PaymentType.EXPENSE,
-                                payments: months,
+                                numberOfMonths: months,
                                 monthlyExpenseId: id,
                             };
                         }
                         if (type === PaymentType.FEE) {
                             return {
                                 type: PaymentType.FEE,
-                                payments: months,
+                                numberOfMonths: months,
                                 monthlyFeeId: id,
                             };
                         }
@@ -166,44 +162,86 @@ export default function ModalAddPayments({
                     months: 1,
                     id,
                 })) ?? []),
-            ];
+            ].filter(({ id, type }) => {
+                return notPaids?.find(
+                    (paid) => paid.id === id && paid.type === type
+                );
+            });
             setPayments(_payments);
         }
     }, [
         queryMonthlyFee.data?.data,
         queryMonthlyExpenseNotPaidMontly.data?.data,
         queryMonthlyExpensePaidMontly.data?.data,
+        notPaids,
     ]);
+
+    const isPaid = (type, id) => {
+        return !!paids?.find((paid) => paid.type === type && paid.id === id);
+    };
 
     const optionsListPaymentAvailable = [
         ...(queryMonthlyFee.data?.data.map(({ fee, name, id }) => ({
-            label: `${name} - ${fee}`,
-            value: id,
-            disabled: !!payments.find(
-                (payment) =>
-                    payment.id === id && payment.type === PaymentType.FEE
+            label: (
+                <Space>
+                    {`${name} - ${fee}`}
+                    {isPaid(PaymentType.FEE, id) ? (
+                        <Tag color="green">Lunas</Tag>
+                    ) : (
+                        ""
+                    )}
+                </Space>
             ),
+            value: `fee-${id}`,
+            disabled:
+                isPaid(PaymentType.FEE, id) ||
+                !!payments.find(
+                    (payment) =>
+                        payment.id === id && payment.type === PaymentType.FEE
+                ),
         })) ?? []),
         ...(queryMonthlyExpensePaidMontly.data?.data.map(
             ({ fee, name, id }) => ({
-                label: `${name} - ${fee}`,
-                value: id,
-                disabled: !!payments.find(
-                    (payment) =>
-                        payment.id === id &&
-                        payment.type === PaymentType.EXPENSE
+                label: (
+                    <Space>
+                        {`${name} - ${fee}`}
+                        {isPaid(PaymentType.EXPENSE, id) ? (
+                            <Tag color="green">Lunas</Tag>
+                        ) : (
+                            ""
+                        )}
+                    </Space>
                 ),
+                value: `expense-${id}`,
+                disabled:
+                    isPaid(PaymentType.EXPENSE, id) ||
+                    !!payments.find(
+                        (payment) =>
+                            payment.id === id &&
+                            payment.type === PaymentType.EXPENSE
+                    ),
             })
         ) ?? []),
         ...(queryMonthlyExpenseNotPaidMontly.data?.data.map(
             ({ fee, name, id }) => ({
-                label: `${name} - ${fee}`,
-                value: id,
-                disabled: !!payments.find(
-                    (payment) =>
-                        payment.id === id &&
-                        payment.type === PaymentType.EXPENSE
+                label: (
+                    <Space>
+                        {`${name} - ${fee}`}
+                        {isPaid(PaymentType.EXPENSE, id) ? (
+                            <Tag color="green">Lunas</Tag>
+                        ) : (
+                            ""
+                        )}
+                    </Space>
                 ),
+                value: `expense-${id}`,
+                disabled:
+                    isPaid(PaymentType.EXPENSE, id) ||
+                    !!payments.find(
+                        (payment) =>
+                            payment.id === id &&
+                            payment.type === PaymentType.EXPENSE
+                    ),
             })
         ) ?? []),
     ];
@@ -221,7 +259,7 @@ export default function ModalAddPayments({
             <TagItemPayment
                 key={
                     _payment.type === PaymentType.FEE
-                        ? "monthly-fee-"
+                        ? "monthly-fee-" + paymentActive.id
                         : "monthly-expense-" + paymentActive.id
                 }
                 color={

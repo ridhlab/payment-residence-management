@@ -152,6 +152,16 @@ export default function TabPaymentHistory() {
                 }}
                 open={openModalAddPayment}
                 setOpen={setOpenModalAddPayment}
+                paids={queryPaidPayment.data?.data.map(({ id, type }) => ({
+                    id,
+                    type,
+                }))}
+                notPaids={queryNotPaidPayment.data?.data.map(
+                    ({ id, type }) => ({
+                        id,
+                        type,
+                    })
+                )}
             />
         </>
     );
