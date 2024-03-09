@@ -4,4 +4,6 @@ export interface IAddHouseOccupantRequest {
     occupantId: number;
     houseId: number;
     occupantStatus: OccupantStatus;
+    startDate?: string;
+    endDate?: string;
 }

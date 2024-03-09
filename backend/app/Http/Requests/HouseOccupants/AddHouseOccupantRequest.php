@@ -24,7 +24,9 @@ class AddHouseOccupantRequest extends FormRequest
         return [
             'occupant_status' => 'required|in:contract,permanent',
             'house_id' => 'required|integer',
-            'occupant_id' => 'required|integer'
+            'occupant_id' => 'required|integer',
+            'start_date' => 'date_format:Y-m-d|required_if:occupant_status,contract',
+            'end_date' => 'date_format:Y-m-d|required_if:occupant_status,contract'
         ];
     }
 }

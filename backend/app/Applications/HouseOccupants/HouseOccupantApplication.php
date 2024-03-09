@@ -9,7 +9,9 @@ use App\Http\Requests\HouseOccupants\AddHouseOccupantRequest;
 use App\Http\Resources\HouseOccupantResource;
 use App\Models\House;
 use App\Models\HouseOccupant;
+use App\Models\HouseOccupantContract;
 use App\Models\Occupant;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -71,6 +73,7 @@ class HouseOccupantApplication
     {
         $houseId = $request->validated()['house_id'];
         $occupantId = $request->validated()['occupant_id'];
+        // dd($request->validated());
         DB::beginTransaction();
 
         $house = House::findOrFail($houseId);
@@ -82,6 +85,7 @@ class HouseOccupantApplication
             throw new HttpException(400, 'Occupant is occupy');
         }
 
+        $isContract = $request->validated()['occupant_status'];
         $houseOccupant = new HouseOccupant();
         $houseOccupant->occupant_status = $request->validated()['occupant_status'];
         $houseOccupant->house_id = $houseId;
@@ -89,6 +93,13 @@ class HouseOccupantApplication
         $houseOccupant->is_still_occupant = true;
 
         $houseOccupant->save();
+
+        if ($isContract) {
+            $houseOccupantContract = new HouseOccupantContract();
+            $houseOccupantContract->start_date = Carbon::parse($request->validated()['start_date']);
+            $houseOccupantContract->end_date = Carbon::parse($request->validated()['end_date']);
+            $houseOccupant->houseOccupantContract()->save($houseOccupantContract);
+        }
 
         $this->houseApplication->setHouseOccupied($houseId);
         $this->historicalHouseOccupantApplication->addHistorical($houseOccupant->id);

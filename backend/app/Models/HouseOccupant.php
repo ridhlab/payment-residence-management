@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -16,6 +15,11 @@ class HouseOccupant extends BaseModel
     protected $casts = [
         'is_still_occupant' => 'boolean'
     ];
+
+    public function houseOccupantContract(): HasOne
+    {
+        return $this->hasOne(HouseOccupantContract::class, 'house_occupant_id');
+    }
 
     public function house(): BelongsTo
     {

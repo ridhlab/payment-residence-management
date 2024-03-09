@@ -14,17 +14,33 @@ import { ROUTES } from "@/routes/list-route";
 import { useAddHouseOccupantMutation } from "@/services/mutations/house-occupants";
 import { useGetHouseDropdownNotOccupied } from "@/services/queries/houses";
 import { useGetOccupantDropdownNotOccupy } from "@/services/queries/occupants";
-import { Button, Card, Form, Select } from "antd";
+import { Button, Card, DatePicker, Form, Select } from "antd";
+import FormItem from "antd/es/form/FormItem";
+import moment, { Moment } from "moment";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
-const schema: yup.ObjectSchema<IAddHouseOccupantRequest> = yup.object().shape({
+const schema: yup.ObjectSchema<
+    Omit<IAddHouseOccupantRequest, "startDate" | "endDate"> & {
+        contractDate?: Moment[];
+    }
+> = yup.object().shape({
     occupantId: yup.number().required(getRequiredMessage("Penghuni")),
     houseId: yup.number().required(getRequiredMessage("Rumah")),
     occupantStatus: yup
         .mixed<OccupantStatus>()
-        .oneOf(Object.values(OccupantStatus)),
+        .oneOf(Object.values(OccupantStatus))
+        .required(getRequiredMessage("Status kontrak")),
+    contractDate: yup
+        .array()
+        .of(yup.mixed<Moment>())
+        .when("occupantStatus", {
+            is: OccupantStatus.CONTRACT,
+            then: (schema) =>
+                schema.required(getRequiredMessage("Masa kontrak")),
+            otherwise: (schema) => schema.optional(),
+        }),
 });
 
 export default function HouseOccupantFormPage() {
@@ -49,6 +65,10 @@ export default function HouseOccupantFormPage() {
         useGetOccupantDropdownNotOccupy(searchValueOccupant);
     const queryDropdownHouse = useGetHouseDropdownNotOccupied(searchValueHouse);
 
+    const watchOccupantStatus = Form.useWatch("occupantStatus", form);
+
+    const isContract = watchOccupantStatus === OccupantStatus.CONTRACT;
+
     const mutationAddHouseOccupant = useAddHouseOccupantMutation({
         onSuccess: () => {
             prompNotification({
@@ -65,7 +85,19 @@ export default function HouseOccupantFormPage() {
         modalConfirm({
             onOk: async () => {
                 await form.validateFields();
+
                 const payload = form.getFieldsValue();
+                if (isContract) {
+                    const contractDateSelected = payload.contractDate;
+                    console.log({ payload, contractDateSelected });
+                    payload["startDate"] = contractDateSelected[0]
+                        .format("YYYY-MM-DD")
+                        .toString();
+                    payload["endDate"] = contractDateSelected[1]
+                        .format("YYYY-MM-DD")
+                        .toString();
+                    delete payload.contractDate;
+                }
                 mutationAddHouseOccupant.mutate(payload);
             },
         });
@@ -132,6 +164,20 @@ export default function HouseOccupantFormPage() {
                             options={occupantStatusOptions}
                         />
                     </Form.Item>
+                    {isContract ? (
+                        <FormItem
+                            name="contractDate"
+                            label="Masa Kontrak"
+                            rules={[yupSync]}
+                        >
+                            <DatePicker.RangePicker
+                                placeholder={["Awal kontrak", "Akhir kontrak"]}
+                                disabledDate={(date) =>
+                                    date < moment().subtract(1, "day")
+                                }
+                            />
+                        </FormItem>
+                    ) : null}
                     <ButtonAction
                         actions={[
                             <Button href={ROUTES.HOUSE_OCCUPANT_INDEX}>
