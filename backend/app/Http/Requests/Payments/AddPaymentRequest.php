@@ -24,8 +24,6 @@ class AddPaymentRequest extends BaseRequest
         return [
             'house_occupant_id' => 'required|integer',
             'payments' => 'present|array',
-            'payments.*.type' =>  'in:fee,expense|required',
-            'payments.*.monthly_expense_id' =>  'integer',
             'payments.*.monthly_fee_id' =>  'integer',
             'payments.*.number_of_months' =>  'integer|required',
         ];

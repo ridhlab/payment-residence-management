@@ -14,10 +14,6 @@ class Payment extends BaseModel
 
     protected $table = 'payments';
 
-    public function monthlyExpense(): BelongsTo
-    {
-        return $this->belongsTo(MonthlyExpense::class, 'monthly_expense_id');
-    }
 
     public function monthlyFee(): BelongsTo
     {

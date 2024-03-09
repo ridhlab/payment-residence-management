@@ -84,7 +84,7 @@ class HouseOccupantApplication
             throw new HttpException(400, 'Occupant is occupy');
         }
 
-        $isContract = $request->validated()['occupant_status'];
+        $isContract = $request->validated()['occupant_status'] === 'contract';
         $houseOccupant = new HouseOccupant();
         $houseOccupant->occupant_status = $request->validated()['occupant_status'];
         $houseOccupant->house_id = $houseId;
@@ -99,6 +99,7 @@ class HouseOccupantApplication
             $houseOccupantContract->end_date = Carbon::parse($request->validated()['end_date']);
             $houseOccupant->houseOccupantContract()->save($houseOccupantContract);
         }
+
 
         $this->houseApplication->setHouseOccupied($houseId);
         $this->historicalHouseOccupantApplication->addHistorical($houseOccupant->id);
