@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\MonthlyFees\MonthlyFeeController;
 use App\Http\Controllers\Api\Occupants\OccupantDropdownController;
 use App\Http\Controllers\Api\Outcomes\OutcomeController;
 use App\Http\Controllers\Api\Payments\PaymentController;
+use App\Http\Controllers\Api\ReportPayments\ReportPaymentController;
 use App\Models\MonthlyFee;
 use App\Models\Outcome;
 use Illuminate\Http\Request;
@@ -90,4 +91,9 @@ Route::prefix('/payment')->controller(PaymentController::class)->group(function 
 Route::prefix('/outcome')->controller(OutcomeController::class)->group(function () {
     Route::get('/', 'getIndex')->name('outcome.index');
     Route::post('/add-outcome', 'addOutcome')->name('outcome.add-outcome');
+});
+
+Route::prefix('/report-payment')->controller(ReportPaymentController::class)->group(function () {
+    Route::get('/outcomes', 'reportOutcomes')->name('report-payment.outcomes');
+    Route::get('/incomes', 'reportIncomes')->name('report-payment.incomes');
 });
