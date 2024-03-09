@@ -120,6 +120,10 @@ class ReportPaymentApplication
 
     public function getBalance()
     {
-        return $this->getTotalIncomesAllTimes() - $this->getTotalOutcomesAllTimes();
+        return [
+            'balance' => $this->getTotalIncomesAllTimes() - $this->getTotalOutcomesAllTimes(),
+            'total_incomes' => $this->getTotalIncomesAllTimes(),
+            'total_outcomes' => $this->getTotalOutcomesAllTimes()
+        ];
     }
 }

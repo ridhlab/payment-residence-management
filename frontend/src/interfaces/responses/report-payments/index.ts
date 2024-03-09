@@ -31,3 +31,12 @@ export interface IReportPaymentForYearData {
 
 export interface IReportPaymentForYearResponse
     extends IBaseResponse<IReportPaymentForYearData[]> {}
+
+export interface IReportBalanceAllTimeData {
+    balance: number;
+    totalIncomes: number;
+    totalOutcomes: number;
+}
+
+export interface IReportBalanceAllTimeResponse
+    extends IBaseResponse<IReportBalanceAllTimeData> {}

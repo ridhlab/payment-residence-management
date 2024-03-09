@@ -1,5 +1,6 @@
 import { IBaseResponse } from "@/interfaces/responses/base";
 import {
+    IReportBalanceAllTimeResponse,
     IReportIncomesResponse,
     IReportOutcomesResponse,
     IReportPaymentForYearResponse,
@@ -44,9 +45,9 @@ export const useGetReportOutcomes = (
 
 export const useGetBalanceAllTimes = (
     options?: UseQueryOptions<
-        IBaseResponse<number>,
+        IReportBalanceAllTimeResponse,
         IBaseResponse<unknown>,
-        IBaseResponse<number>
+        IReportBalanceAllTimeResponse
     >
 ) => {
     return useQuery({

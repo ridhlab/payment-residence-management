@@ -62,7 +62,9 @@ export default function OutcomeFormPage() {
                         <Flex justify="end">
                             <Typography.Text>
                                 Uang tersedia :{" "}
-                                {getCurrencyId(queryGetBalance?.data?.data)}
+                                {getCurrencyId(
+                                    queryGetBalance?.data?.data?.balance
+                                )}
                             </Typography.Text>
                         </Flex>
                         <Form form={form} onFinish={onFinish}>
@@ -79,7 +81,8 @@ export default function OutcomeFormPage() {
                                 rules={[
                                     yupSync,
                                     {
-                                        max: queryGetBalance?.data?.data,
+                                        max: queryGetBalance?.data?.data
+                                            .balance,
                                         type: "number",
                                         message:
                                             "Pengeluaran melebihi batas uang yang tersedia",
