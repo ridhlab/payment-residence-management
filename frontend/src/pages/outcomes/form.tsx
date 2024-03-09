@@ -76,7 +76,15 @@ export default function OutcomeFormPage() {
                             <Form.Item
                                 label="Pengeluaran"
                                 name="fee"
-                                rules={[yupSync]}
+                                rules={[
+                                    yupSync,
+                                    {
+                                        max: queryGetBalance?.data?.data,
+                                        type: "number",
+                                        message:
+                                            "Pengeluaran melebihi batas uang yang tersedia",
+                                    },
+                                ]}
                             >
                                 <InputNumber
                                     prefix={"Rp "}
