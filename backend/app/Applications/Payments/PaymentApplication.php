@@ -7,11 +7,11 @@ use App\Models\MonthlyFee;
 use App\Models\OccupantPayment;
 use App\Models\Payment;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PaymentApplication
 {
+    // Get payments name that is paid in this month
     public function getPaidByHouseOccupant($houseOccupantId)
     {
         $paymentPaid = DB::table('payments', 'payment')
@@ -28,9 +28,18 @@ class PaymentApplication
                 'occupant_payment.payment_date'
             ])
             ->get();
-        return $paymentPaid;
+        return $paymentPaid->map(function ($payment) use ($houseOccupantId) {
+            $listPayments = (DB::table('occupant_payments', 'occupant_payment')
+                ->where('occupant_payment.house_occupant_id', '=', $houseOccupantId)
+                ->leftJoin('payments AS payment', 'payment.occupant_payment_id', '=', 'occupant_payment.id')
+                ->where('payment.monthly_fee_id', '=', $payment->id)
+                ->orderByDesc('payment.date')->get());
+            $payment->lastPaidMonth = $listPayments[0]->date;
+            return $payment;
+        });
     }
 
+    // Get payments name that is not paid in this month
     public function getNotPaidByHouseOccupant($houseOccupantId)
     {
         $paymentPaid = $this->getPaidByHouseOccupant($houseOccupantId);
@@ -51,7 +60,15 @@ class PaymentApplication
             return $isPaid ? false : true;
         })->values();
 
-        return $notPaids;
+        return $notPaids->map(function ($payment) use ($houseOccupantId) {
+            $listPayments = (DB::table('occupant_payments', 'occupant_payment')
+                ->where('occupant_payment.house_occupant_id', '=', $houseOccupantId)
+                ->leftJoin('payments AS payment', 'payment.occupant_payment_id', '=', 'occupant_payment.id')
+                ->where('payment.monthly_fee_id', '=', $payment['id'])
+                ->orderByDesc('payment.date')->get());
+            $payment['lastPaidMonth'] = count($listPayments) > 0 ? $listPayments[0]->date : null;
+            return $payment;
+        });
     }
 
     public function getPaymentByHouseOccupant($houseOccupantId)
@@ -65,6 +82,7 @@ class PaymentApplication
                 'payment.id',
                 'occupant_payment.payment_date',
                 'payment.date AS payment_for_date',
+                'monthly_fee.fee AS fee'
             ])
             ->get();
         $data->map(function ($data) {

@@ -217,6 +217,10 @@ export default function ModalAddPayments({
                                     key="save"
                                     type="primary"
                                     htmlType="submit"
+                                    disabled={
+                                        !payments.length ||
+                                        payments.some(({ months }) => !months)
+                                    }
                                 >
                                     Simpan
                                 </Button>,
