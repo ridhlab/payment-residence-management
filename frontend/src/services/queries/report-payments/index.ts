@@ -4,6 +4,7 @@ import {
     IReportOutcomesResponse,
 } from "@/interfaces/responses/report-payments";
 import {
+    getBalanceAllTimes,
     getReportIncomes,
     getReportOutcomes,
 } from "@/services/apis/report-payments";
@@ -35,6 +36,20 @@ export const useGetReportOutcomes = (
     return useQuery({
         queryKey: ["report-incomes", date],
         queryFn: () => getReportOutcomes(date),
+        ...options,
+    });
+};
+
+export const useGetBalanceAllTimes = (
+    options?: UseQueryOptions<
+        IBaseResponse<number>,
+        IBaseResponse<unknown>,
+        IBaseResponse<number>
+    >
+) => {
+    return useQuery({
+        queryKey: ["get-balance"],
+        queryFn: () => getBalanceAllTimes(),
         ...options,
     });
 };

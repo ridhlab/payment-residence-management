@@ -16,6 +16,12 @@ class ReportPaymentController
         $this->reportPaymentApplication = $reportPaymentApplication;
     }
 
+    public function getBalanceAllTime()
+    {
+        $data = $this->reportPaymentApplication->getBalance();
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('balances'));
+    }
+
     public function reportIncomes(Request $request)
     {
         $data = $this->reportPaymentApplication->reportIncomes($request);

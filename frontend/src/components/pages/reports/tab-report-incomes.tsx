@@ -1,3 +1,4 @@
+import { getCurrencyId } from "@/helpers/currency";
 import { numberColumns } from "@/helpers/table";
 import { IBaseResponse } from "@/interfaces/responses/base";
 import { IReportIncomesResponse } from "@/interfaces/responses/report-payments";
@@ -48,7 +49,12 @@ export default function TabReportIncomes({
                         dataIndex: "paymentName",
                         key: "income-payment-name",
                     },
-                    { title: "Biaya", dataIndex: "fee", key: "income-fee" },
+                    {
+                        title: "Biaya",
+                        dataIndex: "fee",
+                        key: "income-fee",
+                        render: (val) => getCurrencyId(val),
+                    },
                     {
                         title: "Pembayaran untuk Bulan",
                         dataIndex: "paymentForDate",

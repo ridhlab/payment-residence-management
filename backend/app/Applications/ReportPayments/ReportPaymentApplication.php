@@ -58,4 +58,33 @@ class ReportPaymentApplication
         }
         return $query->get();
     }
+
+    public function getTotalIncomesAllTimes()
+    {
+        $dataPayments = DB::table('payments', 'payment')
+            ->leftJoin('monthly_fees AS monthly_fee', 'monthly_fee.id', '=', 'payment.monthly_fee_id')
+            ->get();
+        $total = 0;
+        foreach ($dataPayments as $data) {
+            $total += $data->fee;
+        };
+        return $total;
+    }
+
+    public function getTotalOutcomesAllTimes()
+    {
+        $dataOutcomes = DB::table('outcomes', 'outcome')
+            ->get();
+        $total = 0;
+        foreach ($dataOutcomes as $data) {
+            $total += $data->fee;
+        };
+        return $total;
+    }
+
+
+    public function getBalance()
+    {
+        return $this->getTotalIncomesAllTimes() - $this->getTotalOutcomesAllTimes();
+    }
 }

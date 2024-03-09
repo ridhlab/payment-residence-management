@@ -96,4 +96,5 @@ Route::prefix('/outcome')->controller(OutcomeController::class)->group(function 
 Route::prefix('/report-payment')->controller(ReportPaymentController::class)->group(function () {
     Route::get('/outcomes', 'reportOutcomes')->name('report-payment.outcomes');
     Route::get('/incomes', 'reportIncomes')->name('report-payment.incomes');
+    Route::get('/balance', 'getBalanceAllTime')->name('report-payment.balance');
 });

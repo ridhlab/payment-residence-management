@@ -24,3 +24,14 @@ export const getReportOutcomes = async (date) => {
         throw (error as AxiosError).response.data;
     }
 };
+
+export const getBalanceAllTimes = async () => {
+    try {
+        const response = await axiosInstance.get(
+            ENDPOINT_API.REPORT_PAYMENTS.BALANCE
+        );
+        return response.data;
+    } catch (error) {
+        throw (error as AxiosError).response.data;
+    }
+};

@@ -9,6 +9,7 @@ import {
 } from "@/services/queries/payments";
 import { useParams } from "react-router-dom";
 import LoaderCenter from "@/components/shared/loader/loader-center";
+import { getCurrencyId } from "@/helpers/currency";
 
 export default function TabPaymentHistory() {
     const { id: houseOccupantId } = useParams();
@@ -31,7 +32,7 @@ export default function TabPaymentHistory() {
                         <Tag key={id} color="green" style={{ width: "100%" }}>
                             <p>Nama Pembayaran : {paymentName}</p>
                             <p>Iuran Bulanan</p>
-                            <p>Biaya : {fee}</p>
+                            <p>Biaya : {getCurrencyId(fee)}</p>
                             <p>Pembayaran bulan : {paymentForDate}</p>
                             <p>Dibayar pada : {paymentDate}</p>
                         </Tag>
@@ -54,7 +55,7 @@ export default function TabPaymentHistory() {
                         <Tag key={id} color="green" style={{ width: "100%" }}>
                             <p>Nama Pembayaran : {name}</p>
                             <p>Iuran Bulanan</p>
-                            <p>Biaya : {fee}</p>
+                            <p>Biaya : {getCurrencyId(fee)}</p>
                             <p>Tanggal Pembayaran : {paymentDate}</p>
                         </Tag>
                     )
@@ -75,7 +76,7 @@ export default function TabPaymentHistory() {
                     <Tag key={id} color="red" style={{ width: "100%" }}>
                         <p>Nama Pembayaran : {name}</p>
                         <p>Iuran Bulanan</p>
-                        <p>Biaya : {fee}</p>
+                        <p>Biaya : {getCurrencyId(fee)}</p>
                     </Tag>
                 ))}
             </Space>
