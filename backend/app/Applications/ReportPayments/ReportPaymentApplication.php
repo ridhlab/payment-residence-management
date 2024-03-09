@@ -8,24 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class ReportPaymentApplication
 {
-    // REPORT
-    // Tab report list
-    // - Berisi 2 tab, yaitu incomes dan outcomes 
-    // Tab graph
-    // - Berisi grafik line 3 parameter
-    //   - Pemasukan pada bulan
-    //   - Pengeluaran pada bulan
-    //   - Sisa pada bulan
-    // - Tampilkan juga total pengeluaran dan pemasukan serta sisa all time.
-
-    // Structure response
-    /**
-     * {year:number, month:number, incomes:number, outcomes: number, balance:number}[]
-     * 
-     * 
-     * 
-     */
-
     public function reportForYear($year)
     {
         $data = [];
