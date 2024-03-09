@@ -26,9 +26,12 @@ class ReportPaymentApplication
             ->leftJoin('house_occupants AS house_occupant', 'house_occupant.id', '=', 'occupant_payment.house_occupant_id')
             ->leftJoin('houses AS house', 'house.id', '=', 'house_occupant.house_id')
             ->leftJoin('occupants AS occupant', 'occupant.id', '=', 'house_occupant.occupant_id')
+            ->leftJoin('monthly_fees AS monthly_fee', 'monthly_fee.id', '=', 'payment.monthly_fee_id')
             ->select([
                 'payment.id', 'house.code AS houseCode',
-                'occupant.fullname AS occupant', 'occupant_payment.payment_date'
+                'occupant.fullname AS occupant', 'occupant_payment.payment_date',
+                'payment.date AS payment_for_date', 'monthly_fee.name AS payment_name',
+                'monthly_fee.fee AS fee'
             ]);
         if ($dateSelected) {
             $query->whereBetween(
@@ -36,14 +39,17 @@ class ReportPaymentApplication
                 [Carbon::parse($dateSelected)->startOfMonth(), Carbon::parse($dateSelected)->endOfMonth()]
             );
         }
-        return $query->get();
+        return $query->get()->map(function ($item) {
+            $item->payment_for_date = Carbon::parse($item->payment_for_date)->format('Y-m');
+            return $item;
+        });
     }
 
     public function reportOutcomes(Request $request)
     {
         $dateSelected = $request->query('date');
         $query = DB::table('outcomes', 'outcome')
-            ->select(['outcome.id', 'outcome.name', 'outcome.created_at AS date']);
+            ->select(['outcome.id', 'outcome.name', 'outcome.created_at AS date', 'outcome.fee']);
         if ($dateSelected) {
             $query->whereBetween(
                 'outcome.created_at',

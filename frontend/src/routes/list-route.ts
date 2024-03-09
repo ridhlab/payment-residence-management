@@ -75,4 +75,8 @@ export const ENDPOINT_API = {
         ADD_OUTCOME: "/outcome/add-outcome",
         INDEX: "/outcome",
     },
+    REPORT_PAYMENTS: {
+        INCOMES: "/report-payment/incomes",
+        OUTCOMES: "/report-payment/outcomes",
+    },
 };
