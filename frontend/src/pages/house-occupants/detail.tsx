@@ -31,6 +31,12 @@ export default function HouseOccupantDetailPage() {
                         code={query.data.data?.house.code}
                         fullname={query.data.data?.occupant.fullname}
                         occupantStatus={query.data?.data.occupantStatus}
+                        endDate={
+                            query?.data?.data?.contractDetail?.endDate ?? ""
+                        }
+                        startDate={
+                            query?.data?.data?.contractDetail?.startDate ?? ""
+                        }
                     />
                     <Card>
                         <Tabs
