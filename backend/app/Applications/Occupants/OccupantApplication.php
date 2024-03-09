@@ -17,7 +17,13 @@ class OccupantApplication
 {
     public function getDefaultValueForForm($id)
     {
-        $data = Occupant::where('id', $id)->select(['id', 'fullname', 'is_married', 'phone'])->first();
+        $data = DB::table('occupants', 'occupant')->where('id', $id)->select([
+            'id',
+            'fullname', 'is_married', 'phone', 'identity_card_filename'
+        ])->first();
+        $data->identityCardUrl = $data->identity_card_filename ? StorageHelper::getUrlSorage('/identity-card/' . $data->identity_card_filename) : null;
+
+        unset($data->identity_card_filename);
         return $data;
     }
 

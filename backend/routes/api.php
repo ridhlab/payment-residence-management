@@ -91,5 +91,3 @@ Route::prefix('/outcome')->controller(OutcomeController::class)->group(function 
     Route::get('/', 'getIndex')->name('outcome.index');
     Route::post('/add-outcome', 'addOutcome')->name('outcome.add-outcome');
 });
-
-Route::get('/total-income', [PaymentController::class, 'getTotalIncome'])->name('total-income');
