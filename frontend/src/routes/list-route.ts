@@ -37,6 +37,7 @@ export const ENDPOINT_API = {
         DEFAULT_VALUE_FOR_FORM: "/occupant/:id/default-value-for-form",
         STORE: "/occupant/store",
         UPDATE: "/occupant/:id/update",
+        UPLOAD_IDENTITY_CARD: "/occupant/upload-identity-card/:id",
         DROPDOWN: {
             NOT_OCCUPY: "/occupant/get-dropdown/not-occupy",
         },

@@ -4,5 +4,7 @@ import { IBaseResponse } from "../base";
 export interface IOccupantIndexResponse extends IBaseResponse<IOccupant[]> {}
 export interface IOccupantDefaultValueForFormResponse
     extends IBaseResponse<
-        Pick<IOccupant, "fullname" | "phone" | "isMarried">
+        Pick<IOccupant, "fullname" | "phone" | "isMarried"> & {
+            identityCardUrl: string;
+        }
     > {}

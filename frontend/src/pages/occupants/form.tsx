@@ -7,18 +7,23 @@ import { getRequiredMessage } from "@/helpers/form";
 import { modalConfirm } from "@/helpers/modal-confirm";
 import { prompNotification } from "@/helpers/notification";
 import { digitOnlyRegex } from "@/helpers/regex";
+import { parsingRoute } from "@/helpers/route";
 import { useFormUtility } from "@/hooks/useFormUtility";
 import {
     IOccupantStoreRequest,
     IOccupantUpdateRequest,
 } from "@/interfaces/requests/occupants";
-import { ROUTES } from "@/routes/list-route";
+import { IBaseResponse } from "@/interfaces/responses/base";
+import { ENDPOINT_API, ROUTES } from "@/routes/list-route";
+import { axiosInstance } from "@/services/apis";
 import {
     useOccupantMutationStore,
     useOccupantMutationUpdate,
 } from "@/services/mutations/occupants";
 import { useGetOccupantDefaultValueForForm } from "@/services/queries/occupants";
-import { Card, Form, Input, Radio } from "antd";
+import { Card, Form, Input, Progress, Radio, Upload } from "antd";
+import { UploadRequestOption } from "rc-upload/lib/interface";
+import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import * as yup from "yup";
 
@@ -44,14 +49,16 @@ export default function OccupantFormPage({
     const { form, yupSync } = useFormUtility({ schema });
     const query = useGetOccupantDefaultValueForForm(id);
     const navigate = useNavigate();
+    const [progress, setProgress] = React.useState(0);
 
     const mutationStore = useOccupantMutationStore({
-        onSuccess: () => {
+        onSuccess: (data: IBaseResponse<any>) => {
             prompNotification({
                 method: "success",
-                message: "Berhasil menambahkan data penghuni",
+                message:
+                    "Berhasil menambahkan data penghuni, Silahkan upload identitas diri Anda",
             });
-            navigate(ROUTES.OCCUPANT_INDEX);
+            navigate(parsingRoute(ROUTES.OCCUPANT_EDIT, { id: data.data.id }));
         },
         onError: (error) =>
             prompNotification({ message: error.message, method: "error" }),
@@ -81,6 +88,45 @@ export default function OccupantFormPage({
         });
     };
 
+    const customRequest = async (options: UploadRequestOption<any>) => {
+        const { onSuccess, onError, file, onProgress } = options;
+
+        const fmData = new FormData();
+        const config = {
+            headers: { "content-type": "multipart/form-data" },
+            onUploadProgress: (event) => {
+                const percent = Math.floor((event.loaded / event.total) * 100);
+                setProgress(percent);
+                if (percent === 100) {
+                    setTimeout(() => setProgress(0), 1000);
+                }
+                onProgress({ percent: (event.loaded / event.total) * 100 });
+            },
+        };
+        fmData.append("identity_card", file);
+        try {
+            await axiosInstance.post(
+                parsingRoute(ENDPOINT_API.OCCUPANTS.UPLOAD_IDENTITY_CARD, {
+                    id,
+                }),
+                fmData,
+                config
+            );
+            onSuccess("Upload successfully");
+            prompNotification({
+                message: "Sukses upload KTP",
+                method: "success",
+            });
+            query.refetch();
+        } catch (err) {
+            onError(new Error("Upload failed"));
+            prompNotification({
+                message: err as string,
+                method: "error",
+            });
+        }
+    };
+
     return (
         <MainLayout
             title={editPage ? "Edit Penghuni" : "Tambah Penghuni"}
@@ -97,7 +143,10 @@ export default function OccupantFormPage({
                     <Form
                         form={form}
                         onFinish={onFinish}
-                        initialValues={{ ...query?.data?.data }}
+                        initialValues={{
+                            ...query?.data?.data,
+                            isMarried: !!query?.data?.data.isMarried,
+                        }}
                     >
                         <Form.Item
                             label="Nama Lengkap"
@@ -123,6 +172,37 @@ export default function OccupantFormPage({
                                 <Radio value={false}>Lajang</Radio>
                             </Radio.Group>
                         </Form.Item>
+                        {editPage ? (
+                            <>
+                                <Upload
+                                    maxCount={1}
+                                    customRequest={customRequest}
+                                    defaultFileList={
+                                        query.data.data.identityCardUrl
+                                            ? [
+                                                  {
+                                                      url: query.data.data
+                                                          .identityCardUrl,
+                                                      name: query.data.data
+                                                          .identityCardUrl,
+                                                      uid: query.data.data
+                                                          .identityCardUrl,
+                                                  },
+                                              ]
+                                            : undefined
+                                    }
+                                    listType="picture-card"
+                                    accept="image/jpeg, image/png, image/jpg"
+                                >
+                                    Upload KTP
+                                </Upload>
+
+                                {progress > 0 ? (
+                                    <Progress percent={progress} />
+                                ) : null}
+                            </>
+                        ) : null}
+
                         <ButtonAction
                             actions={[
                                 <Button href={ROUTES.OCCUPANT_INDEX}>
