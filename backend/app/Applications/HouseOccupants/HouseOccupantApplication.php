@@ -73,7 +73,6 @@ class HouseOccupantApplication
     {
         $houseId = $request->validated()['house_id'];
         $occupantId = $request->validated()['occupant_id'];
-        // dd($request->validated());
         DB::beginTransaction();
 
         $house = House::findOrFail($houseId);

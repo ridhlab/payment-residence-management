@@ -3,6 +3,7 @@ import { IBaseResponse } from "../base";
 import { OccupantStatus } from "@/enums/occupant-status";
 import { IHouse } from "@/interfaces/entities/houses";
 import { IOccupant } from "@/interfaces/entities/occupants";
+import { IHouseOccupantContract } from "@/interfaces/entities/house-occupant-contracts";
 
 export interface IHouseOccupantOcccupiedData {
     id: number;
@@ -17,6 +18,7 @@ export interface IHouseOccupantOccupiedResponse
 export interface IHouseOccupantDetailData extends IHouseOccupant {
     house: IHouse;
     occupant: IOccupant;
+    contractDetail: IHouseOccupantContract;
 }
 
 export interface IHouseOccupantDetailResponse

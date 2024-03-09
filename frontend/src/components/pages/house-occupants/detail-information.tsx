@@ -13,13 +13,18 @@ export default function DetailInformationHouseOccupant({
     code,
     fullname,
     occupantStatus,
+    endDate,
+    startDate,
 }: {
     code: string;
     fullname: string;
     occupantStatus: OccupantStatus;
+    startDate: string;
+    endDate: string;
 }) {
     const { id: houseOccupantId } = useParams();
     const navigate = useNavigate();
+    const isContract = occupantStatus === OccupantStatus.CONTRACT;
 
     const mutationRemove = useRemoveHouseOccupantMutation(houseOccupantId, {
         onSuccess: () => {
@@ -66,6 +71,16 @@ export default function DetailInformationHouseOccupant({
                         {occupantStatusTranslation(occupantStatus)}
                     </Tag>
                 </Descriptions.Item>
+                {isContract ? (
+                    <>
+                        <Descriptions.Item label="Kontrak Awal">
+                            {startDate}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Kontrak Berakhir">
+                            {endDate}
+                        </Descriptions.Item>
+                    </>
+                ) : null}
             </Descriptions>
         </Card>
     );

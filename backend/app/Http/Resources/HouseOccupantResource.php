@@ -18,6 +18,7 @@ class HouseOccupantResource extends JsonResource
             ...parent::toArray($request),
             'house' => $this->house,
             'occupant' => $this->occupant,
+            'contract_detail' => $this->houseOccupantContract
         ];
     }
 }

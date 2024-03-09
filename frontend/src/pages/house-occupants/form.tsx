@@ -89,7 +89,6 @@ export default function HouseOccupantFormPage() {
                 const payload = form.getFieldsValue();
                 if (isContract) {
                     const contractDateSelected = payload.contractDate;
-                    console.log({ payload, contractDateSelected });
                     payload["startDate"] = contractDateSelected[0]
                         .format("YYYY-MM-DD")
                         .toString();
