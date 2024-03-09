@@ -14,12 +14,6 @@ const MonthlyFeeIndexPage = React.lazy(() => import("@/pages/monthly-fees"));
 const MonthlyFeeFormPage = React.lazy(
     () => import("@/pages/monthly-fees/form")
 );
-const MonthlyExpenseIndexPage = React.lazy(
-    () => import("@/pages/monthly-expenses")
-);
-const MonthlyExpenseFormPage = React.lazy(
-    () => import("@/pages/monthly-expenses/form")
-);
 const HouseOccupantIndexPage = React.lazy(
     () => import("@/pages/house-occupants")
 );
@@ -80,18 +74,7 @@ export const router = createBrowserRouter([
         path: ROUTES.MONTHLY_FEE_EDIT,
         element: withSuspense(<MonthlyFeeFormPage editPage />),
     },
-    {
-        path: ROUTES.MONTHLY_EXPENSE_INDEX,
-        element: withSuspense(<MonthlyExpenseIndexPage />),
-    },
-    {
-        path: ROUTES.MONTHLY_EXPENSE_CREATE,
-        element: withSuspense(<MonthlyExpenseFormPage />),
-    },
-    {
-        path: ROUTES.MONTHLY_EXPENSE_EDIT,
-        element: withSuspense(<MonthlyExpenseFormPage editPage />),
-    },
+
     {
         path: ROUTES.HOUSE_OCCUPANT_INDEX,
         element: withSuspense(<HouseOccupantIndexPage />),
