@@ -11,6 +11,17 @@ use Illuminate\Support\Facades\DB;
 
 class PaymentApplication
 {
+
+    public function getLastPaidMonth($houseOccupantId, $monthlyFeeId)
+    {
+        $listPayments = (DB::table('occupant_payments', 'occupant_payment')
+            ->where('occupant_payment.house_occupant_id', '=', $houseOccupantId)
+            ->leftJoin('payments AS payment', 'payment.occupant_payment_id', '=', 'occupant_payment.id')
+            ->where('payment.monthly_fee_id', '=', $monthlyFeeId)
+            ->orderByDesc('payment.date')->get());
+        return count($listPayments) > 0 ? Carbon::parse($listPayments[0]->date)->format('Y-m')  : null;
+    }
+
     // Get payments name that is paid in this month
     public function getPaidByHouseOccupant($houseOccupantId)
     {
@@ -28,14 +39,9 @@ class PaymentApplication
                 'occupant_payment.payment_date'
             ])
             ->get();
-        return $paymentPaid->map(function ($payment) use ($houseOccupantId) {
-            $listPayments = (DB::table('occupant_payments', 'occupant_payment')
-                ->where('occupant_payment.house_occupant_id', '=', $houseOccupantId)
-                ->leftJoin('payments AS payment', 'payment.occupant_payment_id', '=', 'occupant_payment.id')
-                ->where('payment.monthly_fee_id', '=', $payment->id)
-                ->orderByDesc('payment.date')->get());
-            $payment->lastPaidMonth = $listPayments[0]->date;
-            return $payment;
+        return $paymentPaid->map(function ($paymentFee) use ($houseOccupantId) {
+            $paymentFee->lastPaidMonth = $this->getLastPaidMonth($houseOccupantId, $paymentFee->id);
+            return $paymentFee;
         });
     }
 
@@ -61,12 +67,7 @@ class PaymentApplication
         })->values();
 
         return $notPaids->map(function ($payment) use ($houseOccupantId) {
-            $listPayments = (DB::table('occupant_payments', 'occupant_payment')
-                ->where('occupant_payment.house_occupant_id', '=', $houseOccupantId)
-                ->leftJoin('payments AS payment', 'payment.occupant_payment_id', '=', 'occupant_payment.id')
-                ->where('payment.monthly_fee_id', '=', $payment['id'])
-                ->orderByDesc('payment.date')->get());
-            $payment['lastPaidMonth'] = count($listPayments) > 0 ? $listPayments[0]->date : null;
+            $payment['lastPaidMonth'] = $this->getLastPaidMonth($houseOccupantId, $payment['id']);
             return $payment;
         });
     }
@@ -102,10 +103,11 @@ class PaymentApplication
         $occupantPayment->save();
 
         foreach ($request->validated()['payments'] as $payment) {
+            $lastPaidMonths = $this->getLastPaidMonth($houseOccupantId, $payment['monthly_fee_id']);
             for ($i = 1; $i <= $payment['number_of_months']; $i++) {
                 $newPayment =  new Payment();
                 $newPayment->monthly_fee_id = $payment['monthly_fee_id'];
-                $date = Carbon::now()->addMonthNoOverflow($i - 1);
+                $date = Carbon::parse($lastPaidMonths)->addMonthNoOverflow($i);
                 $newPayment->date = $date;
                 $occupantPayment->payments()->save($newPayment);
             }

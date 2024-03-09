@@ -72,13 +72,19 @@ export default function TabPaymentHistory() {
             <LoaderCenter />
         ) : queryNotPaidPayment.data?.data?.length ? (
             <Space direction="vertical" style={{ width: "100%" }}>
-                {queryNotPaidPayment?.data?.data.map(({ id, name, fee }) => (
-                    <Tag key={id} color="red" style={{ width: "100%" }}>
-                        <p>Nama Pembayaran : {name}</p>
-                        <p>Iuran Bulanan</p>
-                        <p>Biaya : {getCurrencyId(fee)}</p>
-                    </Tag>
-                ))}
+                {queryNotPaidPayment?.data?.data.map(
+                    ({ id, name, fee, lastPaidMonth }) => (
+                        <Tag key={id} color="red" style={{ width: "100%" }}>
+                            <p>Nama Pembayaran : {name}</p>
+                            <p>Iuran Bulanan</p>
+                            <p>Biaya : {getCurrencyId(fee)}</p>
+                            <p>
+                                Bulan Pembayaran Terakhir :{" "}
+                                {lastPaidMonth ?? "-"}
+                            </p>
+                        </Tag>
+                    )
+                )}
             </Space>
         ) : (
             <Typography.Text>
@@ -124,12 +130,18 @@ export default function TabPaymentHistory() {
                 }}
                 open={openModalAddPayment}
                 setOpen={setOpenModalAddPayment}
-                paids={queryPaidPayment.data?.data.map(({ id }) => ({
-                    id,
-                }))}
-                notPaids={queryNotPaidPayment.data?.data.map(({ id }) => ({
-                    id,
-                }))}
+                paids={queryPaidPayment.data?.data.map(
+                    ({ id, lastPaidMonth }) => ({
+                        id,
+                        lastPaidMonth,
+                    })
+                )}
+                notPaids={queryNotPaidPayment.data?.data.map(
+                    ({ id, lastPaidMonth }) => ({
+                        id,
+                        lastPaidMonth,
+                    })
+                )}
             />
         </>
     );

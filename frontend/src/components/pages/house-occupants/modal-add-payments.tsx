@@ -15,6 +15,7 @@ import ButtonAction from "@/components/shared/form/button-actions";
 import * as yup from "yup";
 import { useFormUtility } from "@/hooks/useFormUtility";
 import { IMonthlyFeeGetAllData } from "@/interfaces/responses/monthly-fees";
+import { getCurrencyId } from "@/helpers/currency";
 
 const schema = yup.object().shape({
     houseOccupantId: yup.number().required(),
@@ -37,8 +38,8 @@ export default function ModalAddPayments({
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     refetchHistoricalPayment: () => void;
-    paids: { id: number }[];
-    notPaids: { id: number }[];
+    paids: { id: number; lastPaidMonth: string }[];
+    notPaids: { id: number; lastPaidMonth: string }[];
 }) {
     const { id: houseOccupantId } = useParams();
     const queryMonthlyFee = useGetMonthlyFeeGetAll();
@@ -134,13 +135,12 @@ export default function ModalAddPayments({
         ...(queryMonthlyFee.data?.data.map(({ fee, name, id }) => ({
             label: (
                 <Space>
-                    {`${name} - ${fee}`}
+                    {`${name} - ${getCurrencyId(fee)}`}
                     {isPaid(id) ? <Tag color="green">Lunas</Tag> : ""}
                 </Space>
             ),
             value: `fee-${id}`,
-            disabled:
-                isPaid(id) || !!payments.find((payment) => payment.id === id),
+            disabled: !!payments.find((payment) => payment.id === id),
         })) ?? []),
     ];
 
@@ -149,8 +149,15 @@ export default function ModalAddPayments({
             queryMonthlyFee?.data?.data.find((data) => data.id === _payment.id);
         return (
             <TagItemPayment
+                lastPaidMonth={
+                    (isPaid(_payment.id)
+                        ? paids?.find((paid) => paid.id === _payment.id)
+                              ?.lastPaidMonth
+                        : notPaids?.find((paid) => paid.id === _payment.id)
+                              ?.lastPaidMonth) ?? "-"
+                }
                 key={paymentActive.id}
-                color={"red"}
+                color={isPaid(_payment.id) ? "green" : "red"}
                 fee={paymentActive.fee}
                 name={paymentActive.name}
                 handleChange={(val) =>
@@ -189,7 +196,6 @@ export default function ModalAddPayments({
                         </Space>
                         <Space>
                             <Select
-                                size="small"
                                 placeholder="Pilih Nama Iura/Pengeluaran"
                                 options={optionsListPaymentAvailable}
                                 allowClear
@@ -201,7 +207,6 @@ export default function ModalAddPayments({
                             />
                             <Button
                                 icon={<PlusOutlined />}
-                                size="small"
                                 disabled={!valueFeeExpenseActive}
                                 onClick={handleClickAdd}
                             >

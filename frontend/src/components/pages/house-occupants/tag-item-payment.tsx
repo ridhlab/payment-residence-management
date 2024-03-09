@@ -11,26 +11,29 @@ export default function TagItemPayment({
     fee,
     handleDelete,
     handleChange,
+    lastPaidMonth,
 }: {
     handleChange: (val) => void;
     color?: LiteralUnion<PresetColorType | PresetStatusColorType>;
     name: string;
     fee: number;
     handleDelete?: () => void;
+    lastPaidMonth: string;
 }) {
     return (
         <Tag color={color} style={{ width: "100%" }}>
             <Flex justify="space-between">
                 <div>
                     <p>Nama : {name}</p>
-                    <p>Biaya : {getCurrencyId(fee)}</p>
                     <p>Iuran Bulanan</p>
+                    <p>Biaya : {getCurrencyId(fee)}</p>
                     <span>Bayar berapa bulan :</span>
                     <InputNumber
                         size="small"
                         defaultValue={1}
                         onChange={(val) => handleChange(val)}
                     />
+                    <p>Bulan Pembayaran Terakhir : {lastPaidMonth}</p>
                 </div>
                 <Button
                     size="small"
