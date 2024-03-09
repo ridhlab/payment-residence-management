@@ -1,11 +1,12 @@
 import {
     DashboardOutlined,
     DatabaseOutlined,
+    EuroOutlined,
     HomeOutlined,
+    LineChartOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     MoneyCollectOutlined,
-    RedEnvelopeOutlined,
     TeamOutlined,
     UserSwitchOutlined,
 } from "@ant-design/icons";
@@ -37,8 +38,9 @@ const menuKey = {
     House: ROUTES.HOUSE_INDEX,
     Occupant: ROUTES.OCCUPANT_INDEX,
     MonthlyFee: ROUTES.MONTHLY_FEE_INDEX,
-    MonthlyExpense: ROUTES.MONTHLY_EXPENSE_INDEX,
     HouseOccupant: ROUTES.HOUSE_OCCUPANT_INDEX,
+    ReportPayment: ROUTES.REPORT_PAYMENT,
+    Outcome: ROUTES.OUTCOMES_INDEX,
 };
 
 export default function MainLayout({ children, ...props }: IProps) {
@@ -85,23 +87,25 @@ export default function MainLayout({ children, ...props }: IProps) {
                             </Link>
                         ),
                     },
-                    {
-                        key: menuKey.MonthlyExpense,
-                        icon: <RedEnvelopeOutlined />,
-                        label: (
-                            <Link to={ROUTES.MONTHLY_EXPENSE_INDEX}>
-                                Pengeluaran Bulanan
-                            </Link>
-                        ),
-                    },
                 ],
             },
-
             {
                 key: menuKey.HouseOccupant,
                 icon: <UserSwitchOutlined />,
                 label: (
                     <Link to={ROUTES.HOUSE_OCCUPANT_INDEX}>Penghuni Rumah</Link>
+                ),
+            },
+            {
+                key: menuKey.Outcome,
+                icon: <EuroOutlined />,
+                label: <Link to={ROUTES.OUTCOMES_INDEX}>Pengeluaran</Link>,
+            },
+            {
+                key: menuKey.ReportPayment,
+                icon: <LineChartOutlined />,
+                label: (
+                    <Link to={ROUTES.REPORT_PAYMENT}>Laporan Pembayaran</Link>
                 ),
             },
         ],

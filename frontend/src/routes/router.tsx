@@ -14,12 +14,6 @@ const MonthlyFeeIndexPage = React.lazy(() => import("@/pages/monthly-fees"));
 const MonthlyFeeFormPage = React.lazy(
     () => import("@/pages/monthly-fees/form")
 );
-const MonthlyExpenseIndexPage = React.lazy(
-    () => import("@/pages/monthly-expenses")
-);
-const MonthlyExpenseFormPage = React.lazy(
-    () => import("@/pages/monthly-expenses/form")
-);
 const HouseOccupantIndexPage = React.lazy(
     () => import("@/pages/house-occupants")
 );
@@ -29,6 +23,11 @@ const HouseOccupantFormPage = React.lazy(
 const HouseOccupantDetailPage = React.lazy(
     () => import("@/pages/house-occupants/detail")
 );
+const ReportPaymentPage = React.lazy(
+    () => import("@/pages/report-payments/index")
+);
+const OutcomeIndexPage = React.lazy(() => import("@/pages/outcomes"));
+const OutcomeFormPage = React.lazy(() => import("@/pages/outcomes/form"));
 
 export const withSuspense = (component: React.ReactNode) => {
     return <Suspense fallback={<LoaderFullscreen />}>{component}</Suspense>;
@@ -75,18 +74,7 @@ export const router = createBrowserRouter([
         path: ROUTES.MONTHLY_FEE_EDIT,
         element: withSuspense(<MonthlyFeeFormPage editPage />),
     },
-    {
-        path: ROUTES.MONTHLY_EXPENSE_INDEX,
-        element: withSuspense(<MonthlyExpenseIndexPage />),
-    },
-    {
-        path: ROUTES.MONTHLY_EXPENSE_CREATE,
-        element: withSuspense(<MonthlyExpenseFormPage />),
-    },
-    {
-        path: ROUTES.MONTHLY_EXPENSE_EDIT,
-        element: withSuspense(<MonthlyExpenseFormPage editPage />),
-    },
+
     {
         path: ROUTES.HOUSE_OCCUPANT_INDEX,
         element: withSuspense(<HouseOccupantIndexPage />),
@@ -98,5 +86,17 @@ export const router = createBrowserRouter([
     {
         path: ROUTES.HOUSE_OCCUPANT_DETAIL,
         element: withSuspense(<HouseOccupantDetailPage />),
+    },
+    {
+        path: ROUTES.REPORT_PAYMENT,
+        element: withSuspense(<ReportPaymentPage />),
+    },
+    {
+        path: ROUTES.OUTCOMES_INDEX,
+        element: withSuspense(<OutcomeIndexPage />),
+    },
+    {
+        path: ROUTES.OUTCOME_CREATE,
+        element: withSuspense(<OutcomeFormPage />),
     },
 ]);

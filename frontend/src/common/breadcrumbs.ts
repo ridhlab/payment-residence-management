@@ -66,37 +66,6 @@ export const BREADCRUBMS = {
             },
         ],
     },
-    MONTHLY_EXPENSE: {
-        INDEX: () => [
-            { label: "Dashboard", href: ROUTES.DASHBOARD },
-            {
-                label: "Daftar Pengeluaran Bulanan",
-                href: ROUTES.MONTHLY_EXPENSE_INDEX,
-            },
-        ],
-        CREATE: () => [
-            { label: "Dashboard", href: ROUTES.DASHBOARD },
-            {
-                label: "Daftar Pengeluaran Bulanan",
-                href: ROUTES.MONTHLY_EXPENSE_INDEX,
-            },
-            {
-                label: "Tambah Pengeluaran Bulanan",
-                href: ROUTES.MONTHLY_EXPENSE_CREATE,
-            },
-        ],
-        EDIT: (id) => [
-            { label: "Dashboard", href: ROUTES.DASHBOARD },
-            {
-                label: "Daftar Pengeluaran Bulanan",
-                href: ROUTES.MONTHLY_EXPENSE_INDEX,
-            },
-            {
-                label: "Edit Pengeluaran Bulanan",
-                href: parsingRoute(ROUTES.MONTHLY_EXPENSE_EDIT, { id }),
-            },
-        ],
-    },
     HOUSE_OCCUPANT: {
         INDEX: () => [
             { label: "Dashboard", href: ROUTES.DASHBOARD },
@@ -126,6 +95,21 @@ export const BREADCRUBMS = {
                 label: "Detail Penghuni Rumah",
                 href: parsingRoute(ROUTES.HOUSE_OCCUPANT_DETAIL, { id }),
             },
+        ],
+    },
+    REPORT_PAYMENT: () => [
+        { label: "Dashboard", href: ROUTES.DASHBOARD },
+        { label: "Laporan Pembayaran", href: ROUTES.REPORT_PAYMENT },
+    ],
+    OUTCOMES: {
+        INDEX: () => [
+            { label: "Dashboard", href: ROUTES.DASHBOARD },
+            { label: "Pengeluaran", href: ROUTES.OUTCOMES_INDEX },
+        ],
+        CREATE: () => [
+            { label: "Dashboard", href: ROUTES.DASHBOARD },
+            { label: "Pengeluaran", href: ROUTES.OUTCOMES_INDEX },
+            { label: "Tambah Pengeluaran", href: ROUTES.OUTCOME_CREATE },
         ],
     },
 };

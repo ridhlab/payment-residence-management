@@ -1,14 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import LoaderCenter from "@/components/shared/loader/loader-center";
-import { PaymentType } from "@/enums/payment-type";
 import { modalConfirm } from "@/helpers/modal-confirm";
 import { prompNotification } from "@/helpers/notification";
 import { IAddPaymentRequest } from "@/interfaces/requests/payments";
 import { useAddPaymentsMutations } from "@/services/mutations/payments";
-import {
-    useGetMonthlyExpenseByIsNotPaidMonthly,
-    useGetMonthlyExpenseByIsPaidMonthly,
-} from "@/services/queries/monthly-expenses";
 import { useGetMonthlyFeeGetAll } from "@/services/queries/monthly-fees";
 import { Form, Modal, Select, Space, Tag } from "antd";
 import React from "react";
@@ -20,13 +15,11 @@ import ButtonAction from "@/components/shared/form/button-actions";
 import * as yup from "yup";
 import { useFormUtility } from "@/hooks/useFormUtility";
 import { IMonthlyFeeGetAllData } from "@/interfaces/responses/monthly-fees";
-import { IMonthlyExpenseByIsPaidOrNotPaidData } from "@/interfaces/responses/monthly-expenses";
 
 const schema = yup.object().shape({
     houseOccupantId: yup.number().required(),
     payments: yup.array().of(
         yup.object().shape({
-            type: yup.mixed<PaymentType>().oneOf(Object.values(PaymentType)),
             monthlyFeeId: yup.number().optional(),
             monthlyExpenseId: yup.number().optional(),
             payments: yup.number().required(),
@@ -44,19 +37,11 @@ export default function ModalAddPayments({
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     refetchHistoricalPayment: () => void;
-    paids: { type: PaymentType; id: number }[];
-    notPaids: { type: PaymentType; id: number }[];
+    paids: { id: number }[];
+    notPaids: { id: number }[];
 }) {
     const { id: houseOccupantId } = useParams();
     const queryMonthlyFee = useGetMonthlyFeeGetAll();
-    const queryMonthlyExpensePaidMontly = useGetMonthlyExpenseByIsPaidMonthly();
-    const queryMonthlyExpenseNotPaidMontly =
-        useGetMonthlyExpenseByIsNotPaidMonthly();
-
-    const dataMonthlyExpense = [
-        ...(queryMonthlyExpensePaidMontly?.data?.data ?? []),
-        ...(queryMonthlyExpenseNotPaidMontly?.data?.data ?? []),
-    ];
 
     const mutationAddPayments = useAddPaymentsMutations({
         onSuccess: () => {
@@ -75,7 +60,7 @@ export default function ModalAddPayments({
     const { form } = useFormUtility<IAddPaymentRequest>(schema);
 
     const [payments, setPayments] = React.useState<
-        { id: number; type: PaymentType; months: number }[]
+        { id: number; months: number }[]
     >([]);
 
     const [valueFeeExpenseActive, setValueFeeExpenseActive] =
@@ -85,13 +70,7 @@ export default function ModalAddPayments({
         setOpen(false);
     };
 
-    const isLoading =
-        queryMonthlyFee.isLoading ||
-        queryMonthlyFee.isFetching ||
-        queryMonthlyExpenseNotPaidMontly.isLoading ||
-        queryMonthlyExpenseNotPaidMontly.isFetching ||
-        queryMonthlyExpensePaidMontly.isLoading ||
-        queryMonthlyExpensePaidMontly.isFetching;
+    const isLoading = queryMonthlyFee.isLoading || queryMonthlyFee.isFetching;
 
     const handleClickAdd = () => {
         setPayments((prev) => [
@@ -111,22 +90,12 @@ export default function ModalAddPayments({
             onOk: async () => {
                 const payload: IAddPaymentRequest = {
                     houseOccupantId: parseInt(houseOccupantId),
-                    // @ts-ignore
-                    payments: payments.map(({ id, months, type }) => {
-                        if (type === PaymentType.EXPENSE) {
-                            return {
-                                type: PaymentType.EXPENSE,
-                                numberOfMonths: months,
-                                monthlyExpenseId: id,
-                            };
-                        }
-                        if (type === PaymentType.FEE) {
-                            return {
-                                type: PaymentType.FEE,
-                                numberOfMonths: months,
-                                monthlyFeeId: id,
-                            };
-                        }
+
+                    payments: payments.map(({ id, months }) => {
+                        return {
+                            numberOfMonths: months,
+                            monthlyFeeId: id,
+                        };
                     }),
                 };
                 mutationAddPayments.mutate(payload);
@@ -134,10 +103,10 @@ export default function ModalAddPayments({
         });
     };
 
-    const handleChangeNumberMonths = (id, val, type: PaymentType) => {
+    const handleChangeNumberMonths = (id, val) => {
         setPayments(
             payments.map((item) => {
-                if (item.id === id && type === item.type) {
+                if (item.id === id) {
                     return { ...item, months: val };
                 }
                 return item;
@@ -146,38 +115,19 @@ export default function ModalAddPayments({
     };
 
     React.useEffect(() => {
-        if (
-            queryMonthlyExpenseNotPaidMontly.data?.data &&
-            queryMonthlyExpenseNotPaidMontly.data?.data &&
-            queryMonthlyExpensePaidMontly.data?.data
-        ) {
-            const _payments = [
-                ...(queryMonthlyFee.data?.data.map(({ id }) => ({
-                    type: PaymentType.FEE,
-                    months: 1,
-                    id,
-                })) ?? []),
-                ...(queryMonthlyExpensePaidMontly.data?.data.map(({ id }) => ({
-                    type: PaymentType.EXPENSE,
-                    months: 1,
-                    id,
-                })) ?? []),
-            ].filter(({ id, type }) => {
-                return notPaids?.find(
-                    (paid) => paid.id === id && paid.type === type
-                );
-            });
-            setPayments(_payments);
-        }
-    }, [
-        queryMonthlyFee.data?.data,
-        queryMonthlyExpenseNotPaidMontly.data?.data,
-        queryMonthlyExpensePaidMontly.data?.data,
-        notPaids,
-    ]);
+        const _payments = [
+            ...(queryMonthlyFee.data?.data.map(({ id }) => ({
+                months: 1,
+                id,
+            })) ?? []),
+        ].filter(({ id }) => {
+            return notPaids?.find((paid) => paid.id === id);
+        });
+        setPayments(_payments);
+    }, [queryMonthlyFee.data?.data, notPaids]);
 
-    const isPaid = (type, id) => {
-        return !!paids?.find((paid) => paid.type === type && paid.id === id);
+    const isPaid = (id) => {
+        return !!paids?.find((paid) => paid.id === id);
     };
 
     const optionsListPaymentAvailable = [
@@ -185,109 +135,31 @@ export default function ModalAddPayments({
             label: (
                 <Space>
                     {`${name} - ${fee}`}
-                    {isPaid(PaymentType.FEE, id) ? (
-                        <Tag color="green">Lunas</Tag>
-                    ) : (
-                        ""
-                    )}
+                    {isPaid(id) ? <Tag color="green">Lunas</Tag> : ""}
                 </Space>
             ),
             value: `fee-${id}`,
             disabled:
-                isPaid(PaymentType.FEE, id) ||
-                !!payments.find(
-                    (payment) =>
-                        payment.id === id && payment.type === PaymentType.FEE
-                ),
+                isPaid(id) || !!payments.find((payment) => payment.id === id),
         })) ?? []),
-        ...(queryMonthlyExpensePaidMontly.data?.data.map(
-            ({ fee, name, id }) => ({
-                label: (
-                    <Space>
-                        {`${name} - ${fee}`}
-                        {isPaid(PaymentType.EXPENSE, id) ? (
-                            <Tag color="green">Lunas</Tag>
-                        ) : (
-                            ""
-                        )}
-                    </Space>
-                ),
-                value: `expense-${id}`,
-                disabled:
-                    isPaid(PaymentType.EXPENSE, id) ||
-                    !!payments.find(
-                        (payment) =>
-                            payment.id === id &&
-                            payment.type === PaymentType.EXPENSE
-                    ),
-            })
-        ) ?? []),
-        ...(queryMonthlyExpenseNotPaidMontly.data?.data.map(
-            ({ fee, name, id }) => ({
-                label: (
-                    <Space>
-                        {`${name} - ${fee}`}
-                        {isPaid(PaymentType.EXPENSE, id) ? (
-                            <Tag color="green">Lunas</Tag>
-                        ) : (
-                            ""
-                        )}
-                    </Space>
-                ),
-                value: `expense-${id}`,
-                disabled:
-                    isPaid(PaymentType.EXPENSE, id) ||
-                    !!payments.find(
-                        (payment) =>
-                            payment.id === id &&
-                            payment.type === PaymentType.EXPENSE
-                    ),
-            })
-        ) ?? []),
     ];
 
     const paymentsNode = payments?.map((_payment) => {
-        const paymentActive:
-            | IMonthlyFeeGetAllData
-            | IMonthlyExpenseByIsPaidOrNotPaidData =
-            _payment.type === PaymentType.FEE
-                ? queryMonthlyFee?.data?.data?.find(
-                      (data) => data.id === _payment.id
-                  )
-                : dataMonthlyExpense.find((data) => data.id === _payment.id);
+        const paymentActive: IMonthlyFeeGetAllData =
+            queryMonthlyFee?.data?.data.find((data) => data.id === _payment.id);
         return (
             <TagItemPayment
-                key={
-                    _payment.type === PaymentType.FEE
-                        ? "monthly-fee-" + paymentActive.id
-                        : "monthly-expense-" + paymentActive.id
-                }
-                color={
-                    _payment.type === PaymentType.FEE ||
-                    (_payment.type === PaymentType.EXPENSE &&
-                        // @ts-ignore
-                        paymentActive?.isPaidMonthly)
-                        ? "red"
-                        : undefined
-                }
+                key={paymentActive.id}
+                color={"red"}
                 fee={paymentActive.fee}
                 name={paymentActive.name}
-                type={_payment.type}
                 handleChange={(val) =>
-                    handleChangeNumberMonths(
-                        paymentActive.id,
-                        val,
-                        PaymentType.FEE
-                    )
+                    handleChangeNumberMonths(paymentActive.id, val)
                 }
                 handleDelete={() =>
                     setPayments(
                         payments.filter(
-                            (data) =>
-                                !(
-                                    data.id === paymentActive.id &&
-                                    data.type === _payment.type
-                                )
+                            (data) => !(data.id === paymentActive.id)
                         )
                     )
                 }

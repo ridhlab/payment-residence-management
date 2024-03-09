@@ -48,4 +48,10 @@ class PaymentController extends Controller
         $data = $this->paymentApplication->getPaidByHouseOccupant($houseOccupantId);
         return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('payments'));
     }
+
+    public function getTotalIncome(Request $request)
+    {
+        $data = $this->paymentApplication->getTotalIncome($request);
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('payments'));
+    }
 }

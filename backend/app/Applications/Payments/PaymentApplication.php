@@ -3,16 +3,37 @@
 namespace App\Applications\Payments;
 
 use App\Http\Requests\Payments\AddPaymentRequest;
-use App\Models\MonthlyExpense;
 use App\Models\MonthlyFee;
 use App\Models\OccupantPayment;
 use App\Models\Payment;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class PaymentApplication
 {
+    public function getTotalIncome(Request $request)
+    {
+        // $startDate = $request->query('start_date');
+        // $endDate = $request->query('end_date');
+        // $isFilteredOneDate = $startDate == $endDate;
+        $dataPayments = DB::table('payments', 'payment')
+            ->leftJoin('monthly_fees AS monthly_fee', 'monthly_fee.id', '=', 'payment.monthly_fee_id')->get();
+        // ->leftJoin('occupant_payments AS occupant_payment', 'occupant_payment.id', '=', 'payment.occupant_payment_id');
+        // if ($isFilteredOneDate) {
+        //     $query->whereBetween('occupant_payment.payment_date', [Carbon::parse($startDate)->startOfMonth(), Carbon::parse($endDate)->endOfMonth()]);
+        // }
+        // if (!$isFilteredOneDate && $startDate && $endDate) {
+        //     $query->whereBetween('occupant_payment.payment_date', [Carbon::parse($startDate)->startOfMonth(), Carbon::parse($endDate)->startOfMonth()]);
+        // }
+
+        // $dataPayments = $query->get();
+        $total = 0;
+        foreach ($dataPayments as $data) {
+            $total += $data->fee;
+        };
+        return $total;
+    }
 
     public function getPaidByHouseOccupant($houseOccupantId)
     {
@@ -20,15 +41,13 @@ class PaymentApplication
             ->leftJoin('occupant_payments AS occupant_payment', 'occupant_payment.id', 'payment.occupant_payment_id')
             ->leftJoin('house_occupants AS house_occupant', 'occupant_payment.house_occupant_id', '=', 'house_occupant.id')
             ->leftJoin('monthly_fees AS monthly_fee', 'monthly_fee.id', '=', 'payment.monthly_fee_id')
-            ->leftJoin('monthly_expenses AS monthly_expense', 'monthly_expense.id', '=', 'payment.monthly_expense_id')
             ->where('house_occupant.id', '=', $houseOccupantId)
             ->whereYear('payment.date', '=', Carbon::now())
             ->whereMonth('payment.date', '=', Carbon::now())
             ->select([
-                'type',
-                DB::raw('(CASE WHEN type = "fee" THEN monthly_fee_id ELSE monthly_expense_id END) AS id'),
-                DB::raw('(CASE WHEN type = "fee" THEN monthly_fee.name ELSE monthly_expense.name END) AS name'),
-                DB::raw('(CASE WHEN type = "fee" THEN monthly_fee.fee ELSE monthly_expense.fee END) AS fee'),
+                'monthly_fee.id',
+                'monthly_fee.name',
+                'monthly_fee.fee',
                 'occupant_payment.payment_date'
             ])
             ->get();
@@ -41,31 +60,18 @@ class PaymentApplication
         $listPaymentAvailable = [...MonthlyFee::all()->map(function ($fee) {
             return [
                 'id' => $fee['id'],
-                'type' => 'fee',
                 'name' => $fee['name'],
                 'fee' => $fee['fee'],
-            ];
-        }), ...MonthlyExpense::all()->map(function ($expense) {
-            return [
-                'id' => $expense['id'],
-                'type' => 'expense',
-                'name' => $expense['name'],
-                'fee' => $expense['fee'],
             ];
         })];
         $notPaids = collect($listPaymentAvailable)->filter(function ($paymentAvail) use ($paymentPaid) {
             $isPaid = false;
             foreach ($paymentPaid as $payment) {
-                if ($payment->type == $paymentAvail['type'] && $paymentAvail['id'] == $payment->id) {
+                if ($paymentAvail['id'] == $payment->id) {
                     $isPaid = true;
                 }
             }
             return $isPaid ? false : true;
-        })->filter(function ($notPaid) {
-            $isFee = $notPaid['type'] == 'fee';
-            if ($isFee) return true;
-            if (MonthlyExpense::findOrFail($notPaid['id'])->is_paid_monthly) return true;
-            return false;
         })->values();
 
         return $notPaids;
@@ -77,15 +83,11 @@ class PaymentApplication
             ->leftJoin('occupant_payments AS occupant_payment', 'occupant_payment.id', '=', 'payment.occupant_payment_id')
             ->leftJoin('house_occupants AS house_occupant', 'house_occupant.id', '=', 'occupant_payment.house_occupant_id')
             ->leftJoin('monthly_fees AS monthly_fee', 'monthly_fee.id', '=', 'payment.monthly_fee_id')
-            ->leftJoin('monthly_expenses AS monthly_expense', 'monthly_expense.id', '=', 'payment.monthly_expense_id')
             ->where('house_occupant.id', '=', $houseOccupantId)
             ->select([
                 'payment.id',
                 'occupant_payment.payment_date',
-                'payment.type AS payment_type',
-                DB::raw('(CASE WHEN payment.type = "fee" THEN monthly_fee.name ELSE monthly_expense.name END) AS payment_name'),
                 'payment.date AS payment_for_date',
-                DB::raw('(CASE WHEN payment.type = "fee" THEN monthly_fee.fee ELSE monthly_expense.fee END) AS fee'),
             ])
             ->get();
         $data->map(function ($data) {
@@ -106,19 +108,10 @@ class PaymentApplication
 
         foreach ($request->validated()['payments'] as $payment) {
             for ($i = 1; $i <= $payment['number_of_months']; $i++) {
-                $isTypeFee = $payment['type'] == 'fee';
-                if ($isTypeFee && !array_key_exists('monthly_fee_id', $payment)  || !$isTypeFee && !array_key_exists('monthly_expense_id', $payment)) {
-                    throw new HttpException(400, 'Type and id relation not match');
-                }
                 $newPayment =  new Payment();
-                if ($isTypeFee) {
-                    $newPayment->monthly_fee_id = $payment['monthly_fee_id'];
-                } else {
-                    $newPayment->monthly_expense_id = $payment['monthly_expense_id'];
-                }
+                $newPayment->monthly_fee_id = $payment['monthly_fee_id'];
                 $date = Carbon::now()->addMonthNoOverflow($i - 1);
                 $newPayment->date = $date;
-                $newPayment->type = $payment['type'];
                 $occupantPayment->payments()->save($newPayment);
             }
         }

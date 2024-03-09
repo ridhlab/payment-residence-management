@@ -2,6 +2,7 @@
 import { BREADCRUBMS } from "@/common/breadcrumbs";
 import { occupantStatusOptions } from "@/common/select-options";
 import MainLayout from "@/components/layouts/main";
+import Button from "@/components/shared/button/button";
 import ButtonAction from "@/components/shared/form/button-actions";
 import { OccupantStatus } from "@/enums/occupant-status";
 import { getRequiredMessage } from "@/helpers/form";
@@ -14,7 +15,7 @@ import { ROUTES } from "@/routes/list-route";
 import { useAddHouseOccupantMutation } from "@/services/mutations/house-occupants";
 import { useGetHouseDropdownNotOccupied } from "@/services/queries/houses";
 import { useGetOccupantDropdownNotOccupy } from "@/services/queries/occupants";
-import { Button, Card, DatePicker, Form, Select } from "antd";
+import { Card, DatePicker, Form, Select } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import moment, { Moment } from "moment";
 import React from "react";

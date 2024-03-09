@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\MonthlyExpenses;
+namespace App\Http\Requests\Outcomes;
 
 use App\Http\Requests\BaseRequest;
 
-class UpdateMonthlyExpensesRequest extends BaseRequest
+class AddOutcomeRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +23,7 @@ class UpdateMonthlyExpensesRequest extends BaseRequest
     {
         return [
             'name' => 'string|required',
-            'fee' => 'numeric|required',
-            'is_paid_monthly' => 'boolean|required'
+            'fee' => 'numeric|required'
         ];
     }
 }

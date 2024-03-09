@@ -13,13 +13,13 @@ export const ROUTES = {
     MONTHLY_FEE_CREATE: "/monthly-fee/create",
     MONTHLY_FEE_EDIT: "/monthly-fee/:id/edit",
 
-    MONTHLY_EXPENSE_INDEX: "/monthly-expense",
-    MONTHLY_EXPENSE_CREATE: "/monthly-expense/create",
-    MONTHLY_EXPENSE_EDIT: "/monthly-expense/:id/edit",
-
     HOUSE_OCCUPANT_INDEX: "/house-occupant",
     HOUSE_OCCUPANT_CREATE: "/house-occupant/create",
     HOUSE_OCCUPANT_DETAIL: "/house-occupant/:id",
+
+    REPORT_PAYMENT: "/report-payment",
+    OUTCOMES_INDEX: "/outcome",
+    OUTCOME_CREATE: "/outcome/create",
 };
 
 export const ENDPOINT_API = {
@@ -51,17 +51,6 @@ export const ENDPOINT_API = {
             NOT_OCCUPIED: "/monthly-fee/get-dropdown/not-occupied",
         },
     },
-    MONTHLY_EXPENSES: {
-        INDEX: "/monthly-expense",
-        DEFAULT_VALUE_FOR_FORM: "/monthly-expense/:id/default-value-for-form",
-        STORE: "/monthly-expense/store",
-        UPDATE: "/monthly-expense/:id/update",
-        IS_PAID_MONTHLY: "/monthly-expense/get-by-is-paid-monthly",
-        IS_NOT_PAID_MONTHLY: "/monthly-expense/get-by-is-not-paid-monthly",
-        DROPDOWN: {
-            NOT_OCCUPIED: "/monthly-expense/get-dropdown/not-occupied",
-        },
-    },
     HOUSE_OCCUPANTS: {
         GET_HOUSE_OCCUPIED: "/house-occupant/occupied",
         DETAIL: "/house-occupant/:id",
@@ -78,5 +67,11 @@ export const ENDPOINT_API = {
             "/payment/paid-by-house-occupant/:houseOccupantId",
         GET_NOT_PAID_BY_HOUSE_OCCUPANT:
             "/payment/not-paid-by-house-occupant/:houseOccupantId",
+    },
+
+    TOTAL_INCOME: "/total-income",
+    OUTCOMES: {
+        ADD_OUTCOME: "/outcome/add-outcome",
+        INDEX: "/outcome",
     },
 };

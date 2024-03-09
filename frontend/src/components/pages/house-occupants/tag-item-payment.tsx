@@ -8,7 +8,6 @@ import { LiteralUnion } from "antd/es/_util/type";
 export default function TagItemPayment({
     color = undefined,
     name,
-    type,
     fee,
     handleDelete,
     handleChange,
@@ -16,7 +15,6 @@ export default function TagItemPayment({
     handleChange: (val) => void;
     color?: LiteralUnion<PresetColorType | PresetStatusColorType>;
     name: string;
-    type: "fee" | "expense";
     fee: number;
     handleDelete?: () => void;
 }) {
@@ -26,12 +24,7 @@ export default function TagItemPayment({
                 <div>
                     <p>Nama : {name}</p>
                     <p>Biaya : {getCurrencyId(fee)}</p>
-                    <p>
-                        Tipe :{" "}
-                        {type === "fee"
-                            ? "Iuran Bulanan"
-                            : "Pengeluaran Bulanan"}
-                    </p>
+                    <p>Iuran Bulanan</p>
                     <span>Bayar berapa bulan :</span>
                     <InputNumber
                         size="small"
