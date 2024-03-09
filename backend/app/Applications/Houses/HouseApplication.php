@@ -20,12 +20,14 @@ class HouseApplication
                 'house.id',
                 'house.is_occupied',
                 'house.code',
-                'occupant.fullname AS occupant',
+                DB::raw('(CASE WHEN house.is_occupied = true THEN occupant.fullname ELSE null END) AS occupant'),
                 'is_still_occupant'
             ])
-            ->get()->filter(function ($data) {
+            ->get()
+            ->filter(function ($data) {
                 return !($data->occupant && !$data->is_still_occupant);
-            })->values();
+            })
+            ->values();
         return $data;
     }
 
