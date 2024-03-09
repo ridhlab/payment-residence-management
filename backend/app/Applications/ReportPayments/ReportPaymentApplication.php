@@ -18,9 +18,44 @@ class ReportPaymentApplication
     //   - Sisa pada bulan
     // - Tampilkan juga total pengeluaran dan pemasukan serta sisa all time.
 
-    public function reportIncomes(Request $request)
+    // Structure response
+    /**
+     * {year:number, month:number, incomes:number, outcomes: number, balance:number}[]
+     * 
+     * 
+     * 
+     */
+
+    public function reportForYear($year)
     {
-        $dateSelected = $request->query('date');
+        $data = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $date = $year . '-' . $month;
+            $incomesYear =  $this->reportIncomes($date);
+            $outcomesYear =  $this->reportOutcomes($date);
+            $totalIncomes = 0;
+            foreach ($incomesYear as $income) {
+                $totalIncomes += $income->fee;
+            }
+            $totalOutcomes = 0;
+            foreach ($outcomesYear as $outcome) {
+                $totalOutcomes += $outcome->fee;
+            }
+            $dataPerMonth = [
+                'year' => intval($year),
+                'month' => $month,
+                'total_incomes' => $totalIncomes,
+                'total_outcomes' => $totalOutcomes,
+                'balance' => $totalIncomes - $totalOutcomes,
+            ];
+            array_push($data, $dataPerMonth);
+        }
+        return $data;
+    }
+
+    public function reportIncomes($date)
+    {
+        $dateSelected = $date;
         $query = DB::table('payments', 'payment')
             ->leftJoin('occupant_payments AS occupant_payment', 'occupant_payment.id', '=', 'payment.occupant_payment_id')
             ->leftJoin('house_occupants AS house_occupant', 'house_occupant.id', '=', 'occupant_payment.house_occupant_id')
@@ -45,9 +80,9 @@ class ReportPaymentApplication
         });
     }
 
-    public function reportOutcomes(Request $request)
+    public function reportOutcomes($date)
     {
-        $dateSelected = $request->query('date');
+        $dateSelected = $date;
         $query = DB::table('outcomes', 'outcome')
             ->select(['outcome.id', 'outcome.name', 'outcome.created_at AS date', 'outcome.fee']);
         if ($dateSelected) {

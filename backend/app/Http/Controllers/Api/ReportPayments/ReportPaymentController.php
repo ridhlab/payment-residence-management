@@ -24,13 +24,19 @@ class ReportPaymentController
 
     public function reportIncomes(Request $request)
     {
-        $data = $this->reportPaymentApplication->reportIncomes($request);
+        $data = $this->reportPaymentApplication->reportIncomes($request->query('date'));
         return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('report incomes'));
     }
 
     public function reportOutcomes(Request $request)
     {
-        $data = $this->reportPaymentApplication->reportOutcomes($request);
+        $data = $this->reportPaymentApplication->reportOutcomes($request->query('date'));
         return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('report outcomes'));
+    }
+
+    public function reportForyear($year)
+    {
+        $data = $this->reportPaymentApplication->reportForYear($year);
+        return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('report for year'));
     }
 }

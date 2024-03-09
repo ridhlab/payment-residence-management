@@ -97,4 +97,5 @@ Route::prefix('/report-payment')->controller(ReportPaymentController::class)->gr
     Route::get('/outcomes', 'reportOutcomes')->name('report-payment.outcomes');
     Route::get('/incomes', 'reportIncomes')->name('report-payment.incomes');
     Route::get('/balance', 'getBalanceAllTime')->name('report-payment.balance');
+    Route::get('/for-year/{year}', 'reportForyear')->name('report-payment.for-year');
 });
