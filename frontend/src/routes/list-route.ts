@@ -79,5 +79,6 @@ export const ENDPOINT_API = {
         INCOMES: "/report-payment/incomes",
         OUTCOMES: "/report-payment/outcomes",
         BALANCE: "/report-payment/balance",
+        FOR_YEAR: "/report-payment/for-year/:year",
     },
 };

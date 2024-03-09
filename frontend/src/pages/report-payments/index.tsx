@@ -1,5 +1,6 @@
 import { BREADCRUBMS } from "@/common/breadcrumbs";
 import MainLayout from "@/components/layouts/main";
+import TabChartPayment from "@/components/pages/reports/tab-chart-payments";
 import TabReportPayments from "@/components/pages/reports/tab-report-payments";
 import { Card, Tabs } from "antd";
 
@@ -13,7 +14,7 @@ export default function ReportPaymentPage() {
         {
             key: "chart",
             label: "Grafik Pemasukan/Pengeluaran",
-            children: "",
+            children: <TabChartPayment />,
         },
     ];
 

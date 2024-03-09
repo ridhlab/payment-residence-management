@@ -2,11 +2,13 @@ import { IBaseResponse } from "@/interfaces/responses/base";
 import {
     IReportIncomesResponse,
     IReportOutcomesResponse,
+    IReportPaymentForYearResponse,
 } from "@/interfaces/responses/report-payments";
 import {
     getBalanceAllTimes,
     getReportIncomes,
     getReportOutcomes,
+    getReportPaymentForYear,
 } from "@/services/apis/report-payments";
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 
@@ -50,6 +52,22 @@ export const useGetBalanceAllTimes = (
     return useQuery({
         queryKey: ["get-balance"],
         queryFn: () => getBalanceAllTimes(),
+        ...options,
+    });
+};
+
+export const useGetReportPaymentForYear = (
+    year,
+    options?: UseQueryOptions<
+        IReportPaymentForYearResponse,
+        IBaseResponse<unknown>,
+        IReportPaymentForYearResponse
+    >
+) => {
+    return useQuery({
+        enabled: !!year,
+        queryKey: ["get-report-payment-for-year", year],
+        queryFn: () => getReportPaymentForYear(year),
         ...options,
     });
 };

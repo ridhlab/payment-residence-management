@@ -20,3 +20,14 @@ export interface IReportOutcomesData {
 }
 export interface IReportOutcomesResponse
     extends IBaseResponse<IReportOutcomesData[]> {}
+
+export interface IReportPaymentForYearData {
+    year: number;
+    month: number;
+    totalIncomes: number;
+    totalOutcomes: number;
+    balance: number;
+}
+
+export interface IReportPaymentForYearResponse
+    extends IBaseResponse<IReportPaymentForYearData[]> {}
