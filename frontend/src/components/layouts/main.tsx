@@ -1,6 +1,7 @@
 import {
     DashboardOutlined,
     DatabaseOutlined,
+    FileDoneOutlined,
     HomeOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -39,6 +40,7 @@ const menuKey = {
     MonthlyFee: ROUTES.MONTHLY_FEE_INDEX,
     MonthlyExpense: ROUTES.MONTHLY_EXPENSE_INDEX,
     HouseOccupant: ROUTES.HOUSE_OCCUPANT_INDEX,
+    ReportPayment: ROUTES.REPORT_PAYMENT,
 };
 
 export default function MainLayout({ children, ...props }: IProps) {
@@ -96,12 +98,18 @@ export default function MainLayout({ children, ...props }: IProps) {
                     },
                 ],
             },
-
             {
                 key: menuKey.HouseOccupant,
                 icon: <UserSwitchOutlined />,
                 label: (
                     <Link to={ROUTES.HOUSE_OCCUPANT_INDEX}>Penghuni Rumah</Link>
+                ),
+            },
+            {
+                key: menuKey.ReportPayment,
+                icon: <FileDoneOutlined />,
+                label: (
+                    <Link to={ROUTES.REPORT_PAYMENT}>Laporan Pembayaran</Link>
                 ),
             },
         ],

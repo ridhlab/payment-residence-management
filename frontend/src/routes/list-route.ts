@@ -20,6 +20,8 @@ export const ROUTES = {
     HOUSE_OCCUPANT_INDEX: "/house-occupant",
     HOUSE_OCCUPANT_CREATE: "/house-occupant/create",
     HOUSE_OCCUPANT_DETAIL: "/house-occupant/:id",
+
+    REPORT_PAYMENT: "/report-payment",
 };
 
 export const ENDPOINT_API = {

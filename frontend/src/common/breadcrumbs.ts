@@ -128,4 +128,8 @@ export const BREADCRUBMS = {
             },
         ],
     },
+    REPORT_PAYMENT: () => [
+        { label: "Dashboard", href: ROUTES.DASHBOARD },
+        { label: "Laporan Pembayaran", href: ROUTES.REPORT_PAYMENT },
+    ],
 };
