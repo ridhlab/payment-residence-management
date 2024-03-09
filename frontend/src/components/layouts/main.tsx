@@ -1,8 +1,9 @@
 import {
     DashboardOutlined,
     DatabaseOutlined,
-    FileDoneOutlined,
+    EuroOutlined,
     HomeOutlined,
+    LineChartOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     MoneyCollectOutlined,
@@ -41,6 +42,7 @@ const menuKey = {
     MonthlyExpense: ROUTES.MONTHLY_EXPENSE_INDEX,
     HouseOccupant: ROUTES.HOUSE_OCCUPANT_INDEX,
     ReportPayment: ROUTES.REPORT_PAYMENT,
+    Outcome: ROUTES.OUTCOMES_INDEX,
 };
 
 export default function MainLayout({ children, ...props }: IProps) {
@@ -106,8 +108,13 @@ export default function MainLayout({ children, ...props }: IProps) {
                 ),
             },
             {
+                key: menuKey.Outcome,
+                icon: <EuroOutlined />,
+                label: <Link to={ROUTES.OUTCOMES_INDEX}>Pengeluaran</Link>,
+            },
+            {
                 key: menuKey.ReportPayment,
-                icon: <FileDoneOutlined />,
+                icon: <LineChartOutlined />,
                 label: (
                     <Link to={ROUTES.REPORT_PAYMENT}>Laporan Pembayaran</Link>
                 ),

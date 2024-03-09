@@ -22,6 +22,8 @@ export const ROUTES = {
     HOUSE_OCCUPANT_DETAIL: "/house-occupant/:id",
 
     REPORT_PAYMENT: "/report-payment",
+    OUTCOMES_INDEX: "/outcome",
+    OUTCOME_CREATE: "/outcome/create",
 };
 
 export const ENDPOINT_API = {
@@ -80,5 +82,11 @@ export const ENDPOINT_API = {
             "/payment/paid-by-house-occupant/:houseOccupantId",
         GET_NOT_PAID_BY_HOUSE_OCCUPANT:
             "/payment/not-paid-by-house-occupant/:houseOccupantId",
+    },
+
+    TOTAL_INCOME: "/total-income",
+    OUTCOMES: {
+        ADD_OUTCOME: "/outcome/add-outcome",
+        INDEX: "/outcome",
     },
 };

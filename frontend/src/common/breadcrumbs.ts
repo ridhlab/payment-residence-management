@@ -132,4 +132,15 @@ export const BREADCRUBMS = {
         { label: "Dashboard", href: ROUTES.DASHBOARD },
         { label: "Laporan Pembayaran", href: ROUTES.REPORT_PAYMENT },
     ],
+    OUTCOMES: {
+        INDEX: () => [
+            { label: "Dashboard", href: ROUTES.DASHBOARD },
+            { label: "Pengeluaran", href: ROUTES.OUTCOMES_INDEX },
+        ],
+        CREATE: () => [
+            { label: "Dashboard", href: ROUTES.DASHBOARD },
+            { label: "Pengeluaran", href: ROUTES.OUTCOMES_INDEX },
+            { label: "Tambah Pengeluaran", href: ROUTES.OUTCOME_CREATE },
+        ],
+    },
 };

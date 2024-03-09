@@ -8,8 +8,10 @@ use App\Http\Controllers\Api\MonthlyExpenses\MonthlyExpenseController;
 use App\Http\Controllers\Api\Occupants\OccupantController;
 use App\Http\Controllers\Api\MonthlyFees\MonthlyFeeController;
 use App\Http\Controllers\Api\Occupants\OccupantDropdownController;
+use App\Http\Controllers\Api\Outcomes\OutcomeController;
 use App\Http\Controllers\Api\Payments\PaymentController;
 use App\Models\MonthlyFee;
+use App\Models\Outcome;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -67,18 +69,6 @@ Route::prefix('/monthly-fee')->controller(MonthlyFeeController::class)->group(fu
 });
 
 
-Route::prefix('/monthly-expense')->controller(MonthlyExpenseController::class)->group(function () {
-    Route::get('/get-by-is-paid-monthly', 'getFilteredIsPaidMonthly')->name('monthly-expense.get-by-is-paid-monthly');
-    Route::get('/get-by-is-not-paid-monthly', 'getFilteredIsNotPaidMonthly')->name('monthly-expense.get-by-is-not-paid-monthly');
-
-    Route::get('/', 'index')->name('monthly-enpense.index');
-    Route::get('{id}/default-value-for-form', 'getDefaultValueForForm')->name('monthly-enpense.default-value-for-form');
-
-    Route::get('{id}', 'show')->name('monthly-expense.show');
-    Route::post('/store', 'store')->name('monthly-expense.store');
-    Route::put('/{id}/update', 'update')->name('monthly-expense.update');
-});
-
 Route::prefix('/house-occupant')->controller(HouseOccupantController::class)->group(function () {
     Route::get('/occupied', 'getHouseOccupied')->name('hous-occupant.occupied');
     Route::get('/{id}', 'getDetailHouseOccupant')->name('house-occupant.show');
@@ -96,3 +86,10 @@ Route::prefix('/payment')->controller(PaymentController::class)->group(function 
     Route::get('/not-paid-by-house-occupant/{houseOccupantId}', 'getNotPaidByHouseOccupant')->name('payments.not-paid-by-house-occupant');
     Route::get('/paid-by-house-occupant/{houseOccupantId}', 'getPaidByHouseOccupant')->name('payments.paid-by-house-occupant');
 });
+
+Route::prefix('/outcome')->controller(OutcomeController::class)->group(function () {
+    Route::get('/', 'getIndex')->name('outcome.index');
+    Route::post('/add-outcome', 'addOutcome')->name('outcome.add-outcome');
+});
+
+Route::get('/total-income', [PaymentController::class, 'getTotalIncome'])->name('total-income');
