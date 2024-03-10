@@ -1,8 +1,12 @@
 import LoaderCenter from "@/components/shared/loader/loader-center";
+import { getCurrencyId } from "@/helpers/currency";
 import { getMonthInIndonesia } from "@/helpers/date";
-import { useGetReportPaymentForYear } from "@/services/queries/report-payments";
+import {
+    useGetBalanceAllTimes,
+    useGetReportPaymentForYear,
+} from "@/services/queries/report-payments";
 import { colorConfig } from "@/themes/color";
-import { DatePicker, Space } from "antd";
+import { Card, DatePicker, Space, Statistic } from "antd";
 import dayjs from "dayjs";
 import moment from "moment";
 import React from "react";
@@ -20,9 +24,15 @@ export default function TabChartPayment() {
     const [yearSelected, setYearSelected] = React.useState(
         new Date().getFullYear()
     );
-    console.log({ yearSelected });
 
+    const queryGetBalance = useGetBalanceAllTimes();
     const query = useGetReportPaymentForYear(yearSelected);
+
+    const isLoading =
+        query.isLoading ||
+        query.isFetching ||
+        queryGetBalance.isLoading ||
+        queryGetBalance.isFetching;
 
     const lineChartNode = (
         <ResponsiveContainer width="100%" minHeight={500}>
@@ -58,6 +68,32 @@ export default function TabChartPayment() {
         </ResponsiveContainer>
     );
 
+    const statisticNode = (
+        <Space>
+            <Card>
+                <Statistic
+                    title="Total Pemasukan"
+                    value={queryGetBalance.data?.data.totalIncomes}
+                    formatter={(val) => getCurrencyId(val)}
+                />
+            </Card>
+            <Card>
+                <Statistic
+                    title="Total Pengeluaran"
+                    value={queryGetBalance.data?.data.totalOutcomes}
+                    formatter={(val) => getCurrencyId(val)}
+                />
+            </Card>
+            <Card>
+                <Statistic
+                    title="Sisa Uang"
+                    value={queryGetBalance.data?.data.balance}
+                    formatter={(val) => getCurrencyId(val)}
+                />
+            </Card>
+        </Space>
+    );
+
     return (
         <Space direction="vertical" size="large" style={{ width: "100%" }}>
             <DatePicker
@@ -71,10 +107,13 @@ export default function TabChartPayment() {
                         : setYearSelected(new Date().getFullYear())
                 }
             />
-            {query?.isLoading || query?.isFetching ? (
+            {isLoading ? (
                 <LoaderCenter />
             ) : (
-                lineChartNode
+                <>
+                    {statisticNode}
+                    {lineChartNode}
+                </>
             )}
         </Space>
     );
