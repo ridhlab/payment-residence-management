@@ -3,10 +3,13 @@ import { axiosInstance } from "..";
 import { parsingRoute, routeWithParams } from "@/helpers/route";
 import { ENDPOINT_API } from "@/routes/list-route";
 
-export const getReportIncomes = async (date) => {
+export const getReportIncomes = async (date, paymentForDate) => {
     try {
         const response = await axiosInstance.get(
-            routeWithParams(ENDPOINT_API.REPORT_PAYMENTS.INCOMES, { date })
+            routeWithParams(ENDPOINT_API.REPORT_PAYMENTS.INCOMES, {
+                date,
+                payment_for_date: paymentForDate,
+            })
         );
         return response.data;
     } catch (error) {

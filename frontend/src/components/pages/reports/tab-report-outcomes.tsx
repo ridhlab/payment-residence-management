@@ -17,6 +17,7 @@ export default function TabReportOutcomes({
     return (
         <Space direction="vertical" style={{ width: "100%" }}>
             <DatePicker
+                placeholder="Pilih bulan pembayaran"
                 picker="month"
                 onChange={(val) =>
                     setDateSelected(

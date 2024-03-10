@@ -2,6 +2,7 @@ import { IBaseResponse } from "../base";
 
 export interface IPaymentByHouseOccupantData {
     id: number;
+    monthlyFeeId: number;
     paymentDate: string;
     paymentName: string;
     paymentForDate: string;
