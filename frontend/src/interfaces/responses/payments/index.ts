@@ -16,6 +16,7 @@ export interface IPaymentNotOrPaid {
     name: string;
     fee: number;
     paymentDate?: string;
+    lastPaidMonth: string | null;
 }
 export interface IPaymentNotOrPaidResponse
     extends IBaseResponse<IPaymentNotOrPaid[]> {}

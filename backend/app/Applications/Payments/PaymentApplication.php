@@ -3,15 +3,28 @@
 namespace App\Applications\Payments;
 
 use App\Http\Requests\Payments\AddPaymentRequest;
+use App\Models\HouseOccupant;
 use App\Models\MonthlyFee;
 use App\Models\OccupantPayment;
 use App\Models\Payment;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class PaymentApplication
 {
+
+    public function getLastPaidMonth($houseOccupantId, $monthlyFeeId)
+    {
+        $listPayments = (DB::table('occupant_payments', 'occupant_payment')
+            ->where('occupant_payment.house_occupant_id', '=', $houseOccupantId)
+            ->leftJoin('payments AS payment', 'payment.occupant_payment_id', '=', 'occupant_payment.id')
+            ->where('payment.monthly_fee_id', '=', $monthlyFeeId)
+            ->orderByDesc('payment.date')->get());
+        return count($listPayments) > 0 ? Carbon::parse($listPayments[0]->date)->format('Y-m')  : null;
+    }
+
+    // Get payments name that is paid in this month
     public function getPaidByHouseOccupant($houseOccupantId)
     {
         $paymentPaid = DB::table('payments', 'payment')
@@ -28,9 +41,13 @@ class PaymentApplication
                 'occupant_payment.payment_date'
             ])
             ->get();
-        return $paymentPaid;
+        return $paymentPaid->map(function ($paymentFee) use ($houseOccupantId) {
+            $paymentFee->lastPaidMonth = $this->getLastPaidMonth($houseOccupantId, $paymentFee->id);
+            return $paymentFee;
+        });
     }
 
+    // Get payments name that is not paid in this month
     public function getNotPaidByHouseOccupant($houseOccupantId)
     {
         $paymentPaid = $this->getPaidByHouseOccupant($houseOccupantId);
@@ -51,7 +68,10 @@ class PaymentApplication
             return $isPaid ? false : true;
         })->values();
 
-        return $notPaids;
+        return $notPaids->map(function ($payment) use ($houseOccupantId) {
+            $payment['lastPaidMonth'] = $this->getLastPaidMonth($houseOccupantId, $payment['id']);
+            return $payment;
+        });
     }
 
     public function getPaymentByHouseOccupant($houseOccupantId)
@@ -65,6 +85,8 @@ class PaymentApplication
                 'payment.id',
                 'occupant_payment.payment_date',
                 'payment.date AS payment_for_date',
+                'monthly_fee.fee AS fee',
+                'monthly_fee.name AS payment_name'
             ])
             ->get();
         $data->map(function ($data) {
@@ -72,6 +94,19 @@ class PaymentApplication
             return $data;
         });
         return $data;
+    }
+
+    public function getOccupantStatusByHouseOccupantId($houseOccupantId)
+    {
+        return HouseOccupant::findOrFail($houseOccupantId)->occupant_status == 'contract';
+    }
+
+    public function getLastMonthContractByHouseOccupantId($houseOccupantId)
+    {
+        return Carbon::parse(DB::table('house_occupants', 'house_occupant')
+            ->where('house_occupant.id', '=', $houseOccupantId)
+            ->leftJoin('house_occupant_contracts AS house_occupant_contract', 'house_occupant_contract.house_occupant_id', '=', 'house_occupant.id')
+            ->first()->end_date)->format('Y-m');
     }
 
     public function addPayments(AddPaymentRequest $request)
@@ -84,10 +119,20 @@ class PaymentApplication
         $occupantPayment->save();
 
         foreach ($request->validated()['payments'] as $payment) {
+            $lastPaidMonth = $this->getLastPaidMonth($houseOccupantId, $payment['monthly_fee_id']);
+            $isContract = $this->getOccupantStatusByHouseOccupantId($houseOccupantId);
+            if ($isContract) {
+                $lastMonthContract = $this->getLastMonthContractByHouseOccupantId($houseOccupantId);
+                $monthAfterAddedPaymentNumberMonth = $lastPaidMonth ?
+                    Carbon::parse($lastPaidMonth)->addMonth($payment['number_of_months'])->format('Y-m')
+                    : Carbon::now()->subMonth()->addMonth($payment['number_of_months'])->format('Y-m');
+                $isExceedLastContract = Carbon::parse($monthAfterAddedPaymentNumberMonth)->isAfter($lastMonthContract);
+                if ($isExceedLastContract) throw new HttpException(400, 'Jumlah bulan pembayaran melebihi batas kontrak');
+            }
             for ($i = 1; $i <= $payment['number_of_months']; $i++) {
                 $newPayment =  new Payment();
                 $newPayment->monthly_fee_id = $payment['monthly_fee_id'];
-                $date = Carbon::now()->addMonthNoOverflow($i - 1);
+                $date = $lastPaidMonth ? Carbon::parse($lastPaidMonth)->addMonthNoOverflow($i) : Carbon::now()->addMonthNoOverflow($i - 1);
                 $newPayment->date = $date;
                 $occupantPayment->payments()->save($newPayment);
             }

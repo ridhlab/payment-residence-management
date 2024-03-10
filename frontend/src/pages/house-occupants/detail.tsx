@@ -4,8 +4,10 @@ import DetailInformationHouseOccupant from "@/components/pages/house-occupants/d
 import TabHistoricalHouseOccupant from "@/components/pages/house-occupants/tab-historical-house-occupant";
 import TabPaymentHistory from "@/components/pages/house-occupants/tab-payments-history";
 import LoaderCenter from "@/components/shared/loader/loader-center";
+import { OccupantStatus } from "@/enums/occupant-status";
 import { useGetDetailHouseOccupant } from "@/services/queries/house-occupants";
 import { Card, Space, Tabs } from "antd";
+import moment from "moment";
 import { useParams } from "react-router-dom";
 
 export default function HouseOccupantDetailPage() {
@@ -16,7 +18,16 @@ export default function HouseOccupantDetailPage() {
         <TabHistoricalHouseOccupant houseId={query?.data?.data?.houseId} />
     );
 
-    const contentHistoricalPayments = <TabPaymentHistory />;
+    const contentHistoricalPayments = (
+        <TabPaymentHistory
+            isContract={
+                query.data?.data?.occupantStatus === OccupantStatus.CONTRACT
+            }
+            isContractNotStart={moment().isBefore(
+                query.data?.data?.contractDetail?.startDate
+            )}
+        />
+    );
 
     return (
         <MainLayout

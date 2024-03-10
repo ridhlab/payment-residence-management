@@ -1,3 +1,4 @@
+import { getCurrencyId } from "@/helpers/currency";
 import { numberColumns } from "@/helpers/table";
 import { IBaseResponse } from "@/interfaces/responses/base";
 import { IReportOutcomesResponse } from "@/interfaces/responses/report-payments";
@@ -37,7 +38,12 @@ export default function TabReportOutcomes({
                         dataIndex: "date",
                         key: "outcome-date",
                     },
-                    { title: "Biaya", dataIndex: "fee", key: "outcome-fee" },
+                    {
+                        title: "Biaya",
+                        dataIndex: "fee",
+                        key: "outcome-fee",
+                        render: (val) => getCurrencyId(val),
+                    },
                 ]}
                 key="table-outcomes"
                 loading={query.isLoading || query.isFetching}

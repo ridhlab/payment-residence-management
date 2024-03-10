@@ -2,6 +2,7 @@ import { BREADCRUBMS } from "@/common/breadcrumbs";
 import MainLayout from "@/components/layouts/main";
 import AddButton from "@/components/shared/button/add-button";
 import LoaderCenter from "@/components/shared/loader/loader-center";
+import { getCurrencyId } from "@/helpers/currency";
 import { numberColumns } from "@/helpers/table";
 import { IOutcome } from "@/interfaces/entities/outcomes";
 import { ROUTES } from "@/routes/list-route";
@@ -22,6 +23,7 @@ export default function OutcomeIndexPage() {
             title: "Pengeluaran",
             dataIndex: "fee",
             key: "fee",
+            render: (val) => getCurrencyId(val),
         },
     ];
     return (

@@ -8,19 +8,36 @@ use Illuminate\Support\Facades\DB;
 
 class ReportPaymentApplication
 {
-    // REPORT
-    // Tab report list
-    // - Berisi 2 tab, yaitu incomes dan outcomes 
-    // Tab graph
-    // - Berisi grafik line 3 parameter
-    //   - Pemasukan pada bulan
-    //   - Pengeluaran pada bulan
-    //   - Sisa pada bulan
-    // - Tampilkan juga total pengeluaran dan pemasukan serta sisa all time.
-
-    public function reportIncomes(Request $request)
+    public function reportForYear($year)
     {
-        $dateSelected = $request->query('date');
+        $data = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $date = $year . '-' . $month;
+            $incomesYear =  $this->reportIncomes($date);
+            $outcomesYear =  $this->reportOutcomes($date);
+            $totalIncomes = 0;
+            foreach ($incomesYear as $income) {
+                $totalIncomes += $income->fee;
+            }
+            $totalOutcomes = 0;
+            foreach ($outcomesYear as $outcome) {
+                $totalOutcomes += $outcome->fee;
+            }
+            $dataPerMonth = [
+                'year' => intval($year),
+                'month' => $month,
+                'total_incomes' => $totalIncomes,
+                'total_outcomes' => $totalOutcomes,
+                'balance' => $totalIncomes - $totalOutcomes,
+            ];
+            array_push($data, $dataPerMonth);
+        }
+        return $data;
+    }
+
+    public function reportIncomes($date)
+    {
+        $dateSelected = $date;
         $query = DB::table('payments', 'payment')
             ->leftJoin('occupant_payments AS occupant_payment', 'occupant_payment.id', '=', 'payment.occupant_payment_id')
             ->leftJoin('house_occupants AS house_occupant', 'house_occupant.id', '=', 'occupant_payment.house_occupant_id')
@@ -45,9 +62,9 @@ class ReportPaymentApplication
         });
     }
 
-    public function reportOutcomes(Request $request)
+    public function reportOutcomes($date)
     {
-        $dateSelected = $request->query('date');
+        $dateSelected = $date;
         $query = DB::table('outcomes', 'outcome')
             ->select(['outcome.id', 'outcome.name', 'outcome.created_at AS date', 'outcome.fee']);
         if ($dateSelected) {
@@ -57,5 +74,38 @@ class ReportPaymentApplication
             );
         }
         return $query->get();
+    }
+
+    public function getTotalIncomesAllTimes()
+    {
+        $dataPayments = DB::table('payments', 'payment')
+            ->leftJoin('monthly_fees AS monthly_fee', 'monthly_fee.id', '=', 'payment.monthly_fee_id')
+            ->get();
+        $total = 0;
+        foreach ($dataPayments as $data) {
+            $total += $data->fee;
+        };
+        return $total;
+    }
+
+    public function getTotalOutcomesAllTimes()
+    {
+        $dataOutcomes = DB::table('outcomes', 'outcome')
+            ->get();
+        $total = 0;
+        foreach ($dataOutcomes as $data) {
+            $total += $data->fee;
+        };
+        return $total;
+    }
+
+
+    public function getBalance()
+    {
+        return [
+            'balance' => $this->getTotalIncomesAllTimes() - $this->getTotalOutcomesAllTimes(),
+            'total_incomes' => $this->getTotalIncomesAllTimes(),
+            'total_outcomes' => $this->getTotalOutcomesAllTimes()
+        ];
     }
 }
