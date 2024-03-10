@@ -11,7 +11,13 @@ import { useParams } from "react-router-dom";
 import LoaderCenter from "@/components/shared/loader/loader-center";
 import { getCurrencyId } from "@/helpers/currency";
 
-export default function TabPaymentHistory() {
+export default function TabPaymentHistory({
+    isContract,
+    isContractNotStart,
+}: {
+    isContract: boolean;
+    isContractNotStart: boolean;
+}) {
     const { id: houseOccupantId } = useParams();
     const [openModalAddPayment, setOpenModalAddPayment] = React.useState(false);
 
@@ -97,30 +103,38 @@ export default function TabPaymentHistory() {
             <Card
                 title="Riwayat Pembayaran"
                 extra={
-                    <AddButton onClick={() => setOpenModalAddPayment(true)}>
-                        Tambah Pembayaran
-                    </AddButton>
+                    !(isContract && isContractNotStart) ? (
+                        <AddButton onClick={() => setOpenModalAddPayment(true)}>
+                            Tambah Pembayaran
+                        </AddButton>
+                    ) : undefined
                 }
             >
-                <Tabs
-                    items={[
-                        {
-                            key: "belum-lunas",
-                            label: "Belum Lunas Bulan Ini",
-                            children: notPaidContent,
-                        },
-                        {
-                            label: "Lunas Bulan Ini",
-                            key: "lunas",
-                            children: paidOffContent,
-                        },
-                        {
-                            label: "Histori Pembayaran",
-                            key: "history",
-                            children: historyContent,
-                        },
-                    ]}
-                />
+                {isContract && isContractNotStart ? (
+                    <Typography.Text>
+                        Masa kontrak belum dimulai
+                    </Typography.Text>
+                ) : (
+                    <Tabs
+                        items={[
+                            {
+                                key: "belum-lunas",
+                                label: "Belum Lunas Bulan Ini",
+                                children: notPaidContent,
+                            },
+                            {
+                                label: "Lunas Bulan Ini",
+                                key: "lunas",
+                                children: paidOffContent,
+                            },
+                            {
+                                label: "Histori Pembayaran",
+                                key: "history",
+                                children: historyContent,
+                            },
+                        ]}
+                    />
+                )}
             </Card>
             <ModalAddPayments
                 refetchHistoricalPayment={() => {

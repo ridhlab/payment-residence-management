@@ -83,7 +83,8 @@ class PaymentApplication
                 'payment.id',
                 'occupant_payment.payment_date',
                 'payment.date AS payment_for_date',
-                'monthly_fee.fee AS fee'
+                'monthly_fee.fee AS fee',
+                'monthly_fee.name AS payment_name'
             ])
             ->get();
         $data->map(function ($data) {
@@ -107,7 +108,7 @@ class PaymentApplication
             for ($i = 1; $i <= $payment['number_of_months']; $i++) {
                 $newPayment =  new Payment();
                 $newPayment->monthly_fee_id = $payment['monthly_fee_id'];
-                $date = Carbon::parse($lastPaidMonths)->addMonthNoOverflow($i);
+                $date = $lastPaidMonths ? Carbon::parse($lastPaidMonths)->addMonthNoOverflow($i) : Carbon::now()->addMonthNoOverflow($i - 1);
                 $newPayment->date = $date;
                 $occupantPayment->payments()->save($newPayment);
             }
