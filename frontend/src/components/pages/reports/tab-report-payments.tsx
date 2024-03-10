@@ -9,7 +9,15 @@ import React from "react";
 
 export default function TabReportPayments() {
     const [dateSelectedIncomes, setDateSelectedIncomes] = React.useState(null);
-    const queryIncomes = useGetReportIncomes(dateSelectedIncomes ?? "");
+    const [
+        paymentForDateSelectedIncomes,
+        setPaymentForDateDateSelectedIncomes,
+    ] = React.useState(null);
+
+    const queryIncomes = useGetReportIncomes(
+        dateSelectedIncomes ?? "",
+        paymentForDateSelectedIncomes ?? ""
+    );
 
     const [dateSelectedOutcomes, setDateSelectedOutcomes] =
         React.useState(null);
@@ -32,6 +40,9 @@ export default function TabReportPayments() {
                         <TabReportIncomes
                             setDateSelected={setDateSelectedIncomes}
                             query={queryIncomes}
+                            setPaymentForDateDateSelected={
+                                setPaymentForDateDateSelectedIncomes
+                            }
                         />
                     ),
                 },

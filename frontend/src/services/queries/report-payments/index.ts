@@ -15,6 +15,7 @@ import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 
 export const useGetReportIncomes = (
     date,
+    paymentForDate,
     options?: UseQueryOptions<
         IReportIncomesResponse,
         IBaseResponse<unknown>,
@@ -22,8 +23,8 @@ export const useGetReportIncomes = (
     >
 ) => {
     return useQuery({
-        queryKey: ["report-incomes", date],
-        queryFn: () => getReportIncomes(date),
+        queryKey: ["report-incomes", date, paymentForDate],
+        queryFn: () => getReportIncomes(date, paymentForDate),
         ...options,
     });
 };

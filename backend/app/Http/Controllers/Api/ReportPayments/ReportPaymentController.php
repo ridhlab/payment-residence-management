@@ -24,7 +24,7 @@ class ReportPaymentController
 
     public function reportIncomes(Request $request)
     {
-        $data = $this->reportPaymentApplication->reportIncomes($request->query('date'));
+        $data = $this->reportPaymentApplication->reportIncomes($request->query('date'), $request->query('payment_for_date'));
         return ApiResponser::successResponser($data, ApiResponser::generateMessageGetData('report incomes'));
     }
 
