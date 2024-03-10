@@ -5,7 +5,7 @@ import confirm from "antd/es/modal/confirm";
 
 export const modalConfirm = (config?: ModalFuncProps) => {
     return confirm({
-        title: "Are you sure?",
+        title: "Apakah Anda yakin?",
         icon: (
             <ExclamationCircleFilled
                 style={{ color: colorConfig.feedback.warning }}
