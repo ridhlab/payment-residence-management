@@ -51,6 +51,7 @@ export default function TabReportIncomes({
             </Row>
 
             <Table
+                size="small"
                 key="table-incomes"
                 columns={[
                     numberColumns(),
