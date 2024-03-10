@@ -14,6 +14,23 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class PaymentApplication
 {
 
+    public function getListPaymentForDate($date)
+    {
+        $paymentPaid = DB::table('payments', 'payment')
+            ->leftJoin('occupant_payments AS occupant_payment', 'occupant_payment.id', 'payment.occupant_payment_id')
+            ->leftJoin('house_occupants AS house_occupant', 'occupant_payment.house_occupant_id', '=', 'house_occupant.id')
+            ->leftJoin('monthly_fees AS monthly_fee', 'monthly_fee.id', '=', 'payment.monthly_fee_id')
+            ->whereYear('payment.date', '=', Carbon::now())
+            ->whereMonth('payment.date', '=', Carbon::now())
+            ->select([
+                'monthly_fee.id',
+                'monthly_fee.name',
+                'monthly_fee.fee',
+                'occupant_payment.payment_date'
+            ])
+            ->get();
+    }
+
     public function getLastPaidMonth($houseOccupantId, $monthlyFeeId)
     {
         $listPayments = (DB::table('occupant_payments', 'occupant_payment')
@@ -35,14 +52,15 @@ class PaymentApplication
             ->whereYear('payment.date', '=', Carbon::now())
             ->whereMonth('payment.date', '=', Carbon::now())
             ->select([
-                'monthly_fee.id',
+                'payment.id AS id',
+                'monthly_fee.id AS monthly_fee_id',
                 'monthly_fee.name',
                 'monthly_fee.fee',
                 'occupant_payment.payment_date'
             ])
             ->get();
         return $paymentPaid->map(function ($paymentFee) use ($houseOccupantId) {
-            $paymentFee->lastPaidMonth = $this->getLastPaidMonth($houseOccupantId, $paymentFee->id);
+            $paymentFee->lastPaidMonth = $this->getLastPaidMonth($houseOccupantId, $paymentFee->monthly_fee_id);
             return $paymentFee;
         });
     }
@@ -61,7 +79,7 @@ class PaymentApplication
         $notPaids = collect($listPaymentAvailable)->filter(function ($paymentAvail) use ($paymentPaid) {
             $isPaid = false;
             foreach ($paymentPaid as $payment) {
-                if ($paymentAvail['id'] == $payment->id) {
+                if ($paymentAvail['id'] == $payment->monthly_fee_id) {
                     $isPaid = true;
                 }
             }
