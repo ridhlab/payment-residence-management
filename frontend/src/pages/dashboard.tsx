@@ -1,7 +1,6 @@
 import { BREADCRUBMS } from "@/common/breadcrumbs";
 import MainLayout from "@/components/layouts/main";
 import { Card } from "antd";
-import React from "react";
 
 export default function DashboardPage() {
     return (
