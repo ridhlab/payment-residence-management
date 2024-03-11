@@ -7,6 +7,7 @@ import { ROUTES } from "@/routes/list-route";
 import { useRemoveHouseOccupantMutation } from "@/services/mutations/house-occupants";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Card, Descriptions, Tag } from "antd";
+import dayjs from "dayjs";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function DetailInformationHouseOccupant({
@@ -74,7 +75,7 @@ export default function DetailInformationHouseOccupant({
                 {isContract ? (
                     <>
                         <Descriptions.Item label="Kontrak Awal">
-                            {startDate}
+                            {dayjs(startDate).format("YYYY/MM/DD")}
                         </Descriptions.Item>
                         <Descriptions.Item label="Kontrak Berakhir">
                             {endDate}

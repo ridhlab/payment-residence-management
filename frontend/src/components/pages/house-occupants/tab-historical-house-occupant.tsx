@@ -1,6 +1,7 @@
 import LoaderCenter from "@/components/shared/loader/loader-center";
 import { useGetHistoricalHouseOccupantByHouse } from "@/services/queries/historical-house-occupants";
 import { Card, Space, Timeline, Typography } from "antd";
+import dayjs from "dayjs";
 
 export default function TabHistoricalHouseOccupant({
     houseId,
@@ -33,10 +34,16 @@ export default function TabHistoricalHouseOccupant({
                                         Nama Penghuni : {occupantName}
                                     </Typography.Text>
                                     <Typography.Text>
-                                        Tanggal Mulai Menghuni : {startDate}
+                                        Tanggal Mulai Menghuni :{" "}
+                                        {dayjs(startDate).format("YYYY/MM/DD")}
                                     </Typography.Text>
                                     <Typography.Text>
-                                        Tanggal Keluar: {endDate ?? "-"}
+                                        Tanggal Keluar:{" "}
+                                        {endDate
+                                            ? dayjs(endDate).format(
+                                                  "YYYY/MM/DD"
+                                              )
+                                            : "-"}
                                     </Typography.Text>
                                 </Space>
                             ),
