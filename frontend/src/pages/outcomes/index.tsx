@@ -9,6 +9,7 @@ import { ROUTES } from "@/routes/list-route";
 import { useGetOutcomeIndex } from "@/services/queries/outcomes";
 import { Card, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
+import dayjs from "dayjs";
 
 export default function OutcomeIndexPage() {
     const query = useGetOutcomeIndex();
@@ -24,6 +25,12 @@ export default function OutcomeIndexPage() {
             dataIndex: "fee",
             key: "fee",
             render: (val) => getCurrencyId(val),
+        },
+        {
+            title: "Tanggal Pengeluaran",
+            dataIndex: "createdAt",
+            key: "createdAt",
+            render: (val) => dayjs(val).format("YYYY/MM/DD, HH:mm:ss"),
         },
     ];
     return (

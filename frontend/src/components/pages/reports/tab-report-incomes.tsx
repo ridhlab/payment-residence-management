@@ -4,6 +4,7 @@ import { IBaseResponse } from "@/interfaces/responses/base";
 import { IReportIncomesResponse } from "@/interfaces/responses/report-payments";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Col, DatePicker, Grid, Row, Space, Table } from "antd";
+import dayjs from "dayjs";
 import moment from "moment";
 import React from "react";
 
@@ -69,6 +70,8 @@ export default function TabReportIncomes({
                         title: "Tanggal Bayar",
                         dataIndex: "paymentDate",
                         key: "income-payment-date",
+                        render: (val) =>
+                            dayjs(val).format("YYYY/MM/DD, HH:mm:ss"),
                     },
                     {
                         title: "Nama Iuran",
@@ -85,6 +88,7 @@ export default function TabReportIncomes({
                         title: "Pembayaran untuk Bulan",
                         dataIndex: "paymentForDate",
                         key: "income-payment-for-date",
+                        render: (val) => dayjs(val).format("YYYY/MM"),
                     },
                 ]}
                 loading={query.isLoading || query.isFetching}

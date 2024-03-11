@@ -10,6 +10,7 @@ import {
 import { useParams } from "react-router-dom";
 import LoaderCenter from "@/components/shared/loader/loader-center";
 import { getCurrencyId } from "@/helpers/currency";
+import dayjs from "dayjs";
 
 export default function TabPaymentHistory({
     isContract,
@@ -40,7 +41,12 @@ export default function TabPaymentHistory({
                             <p>Iuran Bulanan</p>
                             <p>Biaya : {getCurrencyId(fee)}</p>
                             <p>Pembayaran bulan : {paymentForDate}</p>
-                            <p>Dibayar pada : {paymentDate}</p>
+                            <p>
+                                Dibayar pada :{" "}
+                                {dayjs(paymentDate).format(
+                                    "YYYY/MM/DD, HH:mm:ss"
+                                )}
+                            </p>
                         </Tag>
                     )
                 )}
@@ -62,7 +68,12 @@ export default function TabPaymentHistory({
                             <p>Nama Pembayaran : {name}</p>
                             <p>Iuran Bulanan</p>
                             <p>Biaya : {getCurrencyId(fee)}</p>
-                            <p>Tanggal Pembayaran : {paymentDate}</p>
+                            <p>
+                                Tanggal Pembayaran :{" "}
+                                {dayjs(paymentDate).format(
+                                    "YYYY/MM/DD, HH:mm:ss"
+                                )}
+                            </p>
                         </Tag>
                     )
                 )}

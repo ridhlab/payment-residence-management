@@ -4,6 +4,7 @@ import { IBaseResponse } from "@/interfaces/responses/base";
 import { IReportOutcomesResponse } from "@/interfaces/responses/report-payments";
 import { UseQueryResult } from "@tanstack/react-query";
 import { DatePicker, Space, Table } from "antd";
+import dayjs from "dayjs";
 import moment from "moment";
 import React from "react";
 
@@ -39,6 +40,8 @@ export default function TabReportOutcomes({
                         title: "Tanggal Pengeluaran",
                         dataIndex: "date",
                         key: "outcome-date",
+                        render: (val) =>
+                            dayjs(val).format("YYYY/MM/DD, HH:mm:ss"),
                     },
                     {
                         title: "Biaya",
