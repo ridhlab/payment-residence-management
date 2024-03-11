@@ -145,7 +145,9 @@ export default function OccupantFormPage({
                         onFinish={onFinish}
                         initialValues={{
                             ...query?.data?.data,
-                            isMarried: !!query?.data?.data.isMarried,
+                            isMarried: editPage
+                                ? !!query?.data?.data.isMarried
+                                : undefined,
                         }}
                     >
                         <Form.Item

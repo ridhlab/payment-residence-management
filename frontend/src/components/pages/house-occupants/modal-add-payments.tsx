@@ -196,7 +196,7 @@ export default function ModalAddPayments({
                         </Space>
                         <Space>
                             <Select
-                                placeholder="Pilih Nama Iura/Pengeluaran"
+                                placeholder="Pilih Iuran"
                                 options={optionsListPaymentAvailable}
                                 allowClear
                                 onClear={() => setValueFeeExpenseActive(null)}
